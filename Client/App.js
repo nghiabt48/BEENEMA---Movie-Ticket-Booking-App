@@ -1,11 +1,13 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Text, View } from "react-native";
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <View style={styles.Row1}>
+        <Text style={styles.textProfile}>Profile</Text>
+        <Image source={require("./src/image/Settings.png")} />
+      </View>
     </View>
   );
 }
@@ -13,8 +15,14 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#161621",
+  },
+  Row1: {
+    flexDirection: "row",
+  },
+  textProfile: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 27,
   },
 });
