@@ -11,6 +11,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import profile from "./profile";
+import forgot_email from "./src/features/forgot_email";
+import profile_settings from "./src/features/profile_settings";
 
 function ProfileScreen() {
   return (
@@ -110,9 +113,13 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
-          name="Profile"
-          component={ProfileScreen}
-          options={{ headerShown: false }}
+          name=".."
+          component={profile_settings}
+          options={{
+            headerBackImage: () => (
+              <Image source={require('./src/image/Back.png')} />
+            ),
+          }}
         />
       </Stack.Navigator>
     </NavigationContainer>
