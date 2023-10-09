@@ -2,7 +2,6 @@ const mongoose = require('mongoose')
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
-
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -49,7 +48,6 @@ const userSchema = new mongoose.Schema({
   location:{ 
     type: {
       type: String,
-      default: 'Point',
       enum: ['Point']
     },
     coordinates: [Number], // [longtitude, latitude]
