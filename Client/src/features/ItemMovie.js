@@ -3,11 +3,19 @@ import React from 'react'
 
 const ItemMovie = (props) => {
   const { data, navigation } = props;
+  const ImageURL = `http://149.28.159.68:3000/img/movies/${data.imageCover}`
+
+  const shortenText = (text, maxLength) => {
+    if (text.length > maxLength) {
+      return text.substring(0, maxLength - 3) + '...';
+    }
+    return text;
+  };
   return (
     <TouchableOpacity style={styles.container}> 
       <View style={styles.Group}>
-        <Image source={require('../image/image3.png')} style={styles.Image}/>
-        <Text style={styles.Text1}>dfgdgdfgfd</Text>
+        <Image source={{uri: ImageURL}} style={styles.Image}/>
+        <Text style={styles.Text1}>{shortenText(data.title, 14)}</Text>
       </View>
     </TouchableOpacity>
 
@@ -21,6 +29,7 @@ const styles = StyleSheet.create({
     flex: 1,
     maxWidth: Dimensions.get('window').width / 2,
     padding:13,
+    
   },
   Text1: {
     fontSize: 18,
@@ -35,5 +44,6 @@ const styles = StyleSheet.create({
   Group:{
     backgroundColor: '#130B2B',
     alignItems: 'center',
+    
   }
 })

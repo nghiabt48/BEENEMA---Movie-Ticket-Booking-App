@@ -1,11 +1,25 @@
-import { FlatList, Image, StyleSheet, Text, TextInput, View } from 'react-native'
+import { FlatList, Image, StyleSheet, Text, TextInput, ToastAndroid, View } from 'react-native'
 import React, { useState } from 'react'
 import ItemMovie from './ItemMovie'
 import { SafeAreaView } from 'react-native-safe-area-context';
+import AxiosIntance from './AxiosIntance';
 
 const ListMovie = (props) => {
     const { navigation } = props;
-    //const [data, setdata] = useState([])
+    const [data, setdata] = useState([])
+    //const [isLoading, setisLoading] = useState(null);
+    
+    const getAllMovie = async () => {
+        //setisLoading(true)
+        const response = await AxiosIntance().get("/movies");
+        if (response.status == "success") {
+            setdata(response.data.data);  
+        } else {
+            ToastAndroid.show("Lay du lieu that bai", ToastAndroid.SHORT);
+            setdata(null)
+        }
+    }
+    getAllMovie();
 
     return (
         <SafeAreaView style={styles.container}>
@@ -51,22 +65,3 @@ const styles = StyleSheet.create({
        flex:1
     }
 })
-const data =
-    [
-        {
-            "_id": "1",
-
-        },
-        {
-            "_id": "2",
-
-        },
-        {
-            "_id": "3",
-
-        },
-        {
-            "_id": "4",
-
-        },
-    ]
