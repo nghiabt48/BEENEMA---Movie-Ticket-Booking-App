@@ -3,8 +3,14 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var usersRouter = require('./router/userRouter');
+const productRouter = require('./router/movieRouter')
+const cinemaRouter = require('./router/cinemaRouter')
+const ticketRouter = require('./router/ticketRouter')
+const paymentRouter = require('./router/paymentRouter')
+const reviewRouter = require('./router/reviewRouter')
+const showtimeRouter = require('./router/showtimeRouter')
+const bookingRouter = require('./router/bookingRouter')
 
 const globalErrorHandler = require('./controller/errorController');
 const AppError = require('./utils/appError');
@@ -28,7 +34,14 @@ app.get('/api/users/reset-password/:token', (req, res, next) => {
   res.render('ResetPassword', {token: req.params.token, currentUrl})
 })
 
-app.use('/api/users', usersRouter);
+app.use('/api/showtimes', showtimeRouter)
+app.use('/api/movies', productRouter)
+app.use('/api/users', usersRouter)
+app.use('/api/reviews', reviewRouter)
+app.use('/api/cinemas', cinemaRouter)
+app.use('/api/tickets', ticketRouter)
+app.use('/api/payments', paymentRouter)
+app.use('/api/bookings', bookingRouter)
 // error handler
 
 app.all('*', (req, res, next) => {

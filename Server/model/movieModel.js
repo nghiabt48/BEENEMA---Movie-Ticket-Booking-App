@@ -11,7 +11,7 @@ const movieSchema = new mongoose.Schema({
     required: [true, 'Movie genre must be provided .'],
     enum: {
     values: ['action', 'comedy', 'science-fiction', 'drama', 'fantasy', 'tragedy', ],
-    message: 'Genre is either: action, comedy, science-fiction, drama, fantasy, tragedy'
+    message: 'Category phai la: action, comedy, science-fiction, drama, fantasy, tragedy'
   }},
   ratingsAverage: {
     type: Number,
@@ -25,8 +25,11 @@ const movieSchema = new mongoose.Schema({
     default: 0
   },
   imageCover: {
-    type: String,
-    required: [true, 'A tour must have a cover image']
+    type: String
+  },
+  actor: {
+    type: [mongoose.Types.ObjectId],
+    ref: 'Actor'
   },
   trailer: String,
   duration: Number,
