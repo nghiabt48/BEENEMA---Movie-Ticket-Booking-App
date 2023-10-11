@@ -1,14 +1,25 @@
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View } from 'react-native'
 import React, { useContext, useState } from 'react'
 import { LinearGradient } from 'expo-linear-gradient';
 import { AppConText } from './AppConText';
+import AxiosIntance from './AxiosIntance';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const Logins = (props) => {
     const { navigation } = props;
     const { setisLogin } = useContext(AppConText);
-    const [emailUser, setemailUser] = useState("")
+    const [emailUser, setEmailUser] = useState("")
     const [passwordUser, setPasswordUser] = useState("")
     const LoginApp = async () => {
-        setisLogin(true)
+        try {
+            const response = await AxiosIntance().post("users/login", { email: emailUser, password: passwordUser });
+            await AsyncStorage.setItem('token', response.token);
+            ToastAndroid.show("Logged in successfully", ToastAndroid.SHORT);
+            setisLogin(true)
+        } catch (e) {
+            console.log(e.response.data.message)
+            ToastAndroid.show(e.response.data.message, ToastAndroid.SHORT);
+        }
+        
     }
     const RegisterApp = async () => {
         navigation.navigate('Register');
@@ -19,7 +30,7 @@ const Logins = (props) => {
             <Text style={styles.Text2}>Enter your data</Text>
             <View style={styles.Group}>
                 <Text style={styles.Text3}>Email</Text>
-                <TextInput style={styles.Edt}
+                <TextInput style={styles.Edt} onChangeText={setEmailUser}
                     placeholder='Enter yor email'
                     placeholderTextColor={'#ffff'}
                     keyboardType='email-address'
@@ -28,7 +39,7 @@ const Logins = (props) => {
             </View>
             <View style={styles.Group2}>
                 <Text style={styles.Text3}>Password</Text>
-                <TextInput style={styles.Edt}
+                <TextInput style={styles.Edt} onChangeText={setPasswordUser}
                     placeholder='Enter yor password'
                     placeholderTextColor={'#ffff'}
                     returnKeyType='go'
