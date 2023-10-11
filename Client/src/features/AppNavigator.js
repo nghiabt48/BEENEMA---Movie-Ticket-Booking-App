@@ -9,6 +9,7 @@ import ListMovie from './ListMovie';
 import ItemMovie from './ItemMovie';
 import Test1 from './Test1';
 import Test2 from './Test2';
+import ProfileScreen from './ProfileScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -32,7 +33,7 @@ const Main = () => {
           return <Image source={require('../image/videoplay.png')} />
         } else if (route.name === 'Test1') {
           return <Image source={require('../image/videoplay.png')} />
-        } else if (route.name === 'ItemMovie') {
+        } else if (route.name === 'ProfileScreen') {
           return <Image source={require('../image/videoplay.png')} />
         }
       },
@@ -47,7 +48,7 @@ const Main = () => {
       <Stack.Screen name="Home" component={ListMovie} options={{ headerShown: false, title: 'Home' }} />
       <Stack.Screen name="Test2" component={Test2} options={{ headerShown: false }} />
       <Tab.Screen name="Test1" component={Test1} options={{ headerShown: false }} />
-      <Tab.Screen name="ItemMovie" component={ItemMovie} options={{ headerShown: false}} />
+      <Tab.Screen name="ProfileScreen" component={ProfileScreen} options={{ headerShown: false}} />
     </Tab.Navigator>
 
   )
