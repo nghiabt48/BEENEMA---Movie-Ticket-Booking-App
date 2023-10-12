@@ -3,15 +3,26 @@ import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { LinearGradient } from 'expo-linear-gradient'
 
-const ProfileScreen = () => {
+const ProfileScreen = (props) => {
+  const { navigation } = props;
+
+  const ListTicket = async () => {
+    navigation.navigate('ListTicket');
+  }
+  const profile_settings = async () => {
+    navigation.navigate('profile_settings');
+  }
+ 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.Row1}>
-        <Text style={styles.textProfile}>Profile</Text>
-        <Image
-          style={styles.settingBtn}
-          source={require("../image/Settings.png")}
-        />
+      <View>
+        <TouchableOpacity style={styles.Row1} onPress={profile_settings}>
+          <Text style={styles.textProfile}>Profile</Text>
+          <Image
+            style={styles.settingBtn}
+            source={require("../image/Settings.png")}
+          />
+        </TouchableOpacity>
       </View>
       {/* avatar , name  */}
       <View style={styles.Row2}>
@@ -27,7 +38,7 @@ const ProfileScreen = () => {
       </View>
       {/* Button My Tickets*/}
       <View style={styles.viewBtn}>
-        <TouchableOpacity style={styles.btnMine}>
+        <TouchableOpacity style={styles.btnMine} onPress={ListTicket}>
           <Image
             style={styles.imgView}
             source={require("../image/arrowleft.png")}

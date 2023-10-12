@@ -7,7 +7,7 @@ const ItemTicket = (props) => {
         // Set cứng nốt
         <TouchableOpacity style={{marginVertical:'5%', backgroundColor:'rgba(255, 255, 255, 0.1)', borderRadius:10, padding:'5%'}}>
             <View style={styles.container}>
-                <Image style={styles.image} source={require('./icons/itemticket.png')}></Image>
+                <Image style={styles.image} source={require('../icons/itemticket.png')}></Image>
                 <View style={styles.content}>
                     <Text style={styles.textTitle}>{dulieu.movietitle}</Text>
                     <Text style={styles.textTitle}>Date: {dulieu.moviedate}</Text>

@@ -9,7 +9,7 @@ const ListTicket = () => {
        {/* Phần đầu */}
        <View style={styles.header}>   
             <TouchableOpacity>
-                <Image style={styles.imagestyle} source={require('./icons/back.png')} />
+                <Image style={styles.imagestyle} source={require('../icons/back.png')} />
                 </TouchableOpacity>               
             <View style={{flex:1, justifyContent:'center', marginLeft:-50}}>
                 <Text style={[styles.textstyle, {textAlign:'center'}]}>Tickets</Text>

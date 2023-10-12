@@ -1,7 +1,17 @@
 import { StyleSheet, Text, View, Image,TouchableOpacity } from "react-native";
 import React from "react";
 
-const profile_settings = () => {
+const profile_settings = (props) => {
+
+  const { navigation } = props;
+
+  const UpdateProfile = async () => {
+    navigation.navigate('UpdateProfile');
+  }
+
+  const ChangePassword = async () => {
+    navigation.navigate('ChangePassword');
+  }
   return (
     <View style={styles.container}>
       <Image
@@ -10,7 +20,7 @@ const profile_settings = () => {
       />
        {/* Button Update Profile*/}
     <View style={styles.viewBtn}>
-      <TouchableOpacity style={styles.btnMine}>
+      <TouchableOpacity style={styles.btnMine} onPress={UpdateProfile}>
         <Image
           style={styles.imgView}
           source={require("../image/editwhite.png")}
@@ -24,7 +34,7 @@ const profile_settings = () => {
     </View>
        {/* Button change password*/}
        <View style={styles.viewBtn}>
-      <TouchableOpacity style={styles.btnMine}>
+      <TouchableOpacity style={styles.btnMine} onPress={ChangePassword}>
         <Image
           style={styles.imgView}
           source={require("../image/lock.png")}
