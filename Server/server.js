@@ -7,6 +7,24 @@
 var app = require('./app');
 var debug = require('debug')('server:server');
 var http = require('http');
+const mongoose = require('mongoose')
+const dotenv = require('dotenv');
+
+dotenv.config({ path: './config.env' });
+
+// db connection
+const DB = process.env.DATABASE.replace(
+  '<PASSWORD>',
+  process.env.DATABASE_PASSWORD
+);
+
+mongoose
+  .connect(DB, {
+    useNewUrlParser: true
+
+  })
+  .then(() => console.log('DB connection successful!'));
+
 
 /**
  * Get port from environment and store in Express.
