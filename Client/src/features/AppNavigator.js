@@ -69,20 +69,8 @@ const Profile = () => {
 
 }
 
-const AppNavigator = (props) => {
-  const {navigation} = props;
+const AppNavigator = () => {
   const { isLogin } = useContext(AppConText);
-  useEffect(() => {
-    handleGetToken();
-  }, []);
-  const handleGetToken = async () => {
-    const dataToken = await AsyncStorage.getItem("token");
-    if (!dataToken && !isLogin) {
-      return <Users/>
-    } else {
-      return <Main/>
-    }
-  };
   return (
     <>
       {
