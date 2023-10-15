@@ -10,7 +10,6 @@ import AppNavigator from "./src/features/AppNavigator";
 
 
 const Stack = createNativeStackNavigator();
-
 export default function App() {
   return (
     <AppConTextProvider>
