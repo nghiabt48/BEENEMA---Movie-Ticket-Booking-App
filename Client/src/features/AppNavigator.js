@@ -6,13 +6,15 @@ import { AppConText } from "./AppConText";
 import Logins from "./Logins";
 import Registers from "./Registers";
 import ListMovie from "./ListMovie";
-import ItemMovie from "./ItemMovie";
+import ItemMovie from "../Item/ItemMovie";
 import Test1 from "./Test1";
 import Test2 from "./Test2";
 import ProfileScreen from "./ProfileScreen";
 import ForgotEmail from "./ForgotEmail";
 import ProfileSettings from "./ProfileSettings";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import DetailMovie from "./DetailMovie";
+import ItemCast from "../Item/ItemCast";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -37,9 +39,9 @@ const Main = () => {
         tabBarIcon: ({ focused, color, size }) => {
           if (route.name === "Home") {
             return <Image source={require("../image/videoplay.png")} />;
-          } else if (route.name === "Test2") {
+          } else if (route.name === "DetailMovie") {
             return <Image source={require("../image/videoplay.png")} />;
-          } else if (route.name === "Test1") {
+          } else if (route.name === "ItemCast") {
             return <Image source={require("../image/videoplay.png")} />;
           } else if (route.name === "Profile") {
             return <Image source={require("../image/profile.png")} />;
@@ -60,13 +62,13 @@ const Main = () => {
         options={{ headerShown: false, title: "Home" }}
       />
       <Stack.Screen
-        name="Test2"
-        component={Test2}
+        name="DetailMovie"
+        component={DetailMovie}
         options={{ headerShown: false }}
       />
       <Tab.Screen
-        name="Test1"
-        component={Test1}
+        name="ItemCast"
+        component={ItemCast}
         options={{ headerShown: false }}
       />
       <Tab.Screen
@@ -91,7 +93,7 @@ const Profile = () => {
 };
 
 const AppNavigator = () => {
-  const { isLogin,setisLogin } = useContext(AppConText);
+  const { isLogin, setisLogin } = useContext(AppConText);
 
   //get token  đã  lưu từ login
   const checkToken = async () => {
