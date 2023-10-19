@@ -1,7 +1,9 @@
-import { FlatList, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import ItemCast from '../Item/ItemCast'
+import ItemReview from '../Item/ItemReview'
+import { LinearGradient } from 'expo-linear-gradient'
 
 const DetailMovie = () => {
     return (
@@ -27,6 +29,7 @@ const DetailMovie = () => {
                     <Text style={styles.text2}>dsfgdgsdfsfgdghf</Text>
                     <Text style={styles.text3}>fdgfdghfhfghfgh</Text>
                 </View>
+                {/* get cast */}
                 <FlatList
                     data={data}
                     horizontal={true}
@@ -40,13 +43,33 @@ const DetailMovie = () => {
                 {/* btn BooKing */}
                 <View style={styles.Group4}>
                     <TouchableOpacity style={styles.buttonBooking}>
-                        <View style={styles.fixToText2}>
-                            <Text style={styles.text6}>BooKing</Text>
-                            <Image source={require('../image/arrowleft.png')} style={styles.boxImage4} />
-                        </View>
+                        <LinearGradient
+                            colors={['#F34C30', '#DA004E']}
+                            style={styles.gradient}
+                            end={{ x: 0.01, y: 1 }}
+                        >
+                            <View style={styles.fixToText2}>
+                                <Text style={styles.text6}>BooKing</Text>
+                                <Image source={require('../image/arrowleft.png')} style={styles.boxImage5} />
+                            </View>
+                        </LinearGradient>
                     </TouchableOpacity>
                 </View>
+                {/* edt review */}
+                <View style={styles.Group5}>
+                    <TextInput placeholder='Create your Review...' placeholderTextColor={'#ffff'} style={styles.TextInputReview}></TextInput>
+                    <TouchableOpacity>
+                        <Image source={require('../image/plane48.png')} style={styles.boxImage6} />
+                    </TouchableOpacity>
 
+                </View>
+                <Text style={styles.text7}>REVIEWS</Text>
+                {/* get all review */}
+                <FlatList
+                    data={data}
+                    renderItem={({ item }) => <ItemReview data={item} />}
+                    keyExtractor={(item) => item._id}
+                    showsVerticalScrollIndicator={false} />
             </ScrollView>
         </SafeAreaView>
 
@@ -77,6 +100,13 @@ const styles = StyleSheet.create({
     boxImage4: {
         width: 15,
         height: 15,
+    },
+    boxImage5: {
+        width: 15,
+        height: 15,
+    },
+    boxImage6: {
+        marginLeft: 10
     },
     fixToText: {
         width: '100%',
@@ -109,7 +139,24 @@ const styles = StyleSheet.create({
     Group4: {
         width: '100%',
         alignItems: 'center',
-        marginTop:30,
+        marginTop: 30,
+    },
+    Group5: {
+        padding: 10,
+        width: '100%',
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: '#DA004E',
+        marginTop: 15,
+    },
+    Group6: {
+        justifyContent: 'space-around',
+        flexDirection: 'row',
+        marginTop: 5,
+        borderWidth: 1,
+        borderColor: '#fff',
+        borderRadius: 5
     },
     text1: {
         width: '100%',
@@ -143,7 +190,12 @@ const styles = StyleSheet.create({
     text6: {
         color: '#fff',
         fontSize: 22,
-        fontWeight:'bold'
+        fontWeight: 'bold'
+    },
+    text7: {
+        color: '#DA004E',
+        fontSize: 30,
+        alignSelf: "center"
     },
     buttonTrailer: {
         width: 150,
@@ -158,11 +210,31 @@ const styles = StyleSheet.create({
         height: 48,
         backgroundColor: '#F74346',
         borderRadius: 15,
-        
+
     },
     FlatList: {
         margin: 15
-    }
+    },
+    TextInputReview: {
+        flex: 1,
+        borderWidth: 1,
+        borderColor: '#DA004E',
+        padding: 8,
+        borderRadius: 5,
+        color: '#ffff',
+    },
+    button: {
+
+        width: '100%',
+        justifyContent: 'flex-end',
+        marginTop: 50,
+    },
+    gradient: {
+        height: 48,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 20,
+    },
 })
 const data =
     [

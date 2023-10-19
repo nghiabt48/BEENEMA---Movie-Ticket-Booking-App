@@ -53,7 +53,7 @@ const ListMovie = (props) => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.Search}>
-                <Image source={require('../image/Layer3.png')} style={styles.ImageSearch} />
+                <Image source={require('../image/Layer3.png')}/>
                 <TextInput placeholder='Search...' placeholderTextColor={'#ffff'} onChangeText={(text) => down(text)}    style={styles.TextInputSearch}></TextInput>
             </View>
             <FlatList
@@ -90,7 +90,5 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 10,
     },
-    Images: {
-        flex: 1
-    }
+    
 })
