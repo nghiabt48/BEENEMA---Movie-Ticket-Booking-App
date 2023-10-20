@@ -15,6 +15,7 @@ import ProfileSettings from "./ProfileSettings";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DetailMovie from "./DetailMovie";
 import ItemCast from "../Item/ItemCast";
+import Maps from "./Maps";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -44,6 +45,8 @@ const Main = () => {
           } else if (route.name === "ItemCast") {
             return <Image source={require("../image/videoplay.png")} />;
           } else if (route.name === "Profile") {
+            return <Image source={require("../image/profile.png")} />;
+          } else if (route.name === "Map") {
             return <Image source={require("../image/profile.png")} />;
           }
         },
@@ -75,6 +78,11 @@ const Main = () => {
         name="Profile"
         component={Profile}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Map"
+        component={Maps}
+        options={{ headerShown: false, title: "Maps" }}
       />
     </Tab.Navigator>
   );
