@@ -4,22 +4,34 @@ const factory = require('./handleFactory');
 const Movie = require('./../model/movieModel');
 const multer = require('multer')
 const sharp = require('sharp');
+const dotenv = require('dotenv');
+dotenv.config({ path: './config.env' });
+const { initializeApp } = require("firebase/app");
+const { getStorage, ref, getDownloadURL, uploadBytesResumable } = require("firebase/storage");
+// firebase config
+const firebaseConfig = {
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID
+};
+initializeApp(firebaseConfig)
+const storage = getStorage()
 
 const multerStorage = multer.memoryStorage()
-const multerFilter = (req, file, cb) => {
-  if(file.mimetype.startsWith('image')) cb(null, true)
-  else cb(new AppError('Not an image! Please upload only images.', 400), false);
-}
 const upload = multer({
-  storage: multerStorage,
-  fileFilter: multerFilter
+  storage: multerStorage
 });
-exports.uploadMovieImages = upload.fields([
+
+exports.uploadMovieImageAndTrailer = upload.fields([
   { name: 'imageCover', maxCount: 1 },
-  { name: 'images', maxCount: 3 }
+  { name: 'trailer', maxCount: 1 }
 ]);
 exports.resizeMovieImages = catchAsync(async (req, res, next) => {
-  if (!req.files.imageCover && !req.files.images) return next();
+  if (!req.files.imageCover) return next();
   // 1) Cover image
   req.body.imageCover = `movie-${Date.now()}-${req.files.imageCover[0].originalname}-cover.jpeg`;
   await sharp(req.files.imageCover[0].buffer)
@@ -27,25 +39,6 @@ exports.resizeMovieImages = catchAsync(async (req, res, next) => {
     .toFormat('jpeg')
     .jpeg({ quality: 90 })
     .toFile(`public/img/movies/${req.body.imageCover}`);
-
-  // 2) Images
-  if(req.body.images){
-    req.body.images = [];
-    await Promise.all(
-      req.files.images.map(async (file, i) => {
-        const filename = `movies-${req.params.id}-${Date.now()}-${i + 1}.jpeg`;
-  
-        await sharp(file.buffer)
-          .resize(1000, 1500)
-          .toFormat('jpeg')
-          .jpeg({ quality: 90 })
-          .toFile(`public/img/movies/${filename}`);
-  
-        req.body.images.push(filename);
-      })
-    );
-  }
-  
 
   next();
 });
@@ -60,46 +53,45 @@ exports.TopSellingMovie = (req, res, next) => {
 };
 exports.getAllMovies = factory.getAll(Movie)
 //Get product by _id
-exports.getMovieByID = factory.getOne(Movie, {path: 'reviews', select: '-__v'})
+exports.getMovieByID = factory.getOne(Movie, { path: 'reviews', select: '-__v' })
 exports.getMovieByName = catchAsync(async (req, res, next) => {
   const title = req.query.title
-  const movie = await Movie.find({title: {$regex: title, $options: 'i'}})
+  const movie = await Movie.find({ title: { $regex: title, $options: 'i' } })
   res.status(200).json({
     status: 'success',
     movie
   })
 })
+
+exports.saveMovieTrailerToStorage = catchAsync(async (req, res, next) => {
+  if(!req.files.trailer) return next()
+    const storageRef = ref(storage, `files/${req.files.trailer[0].originalname}`);
+    // Create file metadata including the content type
+    const metadata = {
+        contentType: req.files.trailer[0].mimetype,
+    };
+
+    // Upload the file in the bucket storage
+    const snapshot = await uploadBytesResumable(storageRef, req.files.trailer[0].buffer, metadata);
+    //by using uploadBytesResumable we can control the progress of uploading like pause, resume, cancel
+
+    // Grab the public url
+    const downloadURL = await getDownloadURL(snapshot.ref);
+    req.body.trailer = downloadURL
+    next()
+})
 // Create new product
 exports.createMovie = catchAsync(async (req, res, next) => {
+  
   const movie = await Movie.create(req.body)
   res.status(201).json({
     status: 'success',
     data: movie
   })
 })
-// router.post('/add',upload.single('image'), async (req, res) => {
-//   try {
-//     req.body.image = req.file.filename
-//     await Product.create(req.body);
-//     res.redirect('table')
-//   } catch (err) {
-//     res.status(400).json({
-//       status: 'failed',
-//       message: err
-//     });
-//   }
-// })
+
 // Update product
 exports.updateMovie = factory.updateOne(Movie)
-// router.patch('/table/:id', upload.single('image'), async (req, res) => {
-//   try{
-//     req.body.image = req.file.filename
-//     await Product.findByIdAndUpdate(req.params.id, req.body, {runValidators: true})
-//     res.redirect('/products/table')
-//   } catch (err) {
-//     res.send('err while updating product: ' + err.message)
-//   }
-// })
 exports.deleteMovie = factory.deleteOne(Movie)
 
 
