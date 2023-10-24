@@ -4,7 +4,9 @@ import React from 'react'
 const ItemMovie = (props) => {
   const { data, navigation } = props;
   const ImageURL = `http://149.28.159.68:3000/img/movies/${data.imageCover}`
-
+  const goDetail = function() {
+    navigation.navigate('DetailMovie', {data, ImageURL})
+  }
   const shortenText = (text, maxLength) => {
     if (text.length > maxLength) {
       return text.substring(0, maxLength - 3) + '...';
@@ -12,7 +14,7 @@ const ItemMovie = (props) => {
     return text;
   };
   return (
-    <TouchableOpacity style={styles.container}> 
+    <TouchableOpacity style={styles.container} onPress={goDetail}> 
       <View style={styles.Group}>
         <Image source={{uri: ImageURL}} style={styles.Image}/>
         <Text style={styles.Text1}>{shortenText(data.title, 14)}</Text>

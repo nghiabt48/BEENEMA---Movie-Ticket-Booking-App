@@ -1,23 +1,71 @@
-import { FlatList, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import { ActivityIndicator, FlatList, Image, ScrollView, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import ItemCast from '../Item/ItemCast'
 import ItemReview from '../Item/ItemReview'
 import { LinearGradient } from 'expo-linear-gradient'
+import ItemActor from '../Item/ItemActor'
+import AxiosIntance from './AxiosIntance'
+import { MaterialIcons } from '@expo/vector-icons';
 
-const DetailMovie = () => {
+const DetailMovie = (props) => {
+    const { route } = props
+    const { navigation } = props;
+    const { params } = route
+    const [reviews, setreviews] = useState([])
+    const [loading, setloading] = useState(false)
+    const [review, setreview] = useState("");
+    const [rating, setrating] = useState("");
+    
+
+    useEffect(() => {
+        const fetchReviews = async () =>{
+            setloading(true)
+            const response = await AxiosIntance().get(`movies/${params.data._id}/reviews`);
+            if (response.status == "success") {
+                setreviews(response.data.data);
+                setloading(false)
+            } else {
+                setloading(false)
+                
+            }
+        }
+        fetchReviews();
+        
+        return () => {
+
+        }
+    }, []);
+    
+    const Post = async () => {
+        const response = await AxiosIntance().post(`movies/${params.data._id}/reviews`, { review: review, rating: rating });
+        setloading(true)
+        if (response.error == true) {
+            ToastAndroid.show("Đăng review thất bại", ToastAndroid.SHORT);
+            setloading(false)
+        } else {          
+            ToastAndroid.show("Đăng review thành công", ToastAndroid.SHORT);
+            setloading(false)
+
+        }
+    }
+    const Back = () => {
+        navigation.navigate("ListMovie")
+    }
+    const TrailerClick = () => {
+        navigation.navigate("Trailer", { trailer: params.data.trailer })
+    }
     return (
 
         <SafeAreaView style={styles.container}>
             <ScrollView>
-                <Image source={require('../image/image3.png')} style={styles.boxImage2} />
+                <Image source={{ uri: params.ImageURL }} style={styles.boxImage2} />
                 {/* btn Back */}
-                <TouchableOpacity style={styles.Group1}>
+                <TouchableOpacity style={styles.Group1} onPress={Back}>
                     <Image source={require('../image/Back.png')} style={styles.boxImage1} />
                 </TouchableOpacity>
                 {/* btn trailer */}
                 <View style={styles.Group2}>
-                    <TouchableOpacity style={styles.buttonTrailer}>
+                    <TouchableOpacity style={styles.buttonTrailer} onPress={TrailerClick}>
                         <View style={styles.fixToText}>
                             <Image source={require('../image/Play.png')} style={styles.boxImage3} />
                             <Text style={styles.text4}>Trailer</Text>
@@ -26,19 +74,19 @@ const DetailMovie = () => {
                 </View>
 
                 <View style={styles.Group3}>
-                    <Text style={styles.text2}>dsfgdgsdfsfgdghf</Text>
-                    <Text style={styles.text3}>fdgfdghfhfghfgh</Text>
+                    <Text style={styles.text2}>{params.data.title}</Text>
+                    <Text style={styles.text3}>{params.data.category}</Text>
                 </View>
-                {/* get cast */}
+                {/* get actor */}
                 <FlatList
                     data={data}
                     horizontal={true}
                     style={styles.FlatList}
-                    renderItem={({ item }) => <ItemCast data={item} />}
+                    renderItem={({ item }) => <ItemActor data={item} />}
                     keyExtractor={(item) => item._id}
                     showsVerticalScrollIndicator={false} />
                 <View style={styles.Group3}>
-                    <Text style={styles.text5}>fdgfdghfhfghfghdfsdfsdfsdfdsfdfd</Text>
+                    <Text style={styles.text5}>{params.data.description}</Text>
                 </View>
                 {/* btn BooKing */}
                 <View style={styles.Group4}>
@@ -57,19 +105,69 @@ const DetailMovie = () => {
                 </View>
                 {/* edt review */}
                 <View style={styles.Group5}>
-                    <TextInput placeholder='Create your Review...' placeholderTextColor={'#ffff'} style={styles.TextInputReview}></TextInput>
-                    <TouchableOpacity>
-                        <Image source={require('../image/plane48.png')} style={styles.boxImage6} />
-                    </TouchableOpacity>
-
+                    <TextInput placeholder='Create your Review...'
+                        placeholderTextColor={'#ffff'}
+                        style={styles.TextInputReview}
+                        onChangeText={setreview}></TextInput>
+                    {/* btn Post */}
+                    {
+                        rating >= 1 && review != "" ? <TouchableOpacity onPress={Post}>
+                            <Image source={require('../image/plane48.png')} style={styles.boxImage6} />
+                        </TouchableOpacity>
+                            : null
+                    }
+                </View>
+                <View style={styles.container1}>
+                    <Text style={styles.heading}>Tap to rate</Text>
+                    <View style={styles.stars}>
+                        <TouchableOpacity onPress={() => setrating(1)}>
+                            <MaterialIcons
+                                name={rating >= 1 ? 'star' : 'star-border'}
+                                size={32}
+                                style={rating >= 1 ? styles.starSelected : styles.starUnselected}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => setrating(2)}>
+                            <MaterialIcons
+                                name={rating >= 2 ? 'star' : 'star-border'}
+                                size={32}
+                                style={rating >= 2 ? styles.starSelected : styles.starUnselected}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => setrating(3)}>
+                            <MaterialIcons
+                                name={rating >= 3 ? 'star' : 'star-border'}
+                                size={32}
+                                style={rating >= 3 ? styles.starSelected : styles.starUnselected}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => setrating(4)}>
+                            <MaterialIcons
+                                name={rating >= 4 ? 'star' : 'star-border'}
+                                size={32}
+                                style={rating >= 4 ? styles.starSelected : styles.starUnselected}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => setrating(5)}>
+                            <MaterialIcons
+                                name={rating >= 5 ? 'star' : 'star-border'}
+                                size={32}
+                                style={rating >= 5 ? styles.starSelected : styles.starUnselected}
+                            />
+                        </TouchableOpacity>
+                    </View>
                 </View>
                 <Text style={styles.text7}>REVIEWS</Text>
                 {/* get all review */}
-                <FlatList
-                    data={data}
-                    renderItem={({ item }) => <ItemReview data={item} />}
-                    keyExtractor={(item) => item._id}
-                    showsVerticalScrollIndicator={false} />
+                <View>
+                    {
+                        loading == true ? (
+                            <ActivityIndicator size="large" />
+                        ) : (
+                            reviews.map((item, _id) => <ItemReview item={item} key={_id} />)
+                        )
+                    }
+                </View>
             </ScrollView>
         </SafeAreaView>
 
@@ -82,6 +180,12 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#130B2B',
+    },
+    container1: {
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 20,
     },
     boxImage1: {
         width: 40,
@@ -234,6 +338,21 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 20,
+    },
+    heading: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 20,
+        color: '#fff'
+    },
+    stars: {
+        display: 'flex',
+        flexDirection: 'row',
+    },
+    heading: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 20,
     },
 })
 const data =
