@@ -2,11 +2,17 @@ import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import * as Location from "expo-location";
 import { SafeAreaView } from "react-native-safe-area-context";
-import MapView, { Marker } from "react-native-maps"; // Import Marker from react-native-maps
-
+import MapView, { Marker } from "react-native-maps";
+import cinemaMarkerImage from '../image/cinema3.png';
+import userMarkerImage from '../image/userlocation.png';
 const Maps = () => {
   const [location, setLocation] = useState(null);
   const mapRef = useRef(null); // Ref cho MapView
+  const [theaters, setTheaters] = useState([
+    { id: 1, name: "CGV Hoàng Văn Thụ", latitude: 10.79883, longitude: 106.66101 },
+    { id: 2, name: "Galaxy Cinema Nguyễn Văn Quá", latitude: 10.84716047399322, longitude: 106.63405551525818 },
+    // Add more theaters here
+  ]);
 
   useEffect(() => {
     const getPermissions = async () => {
@@ -52,8 +58,21 @@ const Maps = () => {
               longitude: location.coords.longitude,
             }}
             title="You are here"
+            image={userMarkerImage}
           />
         )}
+        {theaters.map((theater) => (
+          <Marker
+            key={theater.id}
+            coordinate={{
+              latitude: theater.latitude,
+              longitude: theater.longitude,
+            }}
+            title={theater.name}
+           
+            image={cinemaMarkerImage}
+          />
+        ))} 
       </MapView>
     </SafeAreaView>
   );
