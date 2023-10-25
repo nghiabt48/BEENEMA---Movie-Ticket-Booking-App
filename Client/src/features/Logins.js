@@ -14,7 +14,7 @@ const Logins = (props) => {
             const response = await AxiosIntance().post("users/login", { email: emailUser, password: passwordUser });
             await AsyncStorage.setItem('token', response.token);
             ToastAndroid.show("Logged in successfully", ToastAndroid.SHORT);
-            setisLogin(true)
+            setisLogin(true) 
         } catch (e) {
             console.log(e.response.data.message)
             ToastAndroid.show(e.response.data.message, ToastAndroid.SHORT);
@@ -23,6 +23,10 @@ const Logins = (props) => {
     }
     const RegisterApp = async () => {
         navigation.navigate('Register');
+    }
+
+    const navigateToForgotPassword = () =>{
+        navigation.navigate('Forgot');
     }
   return (
     <View style={styles.container}>
@@ -47,7 +51,7 @@ const Logins = (props) => {
                     autoCorrect={false}></TextInput>
             </View>
             <View style={styles.Group3}>
-                <Text style={styles.Text4}>Forget password?</Text>
+                <Text style={styles.Text4} onPress={navigateToForgotPassword}>Forget password?</Text>
             </View>
             <TouchableOpacity style={styles.button} onPress={LoginApp}>
                 <LinearGradient
