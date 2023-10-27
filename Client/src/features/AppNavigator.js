@@ -16,6 +16,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import DetailMovie from "./DetailMovie";
 import ItemCast from "../Item/ItemCast";
 import Maps from "./Maps";
+import UpdateProfile from "./UpdateProfile";
+import ChangePassword from "./ChangePassword";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -96,6 +98,8 @@ const Profile = () => {
     >
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
       <Stack.Screen name="ProfileSettings" component={ProfileSettings} />
+      <Stack.Screen name="UpdateProfile" component={UpdateProfile} />
+      <Stack.Screen name="ChangePassword" component={ChangePassword} />
     </Stack.Navigator>
   );
 };
