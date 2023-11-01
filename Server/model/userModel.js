@@ -51,9 +51,9 @@ const userSchema = new mongoose.Schema({
       enum: ['Point']
     },
     coordinates: [Number], // [longtitude, latitude]
-    address: String,
     description: String
-  }
+  },
+  address: String
 })
 userSchema.index({ location: '2dsphere' })
 userSchema.pre('save', async function(next) {

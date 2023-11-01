@@ -14,10 +14,11 @@ import ForgotEmail from "./ForgotEmail";
 import ProfileSettings from "./ProfileSettings";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DetailMovie from "./DetailMovie";
-import ItemCast from "../Item/ItemCast";
 import Maps from "./Maps";
 import UpdateProfile from "./UpdateProfile";
 import ChangePassword from "./ChangePassword";
+import Trailer from "./Trailer";
+
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -42,9 +43,9 @@ const Main = () => {
         tabBarIcon: ({ focused, color, size }) => {
           if (route.name === "Home") {
             return <Image source={require("../image/videoplay.png")} />;
-          } else if (route.name === "DetailMovie") {
+          } else if (route.name === "Test1") {
             return <Image source={require("../image/videoplay.png")} />;
-          } else if (route.name === "ItemCast") {
+          } else if (route.name === "Test2") {
             return <Image source={require("../image/videoplay.png")} />;
           } else if (route.name === "Profile") {
             return <Image source={require("../image/profile.png")} />;
@@ -63,17 +64,17 @@ const Main = () => {
     >
       <Stack.Screen
         name="Home"
-        component={ListMovie}
+        component={BooKing}
         options={{ headerShown: false, title: "Home" }}
       />
       <Stack.Screen
-        name="DetailMovie"
-        component={DetailMovie}
+        name="Test1"
+        component={Test1}
         options={{ headerShown: false }}
       />
       <Tab.Screen
-        name="ItemCast"
-        component={ItemCast}
+        name="Test2"
+        component={Test2}
         options={{ headerShown: false }}
       />
       <Tab.Screen
@@ -103,7 +104,18 @@ const Profile = () => {
     </Stack.Navigator>
   );
 };
-
+const BooKing = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName="ListMovie"
+      screenOptions={{ headerShown: false }}
+    >
+      <Stack.Screen name="ListMovie" component={ListMovie} />
+      <Stack.Screen name="DetailMovie" component={DetailMovie} />
+      <Stack.Screen name="Trailer" component={Trailer} />
+    </Stack.Navigator>
+  );
+};
 const AppNavigator = () => {
   const { isLogin, setisLogin } = useContext(AppConText);
 
