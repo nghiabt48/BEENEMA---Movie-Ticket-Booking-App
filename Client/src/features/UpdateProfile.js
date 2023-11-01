@@ -6,7 +6,7 @@ import AxiosIntance from './AxiosIntance';
 import * as ImagePicker from 'expo-image-picker';
 
 const UpdateProfile = (props) => {
-    const { navigation } = props;
+    const { navigation } = props;z
     const {infoUser, setinfoUser} = useContext(AppConText);
     const ImageURL = "http://149.28.159.68:3000/img/users/";
    
@@ -100,7 +100,7 @@ const UpdateProfile = (props) => {
         <View style={styles.updateimagecontainer}>   
             <TouchableOpacity onPress={pickImage}>
                 {
-                    infoUser.avatar !=""
+                    infoUser.avatar !=null
                     ?
                     <Image style={styles.updateimage} source={{uri:`${ImageURL}${infoUser.avatar}`}}/>
                     :
