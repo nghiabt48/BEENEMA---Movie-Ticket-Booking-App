@@ -73,7 +73,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   }
   // 2) Filtered out unwanted fields names that are not allowed to be updated
         //Chỉ được update những field này 
-  const filteredBody = filterObj(req.body, 'avatar','name', 'email', 'phone_number', 'address');
+  const filteredBody = filterObj(req.body, 'avatar','username', 'email', 'phone_number', 'address', 'location');
   if (req.file) filteredBody.photo = req.file.filename;
 
   // 3) Update user document
