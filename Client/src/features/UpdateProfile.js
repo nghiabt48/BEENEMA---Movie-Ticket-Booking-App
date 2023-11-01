@@ -100,7 +100,7 @@ const UpdateProfile = (props) => {
         <View style={styles.updateimagecontainer}>   
             <TouchableOpacity onPress={pickImage}>
                 {
-                    infoUser.avatar !=""
+                    infoUser.avatar !=null
                     ?
                     <Image style={styles.updateimage} source={{uri:`${ImageURL}${infoUser.avatar}`}}/>
                     :

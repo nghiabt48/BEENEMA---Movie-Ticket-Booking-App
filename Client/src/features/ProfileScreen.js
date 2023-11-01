@@ -34,8 +34,8 @@ const ProfileScreen = (props) => {
   }, []);
 
   //check  avatar user có hay chưa nếu chưa thì sẽ mặc định hiển thị avatar.png
-  const userAvatar = data.photo
-    ? { uri: `${ImageURL}${data.photo}` }
+  const userAvatar = data.avatar
+    ? { uri: `${ImageURL}${data.avatar}` }
     : require("../image/avatar.png");
 
   //Sign Out
