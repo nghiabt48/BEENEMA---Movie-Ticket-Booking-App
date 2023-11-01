@@ -8,14 +8,6 @@ const ProfileSettings = (props) => {
     const goBack = () =>{
         navigation.goBack();
     }
-    
-    const changePassword = () =>{
-      navigation.navigate('ChangePassword');
-    }
-    
-    const updateProfile = () =>{
-      navigation.navigate('UpdateProfile');
-    }
   return (
     <SafeAreaView style={styles.container}>
       <View style={{ flexDirection: "row"}}>
@@ -30,7 +22,7 @@ const ProfileSettings = (props) => {
       />
       {/* Button Update Profile*/}
       <View style={styles.viewBtn}>
-        <TouchableOpacity style={styles.btnMine} onPress={updateProfile}>
+        <TouchableOpacity style={styles.btnMine}>
           <Image
             style={styles.imgView}
             source={require("../image/editwhite.png")}
@@ -44,7 +36,7 @@ const ProfileSettings = (props) => {
       </View>
       {/* Button change password*/}
       <View style={styles.viewBtn}>
-        <TouchableOpacity style={styles.btnMine} onPress={changePassword}>
+        <TouchableOpacity style={styles.btnMine}>
           <Image style={styles.imgView} source={require("../image/lock.png")} />
           <Text style={styles.buttonText1}>Change password</Text>
           <Image
