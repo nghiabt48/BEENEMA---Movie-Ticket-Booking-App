@@ -11,6 +11,7 @@ const paymentRouter = require('./router/paymentRouter')
 const reviewRouter = require('./router/reviewRouter')
 const showtimeRouter = require('./router/showtimeRouter')
 const bookingRouter = require('./router/bookingRouter')
+const actorRouter = require('./router/actorRouter')
 
 const globalErrorHandler = require('./controller/errorController');
 const AppError = require('./utils/appError');
@@ -42,6 +43,7 @@ app.use('/api/cinemas', cinemaRouter)
 app.use('/api/tickets', ticketRouter)
 app.use('/api/payments', paymentRouter)
 app.use('/api/bookings', bookingRouter)
+app.use('/api/actors', actorRouter)
 // error handler
 
 app.all('*', (req, res, next) => {
