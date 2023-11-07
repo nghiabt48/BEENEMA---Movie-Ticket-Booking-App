@@ -3,7 +3,7 @@ import React from 'react'
 
 const ItemReview = (props) => {
     const { item, _id } = props;
-    const ImageURL = `http://149.28.159.68:3000/img/users/${item.user.photo}`
+    const ImageURL = `http://149.28.159.68:3000/img/users/${item.user.avatar}`
     return (
         <View key={_id} style={styles.container}>
             <Image source={{ uri: ImageURL }} style={styles.Image} />

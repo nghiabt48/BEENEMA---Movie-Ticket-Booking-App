@@ -51,7 +51,7 @@ const DetailMovie = (props) => {
         navigation.navigate("ListMovie")
     }
     const TrailerClick = () => {
-        navigation.navigate("Trailer", { trailer: params.data.trailer })
+        navigation.navigate("Trailer", { trailer: params.data.trailer, title: params.data.title })
     }
     return (
 
