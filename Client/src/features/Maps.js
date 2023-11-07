@@ -2,18 +2,15 @@ import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import * as Location from "expo-location";
 import { SafeAreaView } from "react-native-safe-area-context";
-import MapView, { Marker } from "react-native-maps";
-import cinemaMarkerImage from '../image/cinema3.png';
-import userMarkerImage from '../image/userlocation.png';
+import MapView, { Callout, Marker } from "react-native-maps";
+import cinemaMarkerImage from "../image/cinema3.png";
+import userMarkerImage from "../image/userlocation.png";
+import AxiosIntance from "./AxiosIntance";
 const Maps = () => {
   const [location, setLocation] = useState(null);
   const mapRef = useRef(null); // Ref cho MapView
-  const [theaters, setTheaters] = useState([
-    { id: 1, name: "CGV Hoàng Văn Thụ", latitude: 10.79883, longitude: 106.66101 },
-    { id: 2, name: "Galaxy Cinema Nguyễn Văn Quá", latitude: 10.84716047399322, longitude: 106.63405551525818 },
-    // Add more theaters here
-  ]);
-
+  const [theaters, setTheaters] = useState([]);
+  const [distances,setDistances] = useState();
   useEffect(() => {
     const getPermissions = async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -24,7 +21,6 @@ const Maps = () => {
 
       let currentLocation = await Location.getCurrentPositionAsync({});
       setLocation(currentLocation);
-      console.log(currentLocation);
 
       // Di chuyển bản đồ đến vị trí hiện tại
       if (mapRef.current && currentLocation) {
@@ -37,7 +33,34 @@ const Maps = () => {
       }
     };
     getPermissions();
+    getCinema();
+    getCinemaDistance();
   }, []);
+
+  const getCinema = async () => {
+    const respone = await AxiosIntance().get("/cinemas");
+    if (respone.status === "success") {
+      setTheaters(respone.data.data);
+      // console.log(respone.data.data);
+    } else {
+      ToastAndroid.show("Something went wrong!", ToastAndroid.SHORT);
+    }
+  };
+
+  const getCinemaDistance = async () => {
+    let currentLocation = await Location.getCurrentPositionAsync({});
+    const latitude = currentLocation.coords.latitude;
+    const longitude = currentLocation.coords.longitude;
+    const respone = await AxiosIntance().get(
+      `/cinemas/distances/${latitude},${longitude}`
+    );
+    if (respone.status === "success") {
+      setDistances(respone.data.data);
+      console.log(respone.data.data);
+    } else {
+      ToastAndroid.show("Something went wrong!", ToastAndroid.SHORT);
+    }
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "gray" }}>
@@ -62,17 +85,23 @@ const Maps = () => {
           />
         )}
         {theaters.map((theater) => (
+          
           <Marker
-            key={theater.id}
+            key={theater._id}
             coordinate={{
-              latitude: theater.latitude,
-              longitude: theater.longitude,
+              latitude: theater.location.coordinates[1],
+              longitude: theater.location.coordinates[0],
             }}
             title={theater.name}
-           
             image={cinemaMarkerImage}
-          />
-        ))} 
+          >
+            <Callout>
+              <Text>{theater.name}</Text>
+              <Text>{distances.name}</Text>
+              {/* Hiển thị khoảng cách ở đây */}
+            </Callout>
+          </Marker>
+        ))}
       </MapView>
     </SafeAreaView>
   );
