@@ -8,7 +8,7 @@ const actorSchema = new mongoose.Schema({
   },
   dob: Date,
   country: String,
-  gender: String
+  avatar: String
 })
 const Actor = mongoose.model('Actor', actorSchema)
 module.exports = Actor
