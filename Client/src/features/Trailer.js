@@ -42,24 +42,24 @@ export default Trailer
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
+    padding:10
   },
   video: {
     alignSelf: 'center',
-    width: 320,
+    width: "100%",
     height: 200,
   },
   Group1: {
-
+    marginTop: 10,
   },
   Group2: {
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    flex:1
   },
   boxImage1: {
     width: 40,
     height: 40,
-    marginStart: 15,
-    marginTop: 10,
+
   },
 })
