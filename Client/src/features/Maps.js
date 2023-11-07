@@ -10,7 +10,7 @@ const Maps = () => {
   const [location, setLocation] = useState(null);
   const mapRef = useRef(null); // Ref cho MapView
   const [theaters, setTheaters] = useState([]);
-  const [distances,setDistances] = useState();
+  const [distances, setDistances] = useState([]);
   useEffect(() => {
     const getPermissions = async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -55,8 +55,8 @@ const Maps = () => {
       `/cinemas/distances/${latitude},${longitude}`
     );
     if (respone.status === "success") {
-      setDistances(respone.data.data);
-      console.log(respone.data.data);
+      setDistances(respone.data.distances);
+      console.log(respone.data.distances);
     } else {
       ToastAndroid.show("Something went wrong!", ToastAndroid.SHORT);
     }
@@ -84,24 +84,35 @@ const Maps = () => {
             image={userMarkerImage}
           />
         )}
-        {theaters.map((theater) => (
-          
-          <Marker
-            key={theater._id}
-            coordinate={{
-              latitude: theater.location.coordinates[1],
-              longitude: theater.location.coordinates[0],
-            }}
-            title={theater.name}
-            image={cinemaMarkerImage}
-          >
-            <Callout>
-              <Text>{theater.name}</Text>
-              <Text>{distances.name}</Text>
-              {/* Hiển thị khoảng cách ở đây */}
-            </Callout>
-          </Marker>
-        ))}
+        {theaters.map((theater) => {
+          const distanceInfo = distances.find(
+            (item) => item._id === theater._id
+          );
+          const distance = distanceInfo ? distanceInfo.distance : "N/A";
+
+          return (
+            <Marker
+              key={theater._id}
+              coordinate={{
+                latitude: theater.location.coordinates[1],
+                longitude: theater.location.coordinates[0],
+              }}
+              title={theater.name}
+              image={cinemaMarkerImage}
+            >
+              <Callout >
+                <Text>
+                  <Text>Rạp : </Text>
+                  <Text style={styles.txt}>{theater.name}</Text>
+                </Text>
+                <Text>
+                  <Text>Khoảng Cách : </Text>
+                  <Text style={styles.txt}>{distance} Kilometers</Text>
+                </Text>
+              </Callout>
+            </Marker>
+          );
+        })}
       </MapView>
     </SafeAreaView>
   );
@@ -113,5 +124,8 @@ const styles = StyleSheet.create({
   map: {
     width: "100%",
     height: "100%",
+  },
+  txt: {
+    fontWeight: "bold",
   },
 });
