@@ -50,10 +50,11 @@ exports.getDistance = catchAsync(async(req, res, next) => {
       }
     }
   ])
+  distances.map(item => item.distance = item.distance.toFixed(2))
   res.status(200).json({
     status: 'success',
     data: {
-      data: distances
+      distances
     }
   })
 })
