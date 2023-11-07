@@ -18,7 +18,7 @@ import Maps from "./Maps";
 import UpdateProfile from "./UpdateProfile";
 import ChangePassword from "./ChangePassword";
 import Trailer from "./Trailer";
-
+import SeatCinema from "./SeatCinema"
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -60,6 +60,7 @@ const Main = () => {
         tabBarLabelStyle: {
           fontWeight: "700",
         },
+        tabBarHideOnKeyboard: true,
       })}
     >
       <Stack.Screen
@@ -69,7 +70,7 @@ const Main = () => {
       />
       <Stack.Screen
         name="Test1"
-        component={Test1}
+        component={SeatCinema}
         options={{ headerShown: false }}
       />
       <Tab.Screen

@@ -17,10 +17,10 @@ const SeatCinema = () => {
     const renderSeats = () => {
         const seatLayout = [];
 
-        for (let row = 1; row <= 7; row++) {
+        for (let column = 1; column <= 6; column++) {
             const rowSeats = [];
             for (let seat = 1; seat <= 9; seat++) {
-                const seatNumber = row * 10 + seat;
+                const seatNumber = column * 10 + seat;
                 const isSelected = selectedSeats.includes(seatNumber);
 
                 rowSeats.push(
@@ -38,7 +38,7 @@ const SeatCinema = () => {
             }
 
             seatLayout.push(
-                <View key={row} style={styles.row}>
+                <View key={column} style={styles.row}>
                     {rowSeats}
                 </View>
             );
@@ -77,6 +77,24 @@ const SeatCinema = () => {
             <View style={styles.viewGroup3}>
                 {renderSeats()}
             </View>
+            <View style={styles.viewGroup5}>
+                <View style={styles.Group5}>
+                    <View style={styles.viewwhite}></View>
+                    <Text style={styles.textAvailable}>Available</Text>
+                </View>
+                <View style={styles.Group5}>
+                    <View style={styles.viewred}></View>
+                    <Text style={styles.textAvailable}>Resered</Text>
+                </View>
+                <View style={styles.Group5}>
+                    <View style={styles.viewgreen}></View>
+                    <Text style={styles.textAvailable}>Selected</Text>
+                </View>
+            </View>
+            {/* btn booking */}
+            <Text style={styles.selectedSeatsText}>
+                Selected Seats: {selectedSeats.join(', ')}
+            </Text>
             <View style={styles.Group4}>
                 <TouchableOpacity style={styles.buttonBooking}>
                     <LinearGradient
@@ -106,7 +124,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#130B2B',
-        padding: 15
+        padding: 15,
     },
     row: {
         flexDirection: 'row'
@@ -116,18 +134,18 @@ const styles = StyleSheet.create({
         height: 20,
         justifyContent: 'center',
         alignItems: 'center',
-        margin: 5,
+        margin: 8,
 
     },
     // selectedSeat: {
     //     backgroundColor: 'blue',
 
     // },
-    // selectedSeatsText: {
-    //     marginTop: 20,
-    //     fontSize: 16,
-    //     color: '#fff'
-    // },
+    selectedSeatsText: {
+        marginTop: 20,
+        fontSize: 16,
+        color: '#fff'
+    },
     textseat: {
         color: '#F74346',
         fontSize: 23,
@@ -160,6 +178,13 @@ const styles = StyleSheet.create({
         padding: 10,
         alignItems: 'center'
     },
+    viewGroup5: {
+        flexDirection: 'row',
+        padding: 10,
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginTop: '5%'
+    },
     textTitile: {
         color: '#fff',
         marginLeft: 5,
@@ -179,7 +204,7 @@ const styles = StyleSheet.create({
         paddingStart: '5%',
         paddingEnd: '5%',
         alignItems: 'center',
-        marginTop: '15%',
+        marginTop: '10%',
     },
     gradient: {
         alignItems: 'center',
@@ -202,14 +227,42 @@ const styles = StyleSheet.create({
         width: 30,
         height: 25,
     },
-    Group3:{
-        flexDirection:'row',
-        alignItems:'center'
+    Group3: {
+        flexDirection: 'row',
+        alignItems: 'center'
     },
-    textPice:{
-        color:'#fff',
-        fontSize:17,
-        fontWeight:'400',
+    textPice: {
+        color: '#fff',
+        fontSize: 17,
+        fontWeight: '400',
         marginLeft: 5
+    },
+    textAvailable: {
+        color: 'white',
+        fontSize: 12,
+        fontWeight: '300',
+        marginLeft: '7%'
+    },
+    Group5: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    viewwhite: {
+        backgroundColor: 'white',
+        width: 12,
+        height: 12,
+        borderRadius: 100,
+    },
+    viewred: {
+        backgroundColor: '#DA004E',
+        width: 12,
+        height: 12,
+        borderRadius: 100,
+    },
+    viewgreen: {
+        backgroundColor: '#6AFF70',
+        width: 12,
+        height: 12,
+        borderRadius: 100,
     }
 })

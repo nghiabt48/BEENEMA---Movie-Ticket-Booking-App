@@ -10,15 +10,19 @@ const Trailer = (props) => {
   const navigation = useNavigation();
   const { params } = route
   const trailer = params.trailer
-  
+  const title = params.title
+
   const Back = () => {
     navigation.goBack();
   }
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity style={styles.Group1} onPress={Back}>
-        <Image source={require('../image/Back.png')} style={styles.boxImage1} />
-      </TouchableOpacity>
+      <View style={styles.viewGroup1}>
+        <TouchableOpacity onPress={Back}>
+          <Image style={styles.boxImage1} source={require('../image/Back.png')}></Image>
+        </TouchableOpacity>
+        <Text style={styles.textTrailer}>Trailer</Text>
+      </View>
       <View style={styles.Group2}>
         <Video
           ref={video}
@@ -31,6 +35,7 @@ const Trailer = (props) => {
           isLooping
 
         />
+        <Text style={styles.textTitle}>{title}</Text>
       </View>
 
     </SafeAreaView>
@@ -42,7 +47,8 @@ export default Trailer
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding:10
+    padding: 10,
+    backgroundColor: '#130B2B'
   },
   video: {
     alignSelf: 'center',
@@ -55,11 +61,29 @@ const styles = StyleSheet.create({
   Group2: {
     justifyContent: 'center',
     alignItems: 'center',
-    flex:1
+    flex: 1
   },
   boxImage1: {
     width: 40,
     height: 40,
 
   },
+  viewGroup1: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+  },
+  textTrailer: {
+    color: '#fff',
+    fontSize: 22,
+    fontWeight: 'bold',
+    flex: 1,
+    textAlign: 'center'
+  },
+  textTitle: {
+    color: '#fff',
+    fontSize: 26,
+    fontWeight: 'bold',
+    marginStart: 15,
+  }
 })
