@@ -25,7 +25,8 @@ const reviewSchema = new mongoose.Schema({
   user: {
     type: mongoose.Types.ObjectId,
     ref: 'User',
-    required: [true, "Review must belong to a user"]
+    required: [true, "Review must belong to a user"],
+    unique: [true, "Each user only has one review on each movie"]
   }
 },
   {

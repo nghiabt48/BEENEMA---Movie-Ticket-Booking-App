@@ -7,9 +7,7 @@ const handleCastErrorDB = err => {
 };
 
 const handleDuplicateFieldsDB = err => {
-  const value = err.message.match(/(["'])(\\?.)*?\1/)[0];
-
-  const message = `Duplicate field value: ${value}. Please use another value!`;
+  const message = `Duplicate value!`;
   return new AppError(message, 400);
 };
 
@@ -31,12 +29,13 @@ const handleJWTExpiredError = () =>{
 
 const sendErrorDev = (err, res) => {
   console.log(err);
-
+  if (err.code === 11000) {
+    err = handleDuplicateFieldsDB(err);
+  }
   res.status(err.statusCode).json({
     status: err.status,
     error: err,
     message: err.message,
-    stack: err.stack
   });
 };
 
