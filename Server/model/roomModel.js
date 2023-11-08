@@ -6,7 +6,7 @@ const roomSchema = new mongoose.Schema({
       ref: 'Cinema'
   },
   name: String,
-  seats: [String]
+  booked_seats: [String]
 })
 
 const Room = mongoose.model('Room', roomSchema)
