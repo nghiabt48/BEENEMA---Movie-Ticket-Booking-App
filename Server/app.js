@@ -44,6 +44,7 @@ app.use('/api/tickets', ticketRouter)
 app.use('/api/payments', paymentRouter)
 app.use('/api/bookings', bookingRouter)
 app.use('/api/actors', actorRouter)
+app.use('/api/rooms', require('./router/roomRouter'))
 // error handler
 
 app.all('*', (req, res, next) => {
