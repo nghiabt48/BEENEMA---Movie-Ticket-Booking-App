@@ -19,6 +19,7 @@ import UpdateProfile from "./UpdateProfile";
 import ChangePassword from "./ChangePassword";
 import Trailer from "./Trailer";
 import SeatCinema from "./SeatCinema"
+import ShowTimes from "./ShowTimes";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -75,7 +76,7 @@ const Main = () => {
       />
       <Tab.Screen
         name="Test2"
-        component={Test2}
+        component={ShowTimes}
         options={{ headerShown: false }}
       />
       <Tab.Screen
