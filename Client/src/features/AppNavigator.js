@@ -115,6 +115,7 @@ const BooKing = () => {
       <Stack.Screen name="ListMovie" component={ListMovie} />
       <Stack.Screen name="DetailMovie" component={DetailMovie} />
       <Stack.Screen name="Trailer" component={Trailer} />
+      <Stack.Screen name="ShowTime" component={ShowTimes} />
     </Stack.Navigator>
   );
 };

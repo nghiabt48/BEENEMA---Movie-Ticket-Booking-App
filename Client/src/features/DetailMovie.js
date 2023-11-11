@@ -65,6 +65,11 @@ const DetailMovie = (props) => {
     const TrailerClick = () => {
         navigation.navigate("Trailer", { trailer: params.data.trailer, title: params.data.title })
     }
+
+    const showTimeClick = async => {
+        navigation.navigate("ShowTime", { _id: params.data.id })
+      
+    }
     return (
 
         <SafeAreaView style={styles.container}>
@@ -106,7 +111,7 @@ const DetailMovie = (props) => {
                 </View>
                 {/* btn BooKing */}
                 <View style={styles.Group4}>
-                    <TouchableOpacity style={styles.buttonBooking}>
+                    <TouchableOpacity style={styles.buttonBooking} onPress={showTimeClick}>
                         <LinearGradient
                             colors={['#F34C30', '#DA004E']}
                             style={styles.gradient}
