@@ -39,25 +39,30 @@ const DetailMovie = (props) => {
         }
     }
     const ReviewsUser = async () => {
-        
+
         const response = await AxiosIntance().get(`movies/${params.data._id}/reviews?user=${infoUser._id}`);
         if (response.status == "success") {
             console.log(infoUser._id)
         } else {
-            
+
         }
     }
-    
+
     const Post = async () => {
-        setisLoading(true)
-        const response = await AxiosIntance().post(`movies/${params.data._id}/reviews`, { review: review, rating: rating });
-        if (response.status == "success") {
-            ToastAndroid.show("Đăng review thành công", ToastAndroid.SHORT);
-            fetchReviews();
-            setisLoading(false)
-        } else {
+
+        try {
+            setisLoading(true)
+            const response = await AxiosIntance().post(`movies/${params.data._id}/reviews`, { review: review, rating: rating });
+            if (response.status == "success") {
+                ToastAndroid.show("Đăng review thành công", ToastAndroid.SHORT);
+                fetchReviews();
+                setisLoading(false)
+            }
+        } catch (error) {
             ToastAndroid.show("Đăng review thất bại", ToastAndroid.SHORT);
+            setisLoading(false)
         }
+
     }
     const Back = () => {
         navigation.navigate("ListMovie")
@@ -148,7 +153,7 @@ const DetailMovie = (props) => {
                                 style={rating >= 1 ? styles.starSelected : styles.starUnselected}
                             />
                             {
-                                
+
                             }
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => setrating(2)}>
@@ -298,7 +303,7 @@ const styles = StyleSheet.create({
         borderTopWidth: 0.5
     },
     Group8: {
-        
+
     },
     text1: {
         width: '100%',

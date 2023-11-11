@@ -71,12 +71,12 @@ const Main = () => {
       />
       <Stack.Screen
         name="Test1"
-        component={SeatCinema}
+        component={Test1}
         options={{ headerShown: false }}
       />
       <Tab.Screen
         name="Test2"
-        component={ShowTimes}
+        component={Test2}
         options={{ headerShown: false }}
       />
       <Tab.Screen
@@ -116,6 +116,7 @@ const BooKing = () => {
       <Stack.Screen name="DetailMovie" component={DetailMovie} />
       <Stack.Screen name="Trailer" component={Trailer} />
       <Stack.Screen name="ShowTime" component={ShowTimes} />
+      <Stack.Screen name="SeatCinema" component={SeatCinema} />
     </Stack.Navigator>
   );
 };
