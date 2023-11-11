@@ -1,6 +1,6 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const seats = [
@@ -17,10 +17,15 @@ const seats = [
     'K1', 'K2', 'K3', 'K4', 'K5', 'K6', 'K7', 'K8',
     'L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'L7', 'L8',
 ];
+const specialSeats = ['D4', 'A5', 'C1'];
 const SeatCinema = () => {
     const [selectedSeats, setSelectedSeats] = useState([]);
 
     const handleSeatPress = (seatNumber) => {
+        if (specialSeats.includes(seatNumber)) {
+            // If the seat is special, do not change its background color
+            return;
+        }
         if (selectedSeats.includes(seatNumber)) {
             setSelectedSeats(selectedSeats.filter((seat) => seat !== seatNumber));
         } else {
@@ -36,17 +41,16 @@ const SeatCinema = () => {
                 const seatIndex = (column - 1) * 8 + seat - 1;
                 const seatNumber = seats[seatIndex];
                 const isSelected = selectedSeats.includes(seatNumber);
+                const isSpecialSeat = specialSeats.includes(seatNumber);
 
                 rowSeats.push(
                     <TouchableOpacity
                         key={seatNumber}
-
                         onPress={() => handleSeatPress(seatNumber)}
                     >
                         {
-                            isSelected ? <Image style={styles.seat} source={require('../image/seat3.png')}></Image> : <Image style={styles.seat} source={require('../image/seat1.png')}></Image>
+                            isSpecialSeat ? <Image style={styles.seat} source={require('../image/seat2.png')}></Image> : isSelected ? <Image style={styles.seat} source={require('../image/seat3.png')}></Image> : <Image style={styles.seat} source={require('../image/seat1.png')}></Image>
                         }
-
                     </TouchableOpacity>
                 );
             }
@@ -57,77 +61,83 @@ const SeatCinema = () => {
                 </View>
             );
         }
-
-
-
         return seatLayout;
     };
+    // const Checkout = async () => {
+
+    //     try {
+    //         await AxiosIntance().post(`tickets/checkout/${params.showtimeData._id}/create-ticket`, { price: totalPrice, seat_number: selectedSeats })
+    //     } catch (error) {
+    //         console.log("Err at book function: " + err.response.data.message)
+    //     }
+    // }
     return (
 
         <SafeAreaView style={styles.container}>
-            <View style={styles.viewGroup1}>
-                <TouchableOpacity >
-                    <Image style={styles.ImageBack} source={require('../image/back3.png')}></Image>
-                </TouchableOpacity>
-                <Text style={styles.textseat}>Choose seats</Text>
-            </View>
-            <View style={styles.viewGroup2}>
-                <Image style={styles.ImageMovies} source={require('../image/image3.png')}></Image>
-                <View>
-                    <View style={styles.viewGroup4}>
-                        <Image style={styles.ImageIcon} source={require('../image/layoutseat1.png')}></Image>
-                        <Text style={styles.textTitile}>Ten Phim</Text>
-                    </View>
-                    <View style={styles.viewGroup4}>
-                        <Image style={styles.ImageIcon} source={require('../image/layoutseat3.png')}></Image>
-                        <Text style={styles.textTitile}>Cinema</Text>
-                    </View>
-                    <View style={styles.viewGroup4}>
-                        <Image style={styles.ImageIcon} source={require('../image/layoutseat2.png')}></Image>
-                        <Text style={styles.textTitile}>Date</Text>
-                    </View>
+            <ScrollView style={styles.container2}>
+                <View style={styles.viewGroup1}>
+                    <TouchableOpacity >
+                        <Image style={styles.ImageBack} source={require('../image/back3.png')}></Image>
+                    </TouchableOpacity>
+                    <Text style={styles.textseat}>Choose seats</Text>
                 </View>
-            </View>
-            <View style={styles.viewGroup3}>
-                {renderSeats()}
-            </View>
-            <View style={styles.viewGroup5}>
-                <View style={styles.Group5}>
-                    <View style={styles.viewwhite}></View>
-                    <Text style={styles.textAvailable}>Available</Text>
-                </View>
-                <View style={styles.Group5}>
-                    <View style={styles.viewred}></View>
-                    <Text style={styles.textAvailable}>Resered</Text>
-                </View>
-                <View style={styles.Group5}>
-                    <View style={styles.viewgreen}></View>
-                    <Text style={styles.textAvailable}>Selected</Text>
-                </View>
-            </View>
-            {/* btn booking */}
-            <Text style={styles.selectedSeatsText}>
-                Selected Seats: {selectedSeats.join(', ')}
-            </Text>
-            <View style={styles.Group4}>
-                <TouchableOpacity style={styles.buttonBooking}>
-                    <LinearGradient
-                        colors={['#F34C30', '#DA004E']}
-                        style={styles.gradient}
-                        end={{ x: 0.01, y: 1 }}
-                    >
-                        <View style={styles.fixToText}>
-                            <View style={styles.Group3}>
-                                <Image source={require('../image/cart.png')} style={styles.boxImage5} />
-                                <Text style={styles.textPice}>200.000VND</Text>
-                            </View>
-
-                            <Text style={styles.text6}>Continue</Text>
+                <View style={styles.viewGroup2}>
+                    <Image style={styles.ImageMovies} source={require('../image/image3.png')}></Image>
+                    <View>
+                        <View style={styles.viewGroup4}>
+                            <Image style={styles.ImageIcon} source={require('../image/layoutseat1.png')}></Image>
+                            <Text style={styles.textTitile}>Ten Phim</Text>
                         </View>
-                    </LinearGradient>
-                </TouchableOpacity>
-            </View>
+                        <View style={styles.viewGroup4}>
+                            <Image style={styles.ImageIcon} source={require('../image/layoutseat3.png')}></Image>
+                            <Text style={styles.textTitile}>Cinema</Text>
+                        </View>
+                        <View style={styles.viewGroup4}>
+                            <Image style={styles.ImageIcon} source={require('../image/layoutseat2.png')}></Image>
+                            <Text style={styles.textTitile}>Date</Text>
+                        </View>
+                    </View>
+                </View>
+                <View style={styles.viewGroup3}>
+                    {renderSeats()}
+                </View>
+                <View style={styles.viewGroup5}>
+                    <View style={styles.Group5}>
+                        <View style={styles.viewwhite}></View>
+                        <Text style={styles.textAvailable}>Available</Text>
+                    </View>
+                    <View style={styles.Group5}>
+                        <View style={styles.viewred}></View>
+                        <Text style={styles.textAvailable}>Resered</Text>
+                    </View>
+                    <View style={styles.Group5}>
+                        <View style={styles.viewgreen}></View>
+                        <Text style={styles.textAvailable}>Selected</Text>
+                    </View>
+                </View>
+                {/* btn booking */}
+                <Text style={styles.selectedSeatsText}>
+                    Selected Seats: {selectedSeats.join(', ')}
+                </Text>
+                <View style={styles.Group4}>
+                    <TouchableOpacity style={styles.buttonBooking}>
+                        <LinearGradient
+                            colors={['#F34C30', '#DA004E']}
+                            style={styles.gradient}
+                            end={{ x: 0.01, y: 1 }}
+                        >
+                            <View style={styles.fixToText}>
+                                <View style={styles.Group3}>
+                                    <Image source={require('../image/cart.png')} style={styles.boxImage5} />
+                                    <Text style={styles.textPice}>200.000VND</Text>
+                                </View>
 
+                                <Text style={styles.text6}>Continue</Text>
+                            </View>
+                        </LinearGradient>
+                    </TouchableOpacity>
+                </View>
+            </ScrollView>
         </SafeAreaView>
     )
 }
@@ -138,7 +148,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#130B2B',
-        padding: 15,
+        
+    },
+    container2:{
+        padding:15,
+        
     },
     row: {
         flexDirection: 'row'
@@ -151,10 +165,6 @@ const styles = StyleSheet.create({
         margin: 8,
 
     },
-    // selectedSeat: {
-    //     backgroundColor: 'blue',
-
-    // },
     selectedSeatsText: {
         marginTop: 20,
         fontSize: 16,
@@ -219,6 +229,7 @@ const styles = StyleSheet.create({
         paddingEnd: '5%',
         alignItems: 'center',
         marginTop: '10%',
+        paddingBottom: '10%'
     },
     gradient: {
         alignItems: 'center',

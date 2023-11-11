@@ -22,11 +22,9 @@ export default ItemReview
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginStart: 10,
         flexDirection: 'row',
-        paddingBottom: 10,
-        paddingEnd: 10,
-        paddingStart: 10,
+        paddingTop: 10,
+        marginStart: 10,
     },
     Text1: {
         fontSize: 18,
