@@ -5,7 +5,7 @@ const ItemActor = (props) => {
     const { data } = props;
   return (
     <View style={styles.container}> 
-        <Image source={require('../image/Code.png')} style={styles.Image}/>
+        <Image source={require('../image/avatar.png')} style={styles.Image}/>
         <Text style={styles.Text1}>dfgdg</Text>
     </View>
   )
