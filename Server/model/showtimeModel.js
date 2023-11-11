@@ -11,7 +11,9 @@ const showtimeSchema = new mongoose.Schema({
   },
   start_time: Date,
   end_time: Date,
-  price: Number
+  price: Number ,
+  booked_seats: [String]
+
 })
 
 const Showtime = mongoose.model('Showtime', showtimeSchema)
