@@ -1,9 +1,12 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import React from "react";
 
 const ItemShowTime = (props) => {
   const { item, navigation } = props;
 
+  const RoomClick = function() {
+    navigation.navigate('SeatCinema',{item})
+  }
   //format thoi gian
   const inputTimestamp = item.start_time;
   const endTime = item.end_time;
@@ -20,6 +23,7 @@ const ItemShowTime = (props) => {
   }).format(amount);
   return (
     <View style={styles.container1}>
+      <TouchableOpacity onPress={RoomClick}>
       <View style={{ justifyContent: "space-between", flexDirection: "row" }}>
         <Text style={styles.txt2}>{item.room.name}</Text>
         <Text style={styles.txtRole}>giá: {formattedAmount}</Text>
@@ -36,6 +40,7 @@ const ItemShowTime = (props) => {
         <Image style={styles.img} source={require("../image/seat.png")} />
         <Text style={styles.txtType}>{item.type}</Text>
       </View>
+      </TouchableOpacity>
     </View>
   );
 };

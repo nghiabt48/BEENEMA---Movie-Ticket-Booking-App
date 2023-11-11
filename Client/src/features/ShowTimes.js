@@ -23,11 +23,11 @@ const ShowTimes = (props) => {
     navigation.goBack();
   };
   useEffect(() => {
-    fetchReviews();
+    fetchShowTime();
     return () => {};
   }, []);
 
-  const fetchReviews = async () => {
+  const fetchShowTime = async () => {
     setisLoading(true);
     const response = await AxiosIntance().get(`/showtimes?movie=${params._id}`);
     if (response.status == "success") {
@@ -35,7 +35,6 @@ const ShowTimes = (props) => {
       setisLoading(false);
     } else {
       setisLoading(false);
-      setreview(null);
     }
   };
 
@@ -54,7 +53,7 @@ const ShowTimes = (props) => {
 
       <FlatList
         data={showtime}
-        renderItem={({ item }) => <ItemShowTime item={item}  />}
+        renderItem={({ item }) => <ItemShowTime item={item}  navigation={navigation}/>}
         keyExtractor={(item) => item._id}
       />
     </SafeAreaView>
@@ -69,8 +68,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#130B2B",
   },
   navBack: {
-    width: 40,
-    height: 40,
+    width: 35,
+    height: 35,
     marginStart: 22,
   },
   txt1: {

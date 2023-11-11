@@ -2,6 +2,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import AxiosIntance from './AxiosIntance';
 
 const seats = [
     'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8',
@@ -18,9 +19,17 @@ const seats = [
     'L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'L7', 'L8',
 ];
 const specialSeats = ['D4', 'A5', 'C1'];
-const SeatCinema = () => {
+const SeatCinema = (props) => {
+    const { route } = props
+    const { navigation } = props;
+    const { params } = route
     const [selectedSeats, setSelectedSeats] = useState([]);
-
+    const inputTimestamp = params.item.start_time;
+    const datePart = inputTimestamp.slice(0, 10);
+    const timePart = inputTimestamp.slice(11, 16);
+    const [cinema,setcinema] = useState([])
+    const ImageURL = `http://149.28.159.68:3000/img/movies/${params.item.movie.imageCover}`
+   
     const handleSeatPress = (seatNumber) => {
         if (specialSeats.includes(seatNumber)) {
             // If the seat is special, do not change its background color
@@ -63,38 +72,43 @@ const SeatCinema = () => {
         }
         return seatLayout;
     };
-    // const Checkout = async () => {
+    const Checkout = async () => {
 
-    //     try {
-    //         await AxiosIntance().post(`tickets/checkout/${params.showtimeData._id}/create-ticket`, { price: totalPrice, seat_number: selectedSeats })
-    //     } catch (error) {
-    //         console.log("Err at book function: " + err.response.data.message)
-    //     }
-    // }
+        try {
+           const response =  await AxiosIntance().get(`/rooms/${params.item.room._id}`)
+            setcinema(response.data.document.cinema.name)
+        } catch (error) {
+            console.log("Err at book function: " + err.response.data.message)
+        }
+    }
+    Checkout()
+    const Back = () => {
+        navigation.goBack();
+      }
     return (
 
         <SafeAreaView style={styles.container}>
             <ScrollView style={styles.container2}>
                 <View style={styles.viewGroup1}>
-                    <TouchableOpacity >
+                    <TouchableOpacity onPress={Back}>
                         <Image style={styles.ImageBack} source={require('../image/back3.png')}></Image>
                     </TouchableOpacity>
                     <Text style={styles.textseat}>Choose seats</Text>
                 </View>
                 <View style={styles.viewGroup2}>
-                    <Image style={styles.ImageMovies} source={require('../image/image3.png')}></Image>
+                    <Image style={styles.ImageMovies} source={{uri: ImageURL}}></Image>
                     <View>
                         <View style={styles.viewGroup4}>
                             <Image style={styles.ImageIcon} source={require('../image/layoutseat1.png')}></Image>
-                            <Text style={styles.textTitile}>Ten Phim</Text>
+                            <Text style={styles.textTitile}>{params.item.movie.title}</Text>
                         </View>
                         <View style={styles.viewGroup4}>
                             <Image style={styles.ImageIcon} source={require('../image/layoutseat3.png')}></Image>
-                            <Text style={styles.textTitile}>Cinema</Text>
+                            <Text style={styles.textTitile}>{cinema}</Text>
                         </View>
                         <View style={styles.viewGroup4}>
                             <Image style={styles.ImageIcon} source={require('../image/layoutseat2.png')}></Image>
-                            <Text style={styles.textTitile}>Date</Text>
+                            <Text style={styles.textTitile}>{datePart} {timePart}</Text>
                         </View>
                     </View>
                 </View>
@@ -148,11 +162,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#130B2B',
-        
+
     },
-    container2:{
-        padding:15,
-        
+    container2: {
+        padding: 15,
+
     },
     row: {
         flexDirection: 'row'
