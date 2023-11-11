@@ -4,7 +4,11 @@ const factory = require('./handleFactory')
 
 exports.createShowTime = factory.createOne(Showtime)
 exports.getShowTime = factory.getOne(Showtime, {path: 'movie', select: 'title price'}, {path: 'cinema', select: 'name'})
+<<<<<<< HEAD
 exports.getAllShowtimes = factory.getAll(Showtime, {path: 'room', select: 'name'})
+=======
+exports.getAllShowtimes = factory.getAll(Showtime, {path: 'room', select: 'name'}, {path: 'movie', select: 'title'})
+>>>>>>> 41f46331faaadcebcfcd1e186cfeaac380441231
 exports.getShowtimeBySomething = catchAsync(async (req, res, next) => {
   if(!req.query) return next()
   const showtimes = await Showtime.find({room: req.query.room}).populate({path: 'movie room', select: 'title name'})
