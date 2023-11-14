@@ -12,7 +12,7 @@ const ListTicket = () => {
                 <Image style={styles.imagestyle} source={require('../icons/back.png')} />
                 </TouchableOpacity>               
             <View style={{flex:1, justifyContent:'center', marginLeft:-50}}>
-                <Text style={[styles.textstyle, {textAlign:'center'}]}>Tickets</Text>
+                <Text style={[styles.textstyle, {textAlign:'center'}]}>Vé của tôi</Text>
             </View>
         </View>
         {/* Danh sách vé đã mua */}

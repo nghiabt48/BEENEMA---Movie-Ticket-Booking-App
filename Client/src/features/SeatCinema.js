@@ -93,7 +93,7 @@ const SeatCinema = (props) => {
                     <TouchableOpacity onPress={Back}>
                         <Image style={styles.ImageBack} source={require('../image/back3.png')}></Image>
                     </TouchableOpacity>
-                    <Text style={styles.textseat}>Choose seats</Text>
+                    <Text style={styles.textseat}>Chọn chỗ ngồi</Text>
                 </View>
                 <View style={styles.viewGroup2}>
                     <Image style={styles.ImageMovies} source={{uri: ImageURL}}></Image>
@@ -118,20 +118,20 @@ const SeatCinema = (props) => {
                 <View style={styles.viewGroup5}>
                     <View style={styles.Group5}>
                         <View style={styles.viewwhite}></View>
-                        <Text style={styles.textAvailable}>Available</Text>
+                        <Text style={styles.textAvailable}>Có sẵn</Text>
                     </View>
                     <View style={styles.Group5}>
                         <View style={styles.viewred}></View>
-                        <Text style={styles.textAvailable}>Resered</Text>
+                        <Text style={styles.textAvailable}>Đã đặt</Text>
                     </View>
                     <View style={styles.Group5}>
                         <View style={styles.viewgreen}></View>
-                        <Text style={styles.textAvailable}>Selected</Text>
+                        <Text style={styles.textAvailable}>Đang chọn</Text>
                     </View>
                 </View>
                 {/* btn booking */}
                 <Text style={styles.selectedSeatsText}>
-                    Selected Seats: {selectedSeats.join(', ')}
+                    Đang chọn ghế: {selectedSeats.join(', ')}
                 </Text>
                 <View style={styles.Group4}>
                     <TouchableOpacity style={styles.buttonBooking}>
@@ -146,7 +146,7 @@ const SeatCinema = (props) => {
                                     <Text style={styles.textPice}>200.000VND</Text>
                                 </View>
 
-                                <Text style={styles.text6}>Continue</Text>
+                                <Text style={styles.text6}>Tiếp tục</Text>
                             </View>
                         </LinearGradient>
                     </TouchableOpacity>
