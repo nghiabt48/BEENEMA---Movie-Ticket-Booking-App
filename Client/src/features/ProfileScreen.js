@@ -16,7 +16,7 @@ import AxiosIntance from "./AxiosIntance";
 const ProfileScreen = (props) => {
   const { navigation } = props;
   const { setisLogin } = useContext(AppConText);
-  const [data, setdata] = useState([]);
+  const { infoUser, setinfoUser } = useContext(AppConText);
   const ImageURL = `http://149.28.159.68:3000/img/users/`;
 
   useEffect(() => {
@@ -24,7 +24,7 @@ const ProfileScreen = (props) => {
     const Profile = async () => {
       const respone = await AxiosIntance().get("/users/me");
       if (respone.status == "success") {
-        setdata(respone.data.document);
+        setinfoUser(respone.data.document);
       } else {
         ToastAndroid.show("Something went wrong!", ToastAndroid.SHORT);
       }
@@ -34,8 +34,8 @@ const ProfileScreen = (props) => {
   }, []);
 
   //check  avatar user có hay chưa nếu chưa thì sẽ mặc định hiển thị avatar.png
-  const userAvatar = data.avatar
-    ? { uri: `${ImageURL}${data.avatar}` }
+  const userAvatar = infoUser.avatar
+    ? { uri: `${ImageURL}${infoUser.avatar}` }
     : require("../image/avatar.png");
 
   //Sign Out
@@ -64,7 +64,7 @@ const ProfileScreen = (props) => {
       <View style={styles.Row2}>
         <Image style={styles.avatarImg} source={userAvatar} />
         <Text style={styles.row}>
-          <Text style={styles.txtName}>Hi! {data.username}</Text>
+          <Text style={styles.txtName}>Hi! {infoUser.username}</Text>
           {"\n"}
           <Text style={styles.txtHello}>Welcome</Text>
         </Text>

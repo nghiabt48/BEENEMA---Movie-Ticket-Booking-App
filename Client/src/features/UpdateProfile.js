@@ -45,33 +45,40 @@ const UpdateProfile = (props) => {
 
   //chọn hình trong kho ảnh để đăng lên (chưa tìm được cách để tạm ảnh hay nói thẳng là ngu nên xài api luôn)
   const pickImage = async () => {
-    //Chọn hình
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-    //form data để upload file
-    const formData = new FormData();
-    formData.append("avatar", {
-      uri: result.assets[0].uri,
-      type: "image/jpeg",
-      name: "image.jpg",
-    });
-    //chạy api
-    const respone = await AxiosIntance("multipart/form-data").patch(
-      "users/update-me",
-      formData
-    );
-    if (!result.canceled) {
-      if (respone.status == "success") {
-        ToastAndroid.show("Update Image Successfully", ToastAndroid.SHORT);
-        GetUserProfile();
-      } else {
-        ToastAndroid.show("Update Image Failed", ToastAndroid.SHORT);
+    try{
+      //Chọn hình
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+      //form data để upload file
+      const formData = new FormData();
+      formData.append("avatar", {
+        uri: result.assets[0].uri,
+        type: "image/jpeg",
+        name: "image.jpg",
+      });
+      //chạy api
+      const respone = await AxiosIntance("multipart/form-data").patch(
+        "users/update-user-avatar",
+        formData
+      );
+      if (!result.canceled) {
+        if (respone.status == "success") {
+          console.log(respone);
+          ToastAndroid.show("Update Image Successfully", ToastAndroid.SHORT);
+          setinfoUser({...infoUser, avatar: respone.path});
+        } else {
+          ToastAndroid.show("Update Image Failed", ToastAndroid.SHORT);
+        }
       }
     }
+    catch(e){
+      console.log(e);
+    }
+    
   };
 
   const goBack = () => {
@@ -81,19 +88,25 @@ const UpdateProfile = (props) => {
   //Cập nhật profile
   const UpdateProfile = async () => {
     try {
-      //form data để upload file
-      const formData = new FormData();
-      formData.append("email", infoUser.email);
-      formData.append("username", infoUser.username);
-      formData.append("phone_number", infoUser.phone_number);
-      // formData.append('address',infoUser.address);
-      // formData.append('location',infoUser.location);
-
-      await AxiosIntance("multipart/form-data").patch(
+      
+      const respone = await AxiosIntance().patch(
         "users/update-me",
-        formData
+        {
+          email: infoUser.email,
+          username: infoUser.username,
+          phone_number: infoUser.phone_number,
+          avatar: infoUser.avatar
+        }
       );
-      ToastAndroid.show("Update Profile Successfully", ToastAndroid.SHORT);
+     
+      if (respone.status == "success") {
+        ToastAndroid.show("Update Profile Successfully", ToastAndroid.SHORT);
+        console.log(respone.data);
+      } else {
+        ToastAndroid.show("Update Profile Failed", ToastAndroid.SHORT);
+      }
+   
+      
     } catch (e) {
       ToastAndroid.show("Update Profile Failed", ToastAndroid.SHORT);
       console.log(e);
