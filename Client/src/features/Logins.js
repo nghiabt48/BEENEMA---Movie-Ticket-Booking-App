@@ -13,13 +13,11 @@ const Logins = (props) => {
         try {
             const response = await AxiosIntance().post("users/login", { email: emailUser, password: passwordUser });
             await AsyncStorage.setItem('token', response.token);
-            ToastAndroid.show("Logged in successfully", ToastAndroid.SHORT);
+            ToastAndroid.show("Đăng nhập thành công", ToastAndroid.SHORT);
             setisLogin(true) 
             setinfoUser(response.data.user)
-            console.log(response.data.user)
         } catch (e) {
-            console.log(e.response.data.message)
-            ToastAndroid.show(e.response.data.message, ToastAndroid.SHORT);
+            ToastAndroid.show("Sai email hoặc mật khẩu", ToastAndroid.SHORT);
         }
         
     }
@@ -33,27 +31,27 @@ const Logins = (props) => {
   return (
     <View style={styles.container}>
             <Text style={styles.Text1}>Beenema</Text>
-            <Text style={styles.Text2}>Enter your data</Text>
+            <Text style={styles.Text2}>Nhập dữ liệu của bạn</Text>
             <View style={styles.Group}>
                 <Text style={styles.Text3}>Email</Text>
                 <TextInput style={styles.Edt} onChangeText={setEmailUser}
-                    placeholder='Enter yor email'
+                    placeholder='Nhập email...'
                     placeholderTextColor={'#ffff'}
                     keyboardType='email-address'
                     returnKeyType='next'
                     autoCorrect={false}></TextInput>
             </View>
             <View style={styles.Group2}>
-                <Text style={styles.Text3}>Password</Text>
+                <Text style={styles.Text3}>Mật khẩu</Text>
                 <TextInput style={styles.Edt} onChangeText={setPasswordUser}
-                    placeholder='Enter yor password'
+                    placeholder='Nhập mật khẩu...'
                     placeholderTextColor={'#ffff'}
                     returnKeyType='go'
                     secureTextEntry={true}
                     autoCorrect={false}></TextInput>
             </View>
             <View style={styles.Group3}>
-                <Text style={styles.Text4} onPress={navigateToForgotPassword}>Forget password?</Text>
+                <Text style={styles.Text4} onPress={navigateToForgotPassword}>Quên mật khẩu?</Text>
             </View>
             <TouchableOpacity style={styles.button} onPress={LoginApp}>
                 <LinearGradient
@@ -61,13 +59,15 @@ const Logins = (props) => {
                     style={styles.gradient}
                     end={{ x: 0.01, y: 1 }}
                 >
-                    <Text style={styles.Text5}>Login</Text>
+                    <Text style={styles.Text5}>Đăng Nhập</Text>
                 </LinearGradient>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.Group4} onPress={RegisterApp}>
-                <Text style={styles.buttonText2}>New at Beenema? <Text style={styles.buttonText3}>Create Account</Text></Text>
-            </TouchableOpacity>
+            <View style={styles.Group4} >
+                <TouchableOpacity onPress={RegisterApp}>
+                <Text style={styles.buttonText2}>Bạn mới biết đến Beenema? <Text style={styles.buttonText3}>Đăng ký</Text></Text>
+                </TouchableOpacity>
+            </View>
 
         </View>
   )

@@ -48,7 +48,7 @@ const ShowTimes = (props) => {
           />
         </TouchableOpacity>
 
-        <Text style={styles.txt1}>Choose the time</Text>
+        <Text style={styles.txt1}>Chọn xuất chiếu</Text>
       </View>
 
       <FlatList

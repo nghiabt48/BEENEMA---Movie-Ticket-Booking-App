@@ -13,23 +13,21 @@ const Registers = (props) => {
     const RegisterApp = async () => {
         try {
             await AxiosIntance().post("users/register", { username: Username, email: emailUser, password: passwordUser, passwordConfirm: passwordConfirm });
-            ToastAndroid.show("Sign Up Success", ToastAndroid.SHORT);
+            ToastAndroid.show("Đăng ký thành công", ToastAndroid.SHORT);
 
             navigation.navigate("Login")
         } catch (e) {
             if (e.response.data.error.name == "ValidationError"
                 && e.response.data.error.message.includes("Passwords are not the same")) {
-                ToastAndroid.show("Passwords are not the same", ToastAndroid.LONG);
+                ToastAndroid.show("Mật khẩu không giống nhau", ToastAndroid.LONG);
             }
             else if (e.response.data.error.name == "ValidationError") {
-                ToastAndroid.show("Please enter complete information", ToastAndroid.LONG);
+                ToastAndroid.show("Hãy nhập đầy đủ thông tin", ToastAndroid.LONG);
             }
-            if (e.response.data.message.includes("email") && e.response.data.error.code === 11000) {
-                ToastAndroid.show("Someone has used this email", ToastAndroid.LONG);
+            if (e.response.data.message=="Duplicate value!") {
+                ToastAndroid.show("Email đã tồn tại", ToastAndroid.LONG);
             }
-            if (e.response.data.message.includes("username") && e.response.data.error.code === 11000) {
-                ToastAndroid.show("Someone is already using this username", ToastAndroid.LONG);
-            }
+            
         }
 
     }
@@ -43,37 +41,37 @@ const Registers = (props) => {
             </TouchableOpacity>
 
             <Text style={styles.Text1}>Beenema</Text>
-            <Text style={styles.Text2}>Enter your data</Text>
+            <Text style={styles.Text2}>Nhập dữ liệu của bạn</Text>
             <View style={styles.Group}>
                 <Text style={styles.Text3}>Email</Text>
                 <TextInput style={styles.Edt} onChangeText={setEmailUser}
-                    placeholder='Enter yor email'
+                    placeholder='Nhập email...'
                     placeholderTextColor={'#ffff'}
                     keyboardType='email-address'
                     returnKeyType='next'
                     autoCorrect={false}></TextInput>
             </View>
             <View style={styles.Group2}>
-                <Text style={styles.Text3}>Username</Text>
+                <Text style={styles.Text3}>Tên tài khoản</Text>
                 <TextInput style={styles.Edt} onChangeText={setUsername}
-                    placeholder='Enter yor username'
+                    placeholder='Nhập tên tài khoản...'
                     placeholderTextColor={'#ffff'}
                     returnKeyType='next'
                     autoCorrect={false}></TextInput>
             </View>
             <View style={styles.Group2}>
-                <Text style={styles.Text3}>Password</Text>
+                <Text style={styles.Text3}>Mật khẩu</Text>
                 <TextInput style={styles.Edt} onChangeText={setPasswordUser}
-                    placeholder='Enter yor password'
+                    placeholder='Nhập mật khẩu...'
                     placeholderTextColor={'#ffff'}
                     returnKeyType='go'
                     secureTextEntry={true}
                     autoCorrect={false}></TextInput>
             </View>
             <View style={styles.Group2}>
-                <Text style={styles.Text3}>Confirm Password</Text>
+                <Text style={styles.Text3}>Xác nhận mật khẩu</Text>
                 <TextInput style={styles.Edt} onChangeText={setpasswordConfirm}
-                    placeholder='Enter yor confirm password'
+                    placeholder='Nhập xác nhận mật khẩu...'
                     placeholderTextColor={'#ffff'}
                     returnKeyType='go'
                     secureTextEntry={true}
@@ -85,7 +83,7 @@ const Registers = (props) => {
                     style={styles.gradient}
                     end={{ x: 0.01, y: 1 }}
                 >
-                    <Text style={styles.Text5}>Register</Text>
+                    <Text style={styles.Text5}>Đăng Ký</Text>
                 </LinearGradient>
             </TouchableOpacity>
 

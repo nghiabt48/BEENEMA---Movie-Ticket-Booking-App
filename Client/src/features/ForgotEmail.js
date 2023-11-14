@@ -21,26 +21,26 @@ const ForgotEmail = (props) => {
       const response = await AxiosIntance().post("users/forget-password", {
         email: emailUser,
       });
-  
+
       if (response.data.status === "success") {
         ToastAndroid.show(
-          "Check your email for reset password!",
+          "Kiểm tra email của bạn để lấy lại mật khẩu!",
           ToastAndroid.SHORT
         );
         navigation.goBack();
       } else {
         if (response.status === 404) {
-          ToastAndroid.show("This email is not exist!", ToastAndroid.SHORT);
+          ToastAndroid.show("Email này không tồn tại!", ToastAndroid.SHORT);
         } else {
-          ToastAndroid.show("Something went wrong!", ToastAndroid.SHORT);
+          ToastAndroid.show("Đã xảy ra lỗi!", ToastAndroid.SHORT);
         }
       }
     } catch (error) {
       if (error.response && error.response.status === 404) {
-        ToastAndroid.show("This email is not exist!", ToastAndroid.SHORT);
+        ToastAndroid.show("Email này không tồn tại!", ToastAndroid.SHORT);
       } else {
         console.error(error);
-        ToastAndroid.show("An error occurred!", ToastAndroid.SHORT);
+        ToastAndroid.show("Đã xảy ra lỗi!", ToastAndroid.SHORT);
       }
     }
   };
@@ -48,50 +48,33 @@ const ForgotEmail = (props) => {
     navigation.goBack();
   };
   return (
-    <SafeAreaView style={styles.container}>
-      <TouchableOpacity onPress={goBack}>
-        <Image
-          style={{ marginStart: 25 }}
-          source={require("../image/Back.png")}
-        />
+    <View style={styles.container}>
+      <TouchableOpacity style={styles.GroupImages} onPress={goBack}>
+        <Image style={styles.Image} source={require('../image/Back.png')} />
+      </TouchableOpacity>
+      <Text style={styles.Text1}>Beenema</Text>
+      <Text style={styles.Text2}>Nhập dữ liệu của bạn</Text>
+      <View style={styles.Group}>
+        <Text style={styles.Text3}>Email</Text>
+        <TextInput style={styles.Edt} onChangeText={setemailUser}
+          placeholder='Nhập email...'
+          placeholderTextColor={'#ffff'}
+          keyboardType='email-address'
+          returnKeyType='next'
+          autoCorrect={false}></TextInput>
+      </View>
+
+      <TouchableOpacity style={styles.button} onPress={resetPassword}>
+        <LinearGradient
+          colors={['#F34C30', '#DA004E']}
+          style={styles.gradient}
+          end={{ x: 0.01, y: 1 }}
+        >
+          <Text style={styles.Text5}>Đăng Nhập</Text>
+        </LinearGradient>
       </TouchableOpacity>
 
-      <Text style={styles.txtBeenema}>Beenema</Text>
-      <Text style={styles.txtEnterData}>Enter your data</Text>
-      <View>
-        <Text
-          style={{
-            color: "white",
-            marginStart: 40,
-            marginTop: 50,
-            fontSize: 16,
-          }}
-        >
-          Email
-        </Text>
-        <TextInput
-          style={styles.input}
-          color="white"
-          placeholder="Enter your email"
-          placeholderTextColor="white"
-          onChangeText={setemailUser}
-        />
-      </View>
-
-      <View style={{ alignItems: "center", marginTop: 300 }}>
-        <LinearGradient
-          colors={["rgb(243, 76, 48)", "rgb(218, 0, 78)"]}
-          style={styles.btnReset}
-        >
-          <TouchableOpacity
-            style={styles.buttonContainer}
-            onPress={resetPassword}
-          >
-            <Text style={styles.buttonText}>Reset password</Text>
-          </TouchableOpacity>
-        </LinearGradient>
-      </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -100,41 +83,72 @@ export default ForgotEmail;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#130B2B",
+    backgroundColor: '#130B2B',
+    alignItems: 'center',
+    padding: 20,
   },
-  txtBeenema: {
+  Text1: {
+    color: '#DA004E',
     fontSize: 40,
-    fontWeight: "bold",
-    color: "#FA6900",
-    textAlign: "center",
+    fontWeight: 'bold',
+    //fontFamily: 'poppins',
+    marginTop: 50,
   },
-  txtEnterData: {
+  Text2: {
+    marginTop: 30,
+    color: '#ffff',
     fontSize: 20,
-    color: "white",
-    marginTop: 40,
-    textAlign: "center",
+    //fontFamily: 'poppins',
+    fontWeight: 'normal',
+    marginBottom: 30
   },
-  input: {
-    width: 340,
-    height: 60,
-    borderColor: "white",
+  Group: {
+    width: '100%'
+  },
+  Text3: {
+    color: '#ffff',
+    fontSize: 16,
+    //fontFamily: 'poppins',
+    fontWeight: 'normal',
+    marginLeft: 10,
+    marginBottom: 5,
+  },
+  Edt: {
+    width: '100%',
+    height: 48,
     borderWidth: 1,
-    borderRadius: 20,
-    padding: 15,
-    marginStart: 25,
-    marginTop: 5,
-  },
-  btnReset: {
-    borderRadius: 20,
-    width: 286,
-    height: 50,
-  },
-  buttonContainer: {
+    borderColor: '#ffff',
+    borderRadius: 12,
+    color: '#fff',
     padding: 10,
+    //fontFamily: 'poppins',
+    fontSize: 16,
   },
-  buttonText: {
-    color: "white",
+  Text5: {
+    color: '#ffff',
     fontSize: 17,
-    textAlign: "center",
+    //fontFamily: 'poppins',
+    fontWeight: '600',
+
   },
+  Image: {
+    width: 40,
+    height: 40,
+  },
+  GroupImages: {
+    width: '100%',
+    marginTop: 20,
+  },
+  button: {
+        
+    width: '100%',
+    justifyContent:'flex-end',
+    marginTop:50,
+},
+gradient: {
+    height: 48,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 20,
+},
 });

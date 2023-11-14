@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#130B2B",
+    
   },
   navBack: {
     width: 40,
@@ -124,6 +125,7 @@ const styles = StyleSheet.create({
     marginStart: 10,
   },
   line: {
+    width:'95%',
     marginTop: 5,
     marginStart: 8,
     marginEnd: 7,
