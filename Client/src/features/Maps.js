@@ -43,7 +43,7 @@ const Maps = () => {
       setTheaters(respone.data.data);
       // console.log(respone.data.data);
     } else {
-      ToastAndroid.show("Something went wrong!", ToastAndroid.SHORT);
+      ToastAndroid.show("Đã xảy ra lỗi!", ToastAndroid.SHORT);
     }
   };
 
@@ -58,7 +58,7 @@ const Maps = () => {
       setDistances(respone.data.distances);
       console.log(respone.data.distances);
     } else {
-      ToastAndroid.show("Something went wrong!", ToastAndroid.SHORT);
+      ToastAndroid.show("Đã xảy ra lỗi!", ToastAndroid.SHORT);
     }
   };
 

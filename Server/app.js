@@ -15,6 +15,7 @@ const actorRouter = require('./router/actorRouter')
 
 const globalErrorHandler = require('./controller/errorController');
 const AppError = require('./utils/appError');
+const SeatLogs = require('./model/seatLogs');
 
 
 const app = express();
@@ -32,7 +33,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/api/users/reset-password/:token', (req, res, next) => {
   const currentUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
-  res.render('ResetPassword', {token: req.params.token, currentUrl})
+  res.render('ResetPassword', { token: req.params.token, currentUrl })
 })
 
 app.use('/api/showtimes', showtimeRouter)

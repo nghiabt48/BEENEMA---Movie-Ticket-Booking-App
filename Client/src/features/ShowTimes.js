@@ -1,145 +1,60 @@
-import { StyleSheet, Text, View, Image, FlatList } from "react-native";
-import React from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
+import React, { useState, useContext, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Axios } from "axios";
+import AxiosIntance from "./AxiosIntance";
+import ItemShowTime from "../Item/ItemShowTime";
 
-const data = [
-  {
-    id: "1",
-    name: "REAL D 3D",
-    role: "Dubbed",
-    time1: "15:30",
-    time2: "17:40",
-    time3: "18:45",
-    time4: "21:25",
-    type: "General",
-  },
-  {
-    id: "2",
-    name: "REAL D 3D",
-    role: "Subtitle",
-    time1: "15:30",
-    time2: "17:40",
-    time3: "18:45",
-    time4: "21:25",
-    type: "Premier",
-  },
-  {
-    id: "3",
-    name: "REAL D 3D",
-    role: "Subtitle",
-    time1: "15:30",
-    time2: "17:40",
-    time3: "18:45",
-    time4: "21:25",
-    type: "General",
-  },
-  {
-    id: "4",
-    name: "REAL D 3D",
-    role: "Dubbed",
-    time1: "15:30",
-    time2: "17:40",
-    time3: "18:45",
-    time4: "21:25",
-    type: "General",
-  },
-  {
-    id: "5",
-    name: "REAL D 3D",
-    role: "Dubbed",
-    time1: "15:30",
-    time2: "17:40",
-    time3: "18:45",
-    time4: "21:25",
-    type: "Premier",
-  },
-  {
-    id: "6",
-    name: "REAL D 3D",
-    role: "Subtitle",
-    time1: "15:30",
-    time2: "17:40",
-    time3: "18:45",
-    time4: "21:25",
-    type: "Premier",
-  },
-  {
-    id: "7",
-    name: "REAL D 3D",
-    role: "Subtitle",
-    time1: "15:30",
-    time2: "17:40",
-    time3: "18:45",
-    time4: "21:25",
-    type: "Premier",
-  },
-  {
-    id: "8",
-    name: "REAL D 3D",
-    role: "Subtitle",
-    time1: "15:30",
-    time2: "17:40",
-    time3: "18:45",
-    time4: "21:25",
-    type: "Premier",
-  },
-  {
-    id: "9",
-    name: "REAL D 3D",
-    role: "Subtitle",
-    time1: "15:30",
-    time2: "17:40",
-    time3: "18:45",
-    time4: "21:25",
-    type: "Premier",
-  },
-  {
-    id: "10",
-    name: "REAL D 3D",
-    role: "Subtitle",
-    time1: "15:30",
-    time2: "17:40",
-    time3: "18:45",
-    time4: "21:25",
-    type: "Premier",
-  },
-];
 
-const renderItem = ({ item }) => (
-  <View style={styles.container1}>
-    <View style={{ justifyContent: "space-between", flexDirection: "row" }}>
-      <Text style={styles.txt2}>{item.name}</Text>
-      <Text style={styles.txtRole}>{item.role}</Text>
-    </View>
-    <View style={styles.container2}>
-      <Text style={styles.time}>{item.time1}</Text>
-      <Text style={styles.time}>{item.time2}</Text>
-      <Text style={styles.time}>{item.time3}</Text>
-      <Text style={styles.time}>{item.time4}</Text>
-    </View>
-    <Image style={styles.line} source={require("../image/line.png")} />
-    <View style={{flexDirection:"row",alignItems:"center",}}>
-    <Image style={styles.img} source={require("../image/seat.png")} />
-    <Text style={styles.txtType}>{item.type}</Text>
-    </View>
-  </View>
-);
+const ShowTimes = (props) => {
+  const { navigation } = props;
+  const { route } = props;
+  const { params } = route;
+  const [showtime, setshowtime] = useState();
+  const [isLoading, setisLoading] = useState(null);
+  const Back = () => {
+    navigation.goBack();
+  };
+  useEffect(() => {
+    fetchShowTime();
+    return () => {};
+  }, []);
 
-const ShowTimes = () => {
+  const fetchShowTime = async () => {
+    setisLoading(true);
+    const response = await AxiosIntance().get(`/showtimes?movie=${params._id}`);
+    if (response.status == "success") {
+      setshowtime(response.data.data);
+      setisLoading(false);
+    } else {
+      setisLoading(false);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={{ flexDirection: "row" }}>
-        <Image
-          style={styles.navBack}
-          source={require("../image/navback.png")}
-        />
-        <Text style={styles.txt1}>Choose the time</Text>
+        <TouchableOpacity onPress={Back}>
+          <Image
+            style={styles.navBack}
+            source={require("../image/navback.png")}
+          />
+        </TouchableOpacity>
+
+        <Text style={styles.txt1}>Chọn xuất chiếu</Text>
       </View>
 
       <FlatList
-        data={data}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
+        data={showtime}
+        renderItem={({ item }) => <ItemShowTime item={item}  navigation={navigation}/>}
+        keyExtractor={(item) => item._id}
       />
     </SafeAreaView>
   );
@@ -153,8 +68,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#130B2B",
   },
   navBack: {
-    width: 40,
-    height: 40,
+    width: 35,
+    height: 35,
     marginStart: 22,
   },
   txt1: {
@@ -230,16 +145,16 @@ const styles = StyleSheet.create({
     marginStart: 8,
     marginEnd: 7,
   },
-  img:{
-    marginStart:12,
-    marginTop:7.5,
+  img: {
+    marginStart: 12,
+    marginTop: 7.5,
   },
-  txtType:{
-    color:"#fff",
-    textAlign:"center",
-    fontSize:10,
-    fontWeight:"300",
-    marginTop:8.5,
-    marginStart:8,
-  }
+  txtType: {
+    color: "#fff",
+    textAlign: "center",
+    fontSize: 10,
+    fontWeight: "300",
+    marginTop: 8.5,
+    marginStart: 8,
+  },
 });

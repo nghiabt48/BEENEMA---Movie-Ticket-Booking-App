@@ -39,25 +39,30 @@ const DetailMovie = (props) => {
         }
     }
     const ReviewsUser = async () => {
-        
+
         const response = await AxiosIntance().get(`movies/${params.data._id}/reviews?user=${infoUser._id}`);
         if (response.status == "success") {
             console.log(infoUser._id)
         } else {
-            
+
         }
     }
-    
+
     const Post = async () => {
-        setisLoading(true)
-        const response = await AxiosIntance().post(`movies/${params.data._id}/reviews`, { review: review, rating: rating });
-        if (response.status == "success") {
-            ToastAndroid.show("Đăng review thành công", ToastAndroid.SHORT);
-            fetchReviews();
+
+        try {
+            setisLoading(true)
+            const response = await AxiosIntance().post(`movies/${params.data._id}/reviews`, { review: review, rating: rating });
+            if (response.status == "success") {
+                ToastAndroid.show("Đánh giá thành công", ToastAndroid.SHORT);
+                fetchReviews();
+                setisLoading(false)
+            }
+        } catch (error) {
+            ToastAndroid.show("Chỉ đánh giá được một lần", ToastAndroid.SHORT);
             setisLoading(false)
-        } else {
-            ToastAndroid.show("Đăng review thất bại", ToastAndroid.SHORT);
         }
+
     }
     const Back = () => {
         navigation.navigate("ListMovie")
@@ -65,6 +70,12 @@ const DetailMovie = (props) => {
     const TrailerClick = () => {
         navigation.navigate("Trailer", { trailer: params.data.trailer, title: params.data.title })
     }
+
+    const showTimeClick = async => {
+        navigation.navigate("ShowTime", { _id: params.data.id })
+      
+    }
+    
     return (
 
         <SafeAreaView style={styles.container}>
@@ -100,20 +111,20 @@ const DetailMovie = (props) => {
                 <View style={styles.Group8}>
                     <Text style={styles.text5} numberOfLines={showFullText ? undefined : 3}>{params.data.description}</Text>
                     {
-                        !showFullText ? <TouchableOpacity onPress={() => setShowFullText(true)}><Text style={styles.text8}>See more</Text></TouchableOpacity>
-                            : <TouchableOpacity onPress={() => setShowFullText(false)}><Text style={styles.text8}>Compact</Text></TouchableOpacity>
+                        !showFullText ? <TouchableOpacity onPress={() => setShowFullText(true)}><Text style={styles.text8}>Xem thêm</Text></TouchableOpacity>
+                            : <TouchableOpacity onPress={() => setShowFullText(false)}><Text style={styles.text8}>Thu gọn</Text></TouchableOpacity>
                     }
                 </View>
                 {/* btn BooKing */}
                 <View style={styles.Group4}>
-                    <TouchableOpacity style={styles.buttonBooking}>
+                    <TouchableOpacity style={styles.buttonBooking} onPress={showTimeClick}>
                         <LinearGradient
                             colors={['#F34C30', '#DA004E']}
                             style={styles.gradient}
                             end={{ x: 0.01, y: 1 }}
                         >
                             <View style={styles.fixToText2}>
-                                <Text style={styles.text6}>Booking</Text>
+                                <Text style={styles.text6}>Đặt vé</Text>
                                 <Image source={require('../image/arrowleft.png')} style={styles.boxImage5} />
                             </View>
                         </LinearGradient>
@@ -121,7 +132,7 @@ const DetailMovie = (props) => {
                 </View>
                 {/* edt review */}
                 <View style={styles.Group5}>
-                    <TextInput placeholder='Create your Review...'
+                    <TextInput placeholder='Tạo đánh giá của bạn...'
                         placeholderTextColor={'#ffff'}
                         style={styles.TextInputReview}
                         onChangeText={setreview}></TextInput>
@@ -134,7 +145,7 @@ const DetailMovie = (props) => {
                     }
                 </View>
                 <View style={styles.container1}>
-                    <Text style={styles.heading}>Tap to rate</Text>
+                    <Text style={styles.heading}>Xếp hạng cho phim này</Text>
                     <View style={styles.stars}>
                         <TouchableOpacity onPress={() => setrating(1)}>
                             <MaterialIcons
@@ -143,7 +154,7 @@ const DetailMovie = (props) => {
                                 style={rating >= 1 ? styles.starSelected : styles.starUnselected}
                             />
                             {
-                                
+
                             }
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => setrating(2)}>
@@ -179,7 +190,7 @@ const DetailMovie = (props) => {
                 <View style={styles.Group7}>
 
                 </View>
-                <Text style={styles.text7}>REVIEWS</Text>
+                <Text style={styles.text7}>Đánh giá</Text>
                 {/* get all review */}
                 <ScrollView horizontal={true} style={styles.Group6}>
                     {
@@ -284,7 +295,6 @@ const styles = StyleSheet.create({
 
     },
     Group6: {
-        borderWidth: 0.5,
         borderColor: '#DA004E',
         margin: 10,
     },
@@ -293,7 +303,7 @@ const styles = StyleSheet.create({
         borderTopWidth: 0.5
     },
     Group8: {
-        
+
     },
     text1: {
         width: '100%',

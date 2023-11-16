@@ -20,6 +20,7 @@ import ChangePassword from "./ChangePassword";
 import Trailer from "./Trailer";
 import SeatCinema from "./SeatCinema"
 import ShowTimes from "./ShowTimes";
+import SeatCinemaSocket from "./SeatCinemaSocket";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -43,15 +44,11 @@ const Main = () => {
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           if (route.name === "Home") {
-            return <Image source={require("../image/videoplay.png")} />;
-          } else if (route.name === "Test1") {
-            return <Image source={require("../image/videoplay.png")} />;
-          } else if (route.name === "Test2") {
-            return <Image source={require("../image/videoplay.png")} />;
+            return focused? <Image style={styles.ImageIcon} source={require("../image/movie3.png")} />: <Image style={styles.ImageIcon} source={require("../image/movie4.png")} />;
           } else if (route.name === "Profile") {
-            return <Image source={require("../image/profile.png")} />;
+            return focused? <Image style={styles.ImageIcon} source={require("../image/user1.png")} />: <Image style={styles.ImageIcon} source={require("../image/user2.png")} />;
           } else if (route.name === "Map") {
-            return <Image source={require("../image/profile.png")} />;
+            return focused? <Image style={styles.ImageIcon} source={require("../image/map1.png")} />: <Image style={styles.ImageIcon} source={require("../image/map2.png")} />;
           }
         },
         tabBarActiveTintColor: "#F74346",
@@ -67,27 +64,17 @@ const Main = () => {
       <Stack.Screen
         name="Home"
         component={BooKing}
-        options={{ headerShown: false, title: "Home" }}
-      />
-      <Stack.Screen
-        name="Test1"
-        component={SeatCinema}
-        options={{ headerShown: false }}
-      />
-      <Tab.Screen
-        name="Test2"
-        component={ShowTimes}
-        options={{ headerShown: false }}
+        options={{ headerShown: false, title: "Trang chủ" }}
       />
       <Tab.Screen
         name="Profile"
         component={Profile}
-        options={{ headerShown: false }}
+        options={{ headerShown: false ,title:"Cá nhân"}}
       />
       <Stack.Screen
         name="Map"
         component={Maps}
-        options={{ headerShown: false, title: "Maps" }}
+        options={{ headerShown: false, title: "Bản đồ" }}
       />
     </Tab.Navigator>
   );
@@ -115,6 +102,9 @@ const BooKing = () => {
       <Stack.Screen name="ListMovie" component={ListMovie} />
       <Stack.Screen name="DetailMovie" component={DetailMovie} />
       <Stack.Screen name="Trailer" component={Trailer} />
+      <Stack.Screen name="ShowTime" component={ShowTimes} />
+      <Stack.Screen name="SeatCinema" component={SeatCinema} />
+      <Stack.Screen name="SeatCinemaSocket" component={SeatCinemaSocket} />
     </Stack.Navigator>
   );
 };
@@ -139,7 +129,7 @@ export default AppNavigator;
 
 const styles = StyleSheet.create({
   ImageIcon: {
-    width: 25,
-    height: 25,
+    width: 30,
+    height: 30,
   },
 });

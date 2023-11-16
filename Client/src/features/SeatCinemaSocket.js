@@ -1,9 +1,10 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import AxiosIntance from './AxiosIntance';
-
+import { io } from 'socket.io-client';
+import { AppConText } from './AppConText';
+const host = "http://10.10.10.226:3000";
 const seats = [
     'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8',
     'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8',
@@ -19,27 +20,39 @@ const seats = [
     'L1', 'L2', 'L3', 'L4', 'L5', 'L6', 'L7', 'L8',
 ];
 const specialSeats = ['D4', 'A5', 'C1'];
-const SeatCinema = (props) => {
+const SeatCinemaSocket = (props) => {
     const { route } = props
     const { navigation } = props;
     const { params } = route
+    const [mess, setMess] = useState([]);
+    const [message, setMessage] = useState('');
+    const socketRef = useRef();
+    const [id, setId] = useState();
+    const { infoUser } = useContext(AppConText)
+    const showtimeId = params._id
+
     const [selectedSeats, setSelectedSeats] = useState([]);
-    const inputTimestamp = params.item.start_time;
-    const datePart = inputTimestamp.slice(0, 10);
-    const timePart = inputTimestamp.slice(11, 16);
-    const [cinema,setcinema] = useState([])
-    const ImageURL = `http://149.28.159.68:3000/img/movies/${params.item.movie.imageCover}`
-   
+    const [mySeats, setMySeats] = useState();
+    useEffect(() => {
+        
+        socketRef.current = io.connect(host)
+        
+        socketRef.current.on('seat_changed', dataGot => {
+           setSelectedSeats(dataGot.map(item => item.seat_number))
+        }) // 
+        
+        return () => {
+            socketRef.current.disconnect();
+        };
+    }, []);
     const handleSeatPress = (seatNumber) => {
-        if (specialSeats.includes(seatNumber)) {
-            // If the seat is special, do not change its background color
-            return;
-        }
-        if (selectedSeats.includes(seatNumber)) {
-            setSelectedSeats(selectedSeats.filter((seat) => seat !== seatNumber));
-        } else {
-            setSelectedSeats([...selectedSeats, seatNumber]);
-        }
+        const seat_obj = {
+            showtime: showtimeId, // showtime id
+            seat_number: seatNumber,
+            user: infoUser._id,
+            // status: 'selected' // available || selected
+        };
+        socketRef.current.emit('showtime:modify', seat_obj);
     };
     const renderSeats = () => {
         const seatLayout = [];
@@ -49,7 +62,7 @@ const SeatCinema = (props) => {
             for (let seat = 1; seat <= 8; seat++) {
                 const seatIndex = (column - 1) * 8 + seat - 1;
                 const seatNumber = seats[seatIndex];
-                const isSelected = selectedSeats.includes(seatNumber);
+                const isSelected = selectedSeats ? selectedSeats.includes(seatNumber) : false;
                 const isSpecialSeat = specialSeats.includes(seatNumber);
 
                 rowSeats.push(
@@ -72,43 +85,30 @@ const SeatCinema = (props) => {
         }
         return seatLayout;
     };
-    const Checkout = async () => {
-
-        try {
-           const response =  await AxiosIntance().get(`/rooms/${params.item.room._id}`)
-            setcinema(response.data.document.cinema.name)
-        } catch (error) {
-            console.log("Err at book function: " + err.response.data.message)
-        }
-    }
-    Checkout()
-    const Back = () => {
-        navigation.goBack();
-      }
     return (
 
         <SafeAreaView style={styles.container}>
             <ScrollView style={styles.container2}>
                 <View style={styles.viewGroup1}>
-                    <TouchableOpacity onPress={Back}>
+                    <TouchableOpacity >
                         <Image style={styles.ImageBack} source={require('../image/back3.png')}></Image>
                     </TouchableOpacity>
-                    <Text style={styles.textseat}>Chọn chỗ ngồi</Text>
+                    <Text style={styles.textseat}>Choose seats</Text>
                 </View>
                 <View style={styles.viewGroup2}>
-                    <Image style={styles.ImageMovies} source={{uri: ImageURL}}></Image>
+                    <Image style={styles.ImageMovies} source={require('../image/image3.png')}></Image>
                     <View>
                         <View style={styles.viewGroup4}>
                             <Image style={styles.ImageIcon} source={require('../image/layoutseat1.png')}></Image>
-                            <Text style={styles.textTitile}>{params.item.movie.title}</Text>
+                            <Text style={styles.textTitile}>Ten Phim</Text>
                         </View>
                         <View style={styles.viewGroup4}>
                             <Image style={styles.ImageIcon} source={require('../image/layoutseat3.png')}></Image>
-                            <Text style={styles.textTitile}>{cinema}</Text>
+                            <Text style={styles.textTitile}>Cinema</Text>
                         </View>
                         <View style={styles.viewGroup4}>
                             <Image style={styles.ImageIcon} source={require('../image/layoutseat2.png')}></Image>
-                            <Text style={styles.textTitile}>{datePart} {timePart}</Text>
+                            <Text style={styles.textTitile}>Date</Text>
                         </View>
                     </View>
                 </View>
@@ -118,20 +118,20 @@ const SeatCinema = (props) => {
                 <View style={styles.viewGroup5}>
                     <View style={styles.Group5}>
                         <View style={styles.viewwhite}></View>
-                        <Text style={styles.textAvailable}>Có sẵn</Text>
+                        <Text style={styles.textAvailable}>Available</Text>
                     </View>
                     <View style={styles.Group5}>
                         <View style={styles.viewred}></View>
-                        <Text style={styles.textAvailable}>Đã đặt</Text>
+                        <Text style={styles.textAvailable}>Resered</Text>
                     </View>
                     <View style={styles.Group5}>
                         <View style={styles.viewgreen}></View>
-                        <Text style={styles.textAvailable}>Đang chọn</Text>
+                        <Text style={styles.textAvailable}>Selected</Text>
                     </View>
                 </View>
                 {/* btn booking */}
                 <Text style={styles.selectedSeatsText}>
-                    Đang chọn ghế: {selectedSeats.join(', ')}
+                    Selected Seats: 1
                 </Text>
                 <View style={styles.Group4}>
                     <TouchableOpacity style={styles.buttonBooking}>
@@ -146,7 +146,7 @@ const SeatCinema = (props) => {
                                     <Text style={styles.textPice}>200.000VND</Text>
                                 </View>
 
-                                <Text style={styles.text6}>Tiếp tục</Text>
+                                <Text style={styles.text6}>Continue</Text>
                             </View>
                         </LinearGradient>
                     </TouchableOpacity>
@@ -156,7 +156,7 @@ const SeatCinema = (props) => {
     )
 }
 
-export default SeatCinema
+export default SeatCinemaSocket
 
 const styles = StyleSheet.create({
     container: {

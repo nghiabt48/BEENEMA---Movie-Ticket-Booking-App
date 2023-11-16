@@ -9,6 +9,9 @@ var debug = require('debug')('server:server');
 var http = require('http');
 const mongoose = require('mongoose')
 const dotenv = require('dotenv');
+const { Server } = require('socket.io');
+const SeatLogs = require('./model/seatLogs');
+const catchAsync = require('./utils/catchAsync');
 
 dotenv.config({ path: './config.env' });
 
@@ -38,6 +41,55 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
+const io = require("socket.io")(server, {
+  cors: {
+    origin: "*",
+  }
+});
+io.on('connection', (socket) => {
+  socket.on('clientSendData', async (data) => {
+
+    io.emit('serverSendData', "serverData");
+
+  });
+  socket.emit("getId", socket.id);
+  socket.on('join', () => {
+    socket.join('room')
+  })
+  socket.on("showtime:list", async (data) => {
+    console.log("enter list")
+    try {
+      const list = await SeatLogs.find({ showtime: data })
+      io.emit('seat_list',);
+      console.log(list)
+    } catch (e) {
+      console.log("list", e)
+    }
+  });
+  socket.on("showtime:modify", async (data) => {
+    console.log("entered Modify")
+    try {
+      const log = await SeatLogs.findOne({
+        showtime: data.showtime,
+        user: data.user,
+        seat_number: data.seat_number
+      })
+      if (log) {
+        await SeatLogs.findOneAndDelete(log._id)
+        return io.emit('seat_changed', await SeatLogs.find({ showtime: data.showtime }))
+
+      }
+      else {
+        await SeatLogs.create(data)
+        return io.emit('seat_changed', await SeatLogs.find({ showtime: data.showtime }));
+      }
+    } catch (e) {
+      console.log("modify", e)
+    }
+  })
+}
+)
+
 
 /**
  * Listen on provided port, on all network interfaces.
