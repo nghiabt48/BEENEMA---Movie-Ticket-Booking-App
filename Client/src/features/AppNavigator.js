@@ -15,7 +15,11 @@ import ProfileSettings from "./ProfileSettings";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DetailMovie from "./DetailMovie";
 import Maps from "./Maps";
+import UpdateProfile from "./UpdateProfile";
+import ChangePassword from "./ChangePassword";
 import Trailer from "./Trailer";
+import SeatCinema from "./SeatCinema"
+import ShowTimes from "./ShowTimes";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -57,6 +61,7 @@ const Main = () => {
         tabBarLabelStyle: {
           fontWeight: "700",
         },
+        tabBarHideOnKeyboard: true,
       })}
     >
       <Stack.Screen
@@ -66,12 +71,12 @@ const Main = () => {
       />
       <Stack.Screen
         name="Test1"
-        component={Test1}
+        component={SeatCinema}
         options={{ headerShown: false }}
       />
       <Tab.Screen
         name="Test2"
-        component={Test2}
+        component={ShowTimes}
         options={{ headerShown: false }}
       />
       <Tab.Screen
@@ -96,6 +101,8 @@ const Profile = () => {
     >
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
       <Stack.Screen name="ProfileSettings" component={ProfileSettings} />
+      <Stack.Screen name="UpdateProfile" component={UpdateProfile} />
+      <Stack.Screen name="ChangePassword" component={ChangePassword} />
     </Stack.Navigator>
   );
 };

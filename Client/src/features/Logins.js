@@ -6,7 +6,7 @@ import AxiosIntance from './AxiosIntance';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const Logins = (props) => {
     const { navigation } = props;
-    const { setisLogin } = useContext(AppConText);
+    const { setisLogin , setinfoUser} = useContext(AppConText);
     const [emailUser, setEmailUser] = useState("")
     const [passwordUser, setPasswordUser] = useState("")
     const LoginApp = async () => {
@@ -15,6 +15,8 @@ const Logins = (props) => {
             await AsyncStorage.setItem('token', response.token);
             ToastAndroid.show("Logged in successfully", ToastAndroid.SHORT);
             setisLogin(true) 
+            setinfoUser(response.data.user)
+            console.log(response.data.user)
         } catch (e) {
             console.log(e.response.data.message)
             ToastAndroid.show(e.response.data.message, ToastAndroid.SHORT);

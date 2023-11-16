@@ -1,58 +1,69 @@
 import { ActivityIndicator, FlatList, Image, ScrollView, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import ItemReview from '../Item/ItemReview'
 import { LinearGradient } from 'expo-linear-gradient'
 import ItemActor from '../Item/ItemActor'
 import AxiosIntance from './AxiosIntance'
 import { MaterialIcons } from '@expo/vector-icons';
+import { AppConText } from './AppConText'
 
 const DetailMovie = (props) => {
     const { route } = props
     const { navigation } = props;
     const { params } = route
     const [reviews, setreviews] = useState([])
-    const [loading, setloading] = useState(false)
+    const [isLoading, setisLoading] = useState(null);
     const [review, setreview] = useState("");
     const [rating, setrating] = useState("");
-    
+    const [showFullText, setShowFullText] = useState(false)
+    const { infoUser, setinfoUser } = useContext(AppConText);
 
     useEffect(() => {
-        const fetchReviews = async () =>{
-            setloading(true)
-            const response = await AxiosIntance().get(`movies/${params.data._id}/reviews`);
-            if (response.status == "success") {
-                setreviews(response.data.data);
-                setloading(false)
-            } else {
-                setloading(false)
-                
-            }
-        }
-        fetchReviews();
-        
+
+        fetchReviews()
         return () => {
 
         }
-    }, []);
+    }, [])
+
+    const fetchReviews = async () => {
+        setisLoading(true)
+        const response = await AxiosIntance().get(`movies/${params.data._id}/reviews`);
+        if (response.status == "success") {
+            setreviews(response.data.data);
+            setisLoading(false)
+        } else {
+            setisLoading(false)
+            setreview(null);
+        }
+    }
+    const ReviewsUser = async () => {
+        
+        const response = await AxiosIntance().get(`movies/${params.data._id}/reviews?user=${infoUser._id}`);
+        if (response.status == "success") {
+            console.log(infoUser._id)
+        } else {
+            
+        }
+    }
     
     const Post = async () => {
+        setisLoading(true)
         const response = await AxiosIntance().post(`movies/${params.data._id}/reviews`, { review: review, rating: rating });
-        setloading(true)
-        if (response.error == true) {
-            ToastAndroid.show("Đăng review thất bại", ToastAndroid.SHORT);
-            setloading(false)
-        } else {          
+        if (response.status == "success") {
             ToastAndroid.show("Đăng review thành công", ToastAndroid.SHORT);
-            setloading(false)
-
+            fetchReviews();
+            setisLoading(false)
+        } else {
+            ToastAndroid.show("Đăng review thất bại", ToastAndroid.SHORT);
         }
     }
     const Back = () => {
         navigation.navigate("ListMovie")
     }
     const TrailerClick = () => {
-        navigation.navigate("Trailer", { trailer: params.data.trailer })
+        navigation.navigate("Trailer", { trailer: params.data.trailer, title: params.data.title })
     }
     return (
 
@@ -79,14 +90,19 @@ const DetailMovie = (props) => {
                 </View>
                 {/* get actor */}
                 <FlatList
+
                     data={data}
                     horizontal={true}
                     style={styles.FlatList}
                     renderItem={({ item }) => <ItemActor data={item} />}
                     keyExtractor={(item) => item._id}
                     showsVerticalScrollIndicator={false} />
-                <View style={styles.Group3}>
-                    <Text style={styles.text5}>{params.data.description}</Text>
+                <View style={styles.Group8}>
+                    <Text style={styles.text5} numberOfLines={showFullText ? undefined : 3}>{params.data.description}</Text>
+                    {
+                        !showFullText ? <TouchableOpacity onPress={() => setShowFullText(true)}><Text style={styles.text8}>See more</Text></TouchableOpacity>
+                            : <TouchableOpacity onPress={() => setShowFullText(false)}><Text style={styles.text8}>Compact</Text></TouchableOpacity>
+                    }
                 </View>
                 {/* btn BooKing */}
                 <View style={styles.Group4}>
@@ -97,7 +113,7 @@ const DetailMovie = (props) => {
                             end={{ x: 0.01, y: 1 }}
                         >
                             <View style={styles.fixToText2}>
-                                <Text style={styles.text6}>BooKing</Text>
+                                <Text style={styles.text6}>Booking</Text>
                                 <Image source={require('../image/arrowleft.png')} style={styles.boxImage5} />
                             </View>
                         </LinearGradient>
@@ -126,6 +142,9 @@ const DetailMovie = (props) => {
                                 size={32}
                                 style={rating >= 1 ? styles.starSelected : styles.starUnselected}
                             />
+                            {
+                                
+                            }
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => setrating(2)}>
                             <MaterialIcons
@@ -157,17 +176,26 @@ const DetailMovie = (props) => {
                         </TouchableOpacity>
                     </View>
                 </View>
+                <View style={styles.Group7}>
+
+                </View>
                 <Text style={styles.text7}>REVIEWS</Text>
                 {/* get all review */}
-                <View>
+                <ScrollView horizontal={true} style={styles.Group6}>
                     {
-                        loading == true ? (
+                        isLoading == true ? (
                             <ActivityIndicator size="large" />
                         ) : (
-                            reviews.map((item, _id) => <ItemReview item={item} key={_id} />)
+                            // reviews.map((item, _id) => <ItemReview item={item} key={_id} />)
+                            <FlatList
+                                data={reviews}
+                                renderItem={({ item }) => <ItemReview item={item} />}
+                                keyExtractor={(item) => item._id}
+                                showsVerticalScrollIndicator={false} />
                         )
                     }
-                </View>
+                </ScrollView>
+
             </ScrollView>
         </SafeAreaView>
 
@@ -182,10 +210,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#130B2B',
     },
     container1: {
-        backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
         padding: 20,
+        marginTop: 15,
     },
     boxImage1: {
         width: 40,
@@ -238,7 +266,7 @@ const styles = StyleSheet.create({
     },
     Group3: {
         width: '100%',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     Group4: {
         width: '100%',
@@ -250,17 +278,22 @@ const styles = StyleSheet.create({
         width: '100%',
         flexDirection: 'row',
         alignItems: 'center',
-        borderWidth: 1,
+        borderWidth: 0.5,
         borderColor: '#DA004E',
         marginTop: 15,
+
     },
     Group6: {
-        justifyContent: 'space-around',
-        flexDirection: 'row',
-        marginTop: 5,
-        borderWidth: 1,
-        borderColor: '#fff',
-        borderRadius: 5
+        borderWidth: 0.5,
+        borderColor: '#DA004E',
+        margin: 10,
+    },
+    Group7: {
+        borderTopColor: '#DA004E',
+        borderTopWidth: 0.5
+    },
+    Group8: {
+        
     },
     text1: {
         width: '100%',
@@ -290,6 +323,8 @@ const styles = StyleSheet.create({
     text5: {
         color: '#fff',
         fontSize: 15,
+        marginStart: 15,
+        marginEnd: 15,
     },
     text6: {
         color: '#fff',
@@ -300,6 +335,12 @@ const styles = StyleSheet.create({
         color: '#DA004E',
         fontSize: 30,
         alignSelf: "center"
+    },
+    text8: {
+        color: '#DA004E',
+        fontSize: 14,
+        textDecorationLine: 'underline',
+        marginStart: 15
     },
     buttonTrailer: {
         width: 150,
@@ -321,7 +362,7 @@ const styles = StyleSheet.create({
     },
     TextInputReview: {
         flex: 1,
-        borderWidth: 1,
+        borderWidth: 0.5,
         borderColor: '#DA004E',
         padding: 8,
         borderRadius: 5,
@@ -339,12 +380,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderRadius: 20,
     },
-    heading: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 20,
-        color: '#fff'
-    },
     stars: {
         display: 'flex',
         flexDirection: 'row',
@@ -353,7 +388,14 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 20,
+        color: '#fff'
     },
+    starSelected: {
+        color: '#FFD700'
+    },
+    starUnselected: {
+        color: '#fff'
+    }
 })
 const data =
     [
