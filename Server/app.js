@@ -14,6 +14,7 @@ const bookingRouter = require('./router/bookingRouter')
 
 const globalErrorHandler = require('./controller/errorController');
 const AppError = require('./utils/appError');
+const SeatLogs = require('./model/seatLogs');
 
 
 const app = express();
@@ -31,7 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/api/users/reset-password/:token', (req, res, next) => {
   const currentUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
-  res.render('ResetPassword', {token: req.params.token, currentUrl})
+  res.render('ResetPassword', { token: req.params.token, currentUrl })
 })
 
 app.use('/api/showtimes', showtimeRouter)
@@ -42,6 +43,37 @@ app.use('/api/cinemas', cinemaRouter)
 app.use('/api/tickets', ticketRouter)
 app.use('/api/payments', paymentRouter)
 app.use('/api/bookings', bookingRouter)
+app.post('/test', async (req, res) => {
+  try{
+    const log = await SeatLogs.findOne({
+      showtime: req.body.showtime,
+      user: req.body.user,
+    })
+    if (log) {
+      const newLog = await SeatLogs.findOneAndUpdate(log._id, req.body, {
+        new: true
+      })
+      return res.status(200).json({
+        status: 'success',
+        log: newLog
+      })
+    }
+    else {
+      const newLog = await SeatLogs.create(req.body)
+      return res.status(200).json({
+        status: 'success',
+        log: newLog
+      })
+    }
+    
+  } catch(err) {
+    res.status(400).json({
+      status: 'failed',
+      message: err.message
+    })
+  }
+  
+})
 // error handler
 
 app.all('*', (req, res, next) => {
