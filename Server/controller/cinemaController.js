@@ -30,7 +30,6 @@ exports.getCinemasWithin = catchAsync(async (req, res, next) => {
 exports.getDistance = catchAsync(async(req, res, next) => {
   const { latlng } = req.params
   const [lat, lng] = latlng.split(',')
-  const radius = distance / 6378.1 // earth radius
   if (!lat || !lng) return next(new AppError('Please provide latitude and longitude in the format lat,lng.', 400))
  
   const distances = await Cinema.aggregate([
@@ -51,10 +50,11 @@ exports.getDistance = catchAsync(async(req, res, next) => {
       }
     }
   ])
+  distances.map(item => item.distance = item.distance.toFixed(2))
   res.status(200).json({
     status: 'success',
     data: {
-      data: distances
+      distances
     }
   })
 })

@@ -11,6 +11,7 @@ const paymentRouter = require('./router/paymentRouter')
 const reviewRouter = require('./router/reviewRouter')
 const showtimeRouter = require('./router/showtimeRouter')
 const bookingRouter = require('./router/bookingRouter')
+const actorRouter = require('./router/actorRouter')
 
 const globalErrorHandler = require('./controller/errorController');
 const AppError = require('./utils/appError');
@@ -43,37 +44,8 @@ app.use('/api/cinemas', cinemaRouter)
 app.use('/api/tickets', ticketRouter)
 app.use('/api/payments', paymentRouter)
 app.use('/api/bookings', bookingRouter)
-app.post('/test', async (req, res) => {
-  try{
-    const log = await SeatLogs.findOne({
-      showtime: req.body.showtime,
-      user: req.body.user,
-    })
-    if (log) {
-      const newLog = await SeatLogs.findOneAndUpdate(log._id, req.body, {
-        new: true
-      })
-      return res.status(200).json({
-        status: 'success',
-        log: newLog
-      })
-    }
-    else {
-      const newLog = await SeatLogs.create(req.body)
-      return res.status(200).json({
-        status: 'success',
-        log: newLog
-      })
-    }
-    
-  } catch(err) {
-    res.status(400).json({
-      status: 'failed',
-      message: err.message
-    })
-  }
-  
-})
+app.use('/api/actors', actorRouter)
+app.use('/api/rooms', require('./router/roomRouter'))
 // error handler
 
 app.all('*', (req, res, next) => {

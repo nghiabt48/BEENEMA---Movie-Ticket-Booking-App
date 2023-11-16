@@ -22,7 +22,7 @@ const ProfileSettings = (props) => {
         <TouchableOpacity onPress={goBack}>
           <Image style={{marginStart:36,marginTop:10}} source={require("../image/Back.png")} />
         </TouchableOpacity>
-        <Text style={styles.txt1}>Settings</Text>
+        <Text style={styles.txt1}>Cài đặt</Text>
       </View>
       <Image
         style={styles.settingsImg}
@@ -35,7 +35,7 @@ const ProfileSettings = (props) => {
             style={styles.imgView}
             source={require("../image/editwhite.png")}
           />
-          <Text style={styles.buttonText1}>Update profile</Text>
+          <Text style={styles.buttonText1}>Cập nhật hồ sơ</Text>
           <Image
             style={styles.btnArrow}
             source={require("../image/arrowright.png")}
@@ -46,7 +46,7 @@ const ProfileSettings = (props) => {
       <View style={styles.viewBtn}>
         <TouchableOpacity style={styles.btnMine} onPress={changePassword}>
           <Image style={styles.imgView} source={require("../image/lock.png")} />
-          <Text style={styles.buttonText1}>Change password</Text>
+          <Text style={styles.buttonText1}>Đổi mật khẩu</Text>
           <Image
             style={styles.btnArrow2}
             source={require("../image/arrowright.png")}
