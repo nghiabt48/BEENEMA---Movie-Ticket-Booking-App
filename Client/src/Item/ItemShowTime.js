@@ -5,7 +5,7 @@ const ItemShowTime = (props) => {
   const { item, navigation } = props;
 
   const RoomClick = function() {
-    navigation.navigate('SeatCinema',{item})
+    navigation.navigate('SeatCinemaSocket',{item})
   }
   //format thoi gian
   const inputTimestamp = item.start_time;
