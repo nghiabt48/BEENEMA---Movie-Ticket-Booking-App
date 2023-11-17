@@ -7,7 +7,7 @@ const ItemCinema = (props) => {
   const {movieId,setmovieId } = useContext(AppConText);
 
   const ShowTimesClick = () =>{
-    navigation.navigate('ShowTime',{movieId})
+    navigation.navigate('ShowTime',{item})
   }
   return (
     <View style={styles.container1}>
