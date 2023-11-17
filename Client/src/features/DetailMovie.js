@@ -77,7 +77,6 @@ const DetailMovie = (props) => {
     const showCinema = async =>{
         navigation.navigate("ChooseCinema", {_id:params.data.id})
         setmovieId({_id:params.data.id})
-        console.log({_id:params.data.id})
     }
     
     return (

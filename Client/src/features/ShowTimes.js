@@ -35,7 +35,7 @@ const ShowTimes = (props) => {
     setisLoading(true);
     const response = await AxiosIntance().get(`/showtimes?cinema=${params.item._id}`);
     if (response.status == "success") {
-      setshowtime(response.data.showtimes);
+      setshowtime(response.data.showtimes.filter(item => item.movie.id == movieId._id));
       setisLoading(false);
     } else {
       setisLoading(false);
