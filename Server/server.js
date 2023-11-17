@@ -47,37 +47,29 @@ const io = require("socket.io")(server, {
   }
 });
 io.on('connection', (socket) => {
-  socket.on('clientSendData', async (data) => {
-
-    io.emit('serverSendData', "serverData");
-
-  });
-  socket.emit("getId", socket.id);
-  socket.on('join', () => {
-    socket.join('room')
-  })
   socket.on("showtime:list", async (data) => {
-    console.log("enter list")
     try {
       const list = await SeatLogs.find({ showtime: data })
-      io.emit('seat_list',);
-      console.log(list)
+      socket.emit('seat_list', list);
     } catch (e) {
       console.log("list", e)
     }
   });
   socket.on("showtime:modify", async (data) => {
-    console.log("entered Modify")
     try {
+      // check seat nay co nguoi select chua
       const log = await SeatLogs.findOne({
         showtime: data.showtime,
-        user: data.user,
         seat_number: data.seat_number
       })
+      // neu seat dang dc select -> check user dang click co phai user da select ghe khong
       if (log) {
-        await SeatLogs.findOneAndDelete(log._id)
-        return io.emit('seat_changed', await SeatLogs.find({ showtime: data.showtime }))
-
+        if(log.user == data.user)
+        {
+          // thay doi trang thai ghe neu dung
+          await SeatLogs.findOneAndDelete(log._id)
+          return io.emit('seat_changed', await SeatLogs.find({ showtime: data.showtime }))
+        }
       }
       else {
         await SeatLogs.create(data)

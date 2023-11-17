@@ -32,7 +32,7 @@ const sendToken = (user, statusCode, req, res) => {
     }
   });
 };
-exports.protect = async(req, res, next) => {
+exports.protect =catchAsync(async(req, res, next) => {
   // Get token
   let token
   if(req.headers.authorization && req.headers.authorization.startsWith('Bearer'))
@@ -70,7 +70,7 @@ exports.protect = async(req, res, next) => {
   // GRANT ACCESS TO PROTECTED ROUTE
   req.user = currentUser;
   next();
-}
+})
 
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {

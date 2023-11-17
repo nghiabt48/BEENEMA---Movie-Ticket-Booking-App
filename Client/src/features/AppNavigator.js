@@ -18,9 +18,9 @@ import Maps from "./Maps";
 import UpdateProfile from "./UpdateProfile";
 import ChangePassword from "./ChangePassword";
 import Trailer from "./Trailer";
-import SeatCinema from "./SeatCinema"
 import ShowTimes from "./ShowTimes";
 import SeatCinemaSocket from "./SeatCinemaSocket";
+import AxiosIntance from "./AxiosIntance";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -103,18 +103,20 @@ const BooKing = () => {
       <Stack.Screen name="DetailMovie" component={DetailMovie} />
       <Stack.Screen name="Trailer" component={Trailer} />
       <Stack.Screen name="ShowTime" component={ShowTimes} />
-      <Stack.Screen name="SeatCinema" component={SeatCinema} />
       <Stack.Screen name="SeatCinemaSocket" component={SeatCinemaSocket} />
     </Stack.Navigator>
   );
 };
 const AppNavigator = () => {
   const { isLogin, setisLogin } = useContext(AppConText);
+  const { infoUser, setinfoUser } = useContext(AppConText);
 
   //get token  đã  lưu từ login
   const checkToken = async () => {
     const token = await AsyncStorage.getItem("token");
     if (token) {
+      const response = await AxiosIntance().get('users/me')
+      setinfoUser(response.data.document)
       setisLogin(true); // Đánh dấu người dùng đã đăng nhập
     }
   };
