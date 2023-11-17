@@ -21,6 +21,7 @@ import Trailer from "./Trailer";
 import SeatCinema from "./SeatCinema"
 import ShowTimes from "./ShowTimes";
 import SeatCinemaSocket from "./SeatCinemaSocket";
+import ChooseCinema from "./ChooseCinema";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -105,6 +106,7 @@ const BooKing = () => {
       <Stack.Screen name="ShowTime" component={ShowTimes} />
       <Stack.Screen name="SeatCinema" component={SeatCinema} />
       <Stack.Screen name="SeatCinemaSocket" component={SeatCinemaSocket} />
+      <Stack.Screen name="ChooseCinema" component={ChooseCinema} />
     </Stack.Navigator>
   );
 };

@@ -11,6 +11,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Axios } from "axios";
 import AxiosIntance from "./AxiosIntance";
 import ItemShowTime from "../Item/ItemShowTime";
+import { AppConText } from "./AppConText";
 
 
 const ShowTimes = (props) => {
@@ -19,9 +20,12 @@ const ShowTimes = (props) => {
   const { params } = route;
   const [showtime, setshowtime] = useState();
   const [isLoading, setisLoading] = useState(null);
+  const {movieId,setmovieId } = useContext(AppConText);
+
   const Back = () => {
     navigation.goBack();
   };
+
   useEffect(() => {
     fetchShowTime();
     return () => {};
@@ -29,9 +33,10 @@ const ShowTimes = (props) => {
 
   const fetchShowTime = async () => {
     setisLoading(true);
-    const response = await AxiosIntance().get(`/showtimes?movie=${params._id}`);
+    const response = await AxiosIntance().get(`/showtimes?movie=${params.movieId._id}`);
     if (response.status == "success") {
       setshowtime(response.data.data);
+      console.log(response.data.data)
       setisLoading(false);
     } else {
       setisLoading(false);
