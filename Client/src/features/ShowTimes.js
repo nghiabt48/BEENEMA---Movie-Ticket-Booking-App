@@ -33,10 +33,9 @@ const ShowTimes = (props) => {
 
   const fetchShowTime = async () => {
     setisLoading(true);
-    const response = await AxiosIntance().get(`/showtimes?movie=${params.movieId._id}`);
+    const response = await AxiosIntance().get(`/showtimes?cinema=${params.item._id}`);
     if (response.status == "success") {
-      setshowtime(response.data.data);
-      console.log(response.data.data)
+      setshowtime(response.data.showtimes);
       setisLoading(false);
     } else {
       setisLoading(false);
