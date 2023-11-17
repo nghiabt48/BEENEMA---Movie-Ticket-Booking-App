@@ -35,7 +35,19 @@ app.get('/api/users/reset-password/:token', (req, res, next) => {
   const currentUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
   res.render('ResetPassword', { token: req.params.token, currentUrl })
 })
-
+app.get('/api/logs', async(req, res, next) => {
+  try{
+    res.status(200).json({
+      status: 'success',
+      seat_logs: await SeatLogs.find(req.query)
+    })
+  } catch(err){
+    res.status(400).json({
+      status: 'failed',
+      message: err.message
+    })
+  }
+})
 app.use('/api/showtimes', showtimeRouter)
 app.use('/api/movies', productRouter)
 app.use('/api/users', usersRouter)

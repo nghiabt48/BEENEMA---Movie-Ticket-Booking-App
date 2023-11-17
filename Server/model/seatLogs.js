@@ -12,7 +12,7 @@ const logsSchema = new mongoose.Schema({
   seat_number: String,
   status: {
     type: String,
-    enum: ['available', 'selected', 'booked']
+    enum: ['available', 'selected', 'reserved']
   }
 })
 
