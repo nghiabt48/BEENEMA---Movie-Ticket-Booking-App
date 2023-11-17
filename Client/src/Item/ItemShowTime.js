@@ -1,11 +1,12 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
+import { AppConText } from "../features/AppConText";
 
 const ItemShowTime = (props) => {
   const { item, navigation } = props;
-
+  const { movieId, setmovieId } = useContext(AppConText);
   const RoomClick = function() {
-    navigation.navigate('SeatCinemaSocket',{item})
+    navigation.navigate('SeatCinemaSocket',{item,movieId})
   }
   //format thoi gian
   const inputTimestamp = item.start_time;
