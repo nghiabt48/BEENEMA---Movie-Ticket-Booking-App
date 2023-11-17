@@ -67,14 +67,15 @@ io.on('connection', (socket) => {
     }
   });
   socket.on("showtime:modify", async (data) => {
-    console.log("entered Modify")
     try {
       const log = await SeatLogs.findOne({
         showtime: data.showtime,
         user: data.user,
         seat_number: data.seat_number
       })
-      if (log) {
+      
+      if (log ) {
+        console.log(data , log._id)
         await SeatLogs.findOneAndDelete(log._id)
         return io.emit('seat_changed', await SeatLogs.find({ showtime: data.showtime }))
 
