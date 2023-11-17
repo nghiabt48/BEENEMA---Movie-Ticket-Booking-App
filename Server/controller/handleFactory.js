@@ -4,7 +4,6 @@ const APIFeatures = require('./../utils/apiFeatures');
 
 exports.getAll = (Model, populateOptions, populateOptions1) =>
   catchAsync(async (req, res, next) => {
-    // To allow for nested GET reviews on tour (hack)
     let filter = {};
     if (req.params.movieId) filter = { movie: req.params.movieId };
 
