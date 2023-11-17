@@ -20,7 +20,11 @@ import ChangePassword from "./ChangePassword";
 import Trailer from "./Trailer";
 import ShowTimes from "./ShowTimes";
 import SeatCinemaSocket from "./SeatCinemaSocket";
+
+import ChooseCinema from "./ChooseCinema";
+
 import AxiosIntance from "./AxiosIntance";
+
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -104,6 +108,7 @@ const BooKing = () => {
       <Stack.Screen name="Trailer" component={Trailer} />
       <Stack.Screen name="ShowTime" component={ShowTimes} />
       <Stack.Screen name="SeatCinemaSocket" component={SeatCinemaSocket} />
+      <Stack.Screen name="ChooseCinema" component={ChooseCinema} />
     </Stack.Navigator>
   );
 };

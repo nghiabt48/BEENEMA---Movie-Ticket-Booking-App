@@ -17,7 +17,7 @@ const DetailMovie = (props) => {
     const [review, setreview] = useState("");
     const [rating, setrating] = useState("");
     const [showFullText, setShowFullText] = useState(false)
-    const { infoUser, setinfoUser } = useContext(AppConText);
+    const { infoUser, setinfoUser, movieId,setmovieId } = useContext(AppConText);
 
     useEffect(() => {
 
@@ -73,7 +73,10 @@ const DetailMovie = (props) => {
 
     const showTimeClick = async => {
         navigation.navigate("ShowTime", { _id: params.data.id })
-      
+    }
+    const showCinema = async =>{
+        navigation.navigate("ChooseCinema", {_id:params.data.id})
+        setmovieId({_id:params.data.id})
     }
     
     return (
@@ -117,7 +120,7 @@ const DetailMovie = (props) => {
                 </View>
                 {/* btn BooKing */}
                 <View style={styles.Group4}>
-                    <TouchableOpacity style={styles.buttonBooking} onPress={showTimeClick}>
+                    <TouchableOpacity style={styles.buttonBooking} onPress={showCinema}>
                         <LinearGradient
                             colors={['#F34C30', '#DA004E']}
                             style={styles.gradient}
