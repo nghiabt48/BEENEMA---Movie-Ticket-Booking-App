@@ -1,5 +1,6 @@
 import {
   Image,
+  ScrollView,
   StyleSheet,
   Text,
   ToastAndroid,
@@ -44,93 +45,88 @@ const ProfileScreen = (props) => {
     await AsyncStorage.removeItem("token");
     ToastAndroid.show("Logout Succesfully!", ToastAndroid.SHORT);
   };
-
-  const navigateToProfileSettings = () => {
-    navigation.navigate("ProfileSettings");
-  };
+  const updateProfile = () =>{
+    navigation.navigate('UpdateProfile');
+  }
+  const changePassword = () =>{
+    navigation.navigate('ChangePassword');
+  }
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.Row1}>
-        <Text style={styles.textProfile}>Profile</Text>
-        <TouchableOpacity onPress={navigateToProfileSettings}>
-        <Image
-          style={styles.settingBtn}
-          source={require("../image/Settings.png")}
-        />
-        </TouchableOpacity>
-       
-      </View>
-      {/* avatar , name  */}
-      <View style={styles.Row2}>
-        <Image style={styles.avatarImg} source={userAvatar} />
-        <Text style={styles.row}>
-          <Text style={styles.txtName}>Hi! {infoUser.username}</Text>
-          {"\n"}
-          <Text style={styles.txtHello}>Welcome</Text>
-        </Text>
-      </View>
-      {/* Button My Tickets*/}
-      <View style={styles.viewBtn}>
-        <TouchableOpacity style={styles.btnMine}>
-          <Image
-            style={styles.imgView}
-            source={require("../image/Ticket.png")}
-          />
-          <Text style={styles.buttonText1}>My tickets</Text>
-          <Image
-            style={styles.btnArrow}
-            source={require("../image/arrowleft.png")}
-          />
-        </TouchableOpacity>
-      </View>
-      {/* Button My credit Cards*/}
-      <View style={styles.viewBtn2}>
-        <TouchableOpacity style={styles.btnMine}>
-          <Image style={styles.imgView} source={require("../image/card.png")} />
-          <Text style={styles.buttonText2}>My credit cards</Text>
-          <Image
-            style={styles.btnArrow2}
-            source={require("../image/arrowleft.png")}
-          />
-        </TouchableOpacity>
-      </View>
-      {/* Button History*/}
-      <View style={styles.viewBtn3}>
-        <TouchableOpacity style={styles.btnMine}>
-          <Image
-            style={styles.imgView}
-            source={require("../image/history.png")}
-          />
-          <Text style={styles.buttonText3}>History</Text>
-          <Image
-            style={styles.btnArrow3}
-            source={require("../image/arrowleft.png")}
-          />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.Row3}>
-        <Image source={require("../image/Edit.png")} />
-        <Text style={styles.textEdit}>Changes city</Text>
-      </View>
-      <View style={styles.Row4}>
-        <Image source={require("../image/info.png")} />
-        <Text style={styles.textInfo}>About us</Text>
-      </View>
-      {/* Button Logout */}
-      <View style={{ alignItems: "center", marginTop: 40 }}>
-        <LinearGradient
-          colors={["rgb(243, 76, 48)", "rgb(218, 0, 78)"]}
-          style={styles.btnLogOut}
-        >
-          <TouchableOpacity style={styles.buttonContainer} onPress={signOut}>
+      <ScrollView>
+        <View style={styles.Row1}>
+          <Text style={styles.textProfile}>Profile</Text>
+          
+        </View>
+        {/* avatar , name  */}
+        <View style={styles.Row2}>
+          <Image style={styles.avatarImg} source={userAvatar} />
+          <Text style={styles.row}>
+            <Text style={styles.txtName}>Chào! {infoUser.username}</Text>
+            {"\n"}
+            <Text style={styles.txtHello}>Chào mừng</Text>
+          </Text>
+        </View>
+        <View style={styles.ViewGroup}>
+        {/* Button My Tickets*/}
+        <View style={styles.viewBtn}>
+          <TouchableOpacity style={styles.btnMine}>
             <Image
-              style={styles.imgLogOut}
-              source={require("../image/logout.png")}
+              style={styles.imgView}
+              source={require("../image/Ticket.png")}
             />
-            <Text style={styles.buttonTextLogOut}>Logout</Text>
+            <Text style={styles.buttonText1}>Vé của tôi</Text>
+            <Image
+              style={styles.btnArrow}
+              source={require("../image/arrowleft.png")}
+            />
           </TouchableOpacity>
-        </LinearGradient>
-      </View>
+        </View>
+        {/* Button Update Profile*/}
+        <View style={styles.viewBtn2}>
+          <TouchableOpacity style={styles.btnMine} onPress={updateProfile}>
+            <Image style={styles.imgView} source={require("../image/Note.png")} />
+            <Text style={styles.buttonText2}>Cập nhật hồ sơ</Text>
+            <Image
+              style={styles.btnArrow2}
+              source={require("../image/arrowleft.png")}
+            />
+          </TouchableOpacity>
+        </View>
+        {/* Button Change password*/}
+        <View style={styles.viewBtn3}>
+          <TouchableOpacity style={styles.btnMine} onPress={changePassword}>
+            <Image
+              style={styles.imgView}
+              source={require("../image/SetTing.png")}
+            />
+            <Text style={styles.buttonText3}>Đổi mật khẩu</Text>
+            <Image
+              style={styles.btnArrow3}
+              source={require("../image/arrowleft.png")}
+            />
+          </TouchableOpacity>
+        </View>
+        </View>
+        {/* Button Logout */}
+        <View style={{ alignItems: "center", marginTop: 40, marginBottom: '20%' }}>
+          <LinearGradient
+            colors={["rgb(243, 76, 48)", "rgb(218, 0, 78)"]}
+            style={styles.btnLogOut}
+          >
+            <TouchableOpacity style={styles.buttonContainer} onPress={signOut}>
+              <Image
+                style={styles.imgLogOut}
+                source={require("../image/logout.png")}
+              />
+              <Text style={styles.buttonTextLogOut}>Đăng xuất</Text>
+            </TouchableOpacity>
+          </LinearGradient>
+        </View>
+       
+      </ScrollView>
+      {/* avatar , name  */}
+      
     </SafeAreaView>
   );
 };
@@ -211,10 +207,11 @@ const styles = StyleSheet.create({
   btnMine: {
     backgroundColor: "#2B2B38",
     padding: 10,
-    width: 288,
+    width: '100%',
     height: 58,
     borderRadius: 16,
     flexDirection: "row",
+    alignItems:'center'
   },
   buttonText1: {
     color: "white",
@@ -235,8 +232,7 @@ const styles = StyleSheet.create({
     marginStart: 20,
   },
   imgView: {
-    width: 26,
-    height: 20,
+    
     marginTop: 8,
     marginStart: 20,
   },
@@ -250,13 +246,13 @@ const styles = StyleSheet.create({
     width: 10.45,
     height: 12.41,
     marginTop: 10,
-    marginStart: 20,
+    marginStart: 25,
   },
   btnArrow3: {
     width: 10.45,
     height: 12.41,
     marginTop: 10,
-    marginStart: 100,
+    marginStart: 33,
   },
   textEdit: {
     color: "white",
@@ -289,4 +285,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: -25,
   },
+  ViewGroup:{
+    marginStart: '10%',
+    marginEnd:'10%'
+  }
 });
