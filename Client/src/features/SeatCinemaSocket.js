@@ -120,6 +120,7 @@ const SeatCinemaSocket = (props) => {
   const socketRef = useRef();
   const { infoUser } = useContext(AppConText);
   const showtimeId = params.item._id;
+  const roomId = params.item.room._id
   const [info, setInfo] = useState();
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [mySeats, setMySeats] = useState([]);
@@ -133,8 +134,11 @@ const SeatCinemaSocket = (props) => {
   useEffect(() => {
     socketRef.current = io.connect(host);
     socketRef.current.on("seat_changed", (dataGot) => {
-      setSelectedSeats(dataGot.map((item) => item.seat_number));
-      setMySeats(filterMySeats(dataGot));
+      if(dataGot[0].showtime == showtimeId && dataGot[0].room == roomId)
+      {
+        setSelectedSeats(dataGot.map((item) => item.seat_number));
+        setMySeats(filterMySeats(dataGot));
+      }
     });
     return () => {
       socketRef.current.disconnect();
@@ -144,7 +148,7 @@ const SeatCinemaSocket = (props) => {
     const seat_init = async () => {
       try {
         const response = await AxiosIntance().get(
-          `logs?showtime=${showtimeId}`
+          `logs?showtime=${showtimeId}&room=${roomId}`
         );
         setSelectedSeats(response.seat_logs.map((item) => item.seat_number));
         setMySeats(filterMySeats(response.seat_logs));
@@ -168,6 +172,7 @@ const SeatCinemaSocket = (props) => {
     const seat_obj = {
       showtime: showtimeId,
       seat_number: seatNumber,
+      room: roomId,
       user: infoUser._id,
     };
     socketRef.current.emit("showtime:modify", seat_obj);
