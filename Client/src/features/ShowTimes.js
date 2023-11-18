@@ -42,6 +42,8 @@ const ShowTimes = (props) => {
     }
   };
 
+  
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={{ flexDirection: "row" }}>
