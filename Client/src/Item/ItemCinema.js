@@ -1,26 +1,58 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { AppConText } from "../features/AppConText";
-
+import * as Location from "expo-location";
+import AxiosIntance from "../features/AxiosIntance";
 const ItemCinema = (props) => {
   const { item, navigation } = props;
-  const {movieId,setmovieId } = useContext(AppConText);
+  const { movieId, setmovieId } = useContext(AppConText);
+  const [location, setLocation] = useState(null);
+  const [theaters, setTheaters] = useState([]);
+  const [distances, setDistances] = useState([]);
 
-  const ShowTimesClick = () =>{
-    navigation.navigate('ShowTime',{item})
-  }
+  useEffect(() => {
+  
+    getCinemaDistance();
+  }, []);
+  const getCinemaDistance = async () => {
+    
+    let currentLocation = await Location.getCurrentPositionAsync({});
+    setLocation(currentLocation)
+    const latitude = currentLocation.coords.latitude;
+    const longitude = currentLocation.coords.longitude;
+    const respone = await AxiosIntance().get(
+      `/cinemas/distances/${latitude},${longitude}`
+    );
+    if (respone.status === "success") {
+       // Tìm phần tử có _id trùng với item._id 
+      setDistances(respone.data.distances.find(
+        (cinema) => cinema._id === item._id
+      ));
+    } else {
+      ToastAndroid.show("Đã xảy ra lỗi!", ToastAndroid.SHORT);
+    }
+  };
+
+
+  const ShowTimesClick = () => {
+    navigation.navigate("ShowTime", { item });
+  };
   return (
     <View style={styles.container1}>
       <TouchableOpacity onPress={ShowTimesClick}>
-      <View style={{ justifyContent: "space-between", flexDirection: "row" }}>
-        <Text style={styles.txt2}>{item.location.address}</Text>
-        <Text style={styles.txtRole}>{item.name}</Text>
-      </View>
-      <Image style={styles.line} source={require("../image/line.png")} />
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <Image style={styles.img} source={require("../image/seat.png")} />
-        <Text style={styles.txtType}>{item.type}</Text>
-      </View>
+        <View style={{ justifyContent: "space-between", flexDirection: "row" }}>
+          <View
+            style={{ flexDirection: "column", marginStart: "5%", marginTop: 10 }}
+          > 
+            <Image source={require("../image/location.png")} />
+            <Text style={styles.txr3}>{distances.distance} km</Text>
+          </View>
+          <View style={{ flexDirection: "column",marginStart:30,flexWrap:"wrap",flex:1,flexDirection:"row" }}>
+            <Text style={styles.txtRole}>{item.name}</Text>
+            <Text style={styles.txt2} >{item.location.address}</Text>
+          </View>
+        </View>
+        <Image style={styles.line} source={require("../image/line.png")} />
       </TouchableOpacity>
     </View>
   );
@@ -32,7 +64,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#130B2B",
-    
   },
   navBack: {
     width: 40,
@@ -70,11 +101,6 @@ const styles = StyleSheet.create({
   },
   container1: {
     backgroundColor: "#1A0F3C",
-    marginTop: 10,
-    marginStart: 21,
-    marginEnd: 19,
-    borderRadius: 5,
-    height: 81,
   },
   row: {
     flexDirection: "row",
@@ -83,17 +109,21 @@ const styles = StyleSheet.create({
   },
   txt2: {
     color: "#fff",
-    fontSize: 10,
-    fontWeight: "400",
+    fontSize: 12,
+    fontWeight: "200",
     marginTop: 6,
-    marginStart: 12,
+  },
+  txr3: {
+    color: "#fff",
+    fontSize: 12,
+    marginTop:5,
+    fontWeight: "300",
   },
   txtRole: {
-    color: "#fff",
-    fontSize: 10,
-    fontWeight: "300",
+    color: "#F74346",
+    fontSize: 16,
+    fontWeight: "500",
     marginTop: 6,
-    marginEnd: 9,
   },
   time: {
     color: "#fff",
@@ -106,10 +136,10 @@ const styles = StyleSheet.create({
     marginStart: 10,
   },
   line: {
-    width:'95%',
-    marginTop: 5,
-    marginStart: 8,
-    marginEnd: 7,
+    width: "95%",
+    marginTop: 16,
+    marginStart: 75,
+  
   },
   img: {
     marginStart: 12,

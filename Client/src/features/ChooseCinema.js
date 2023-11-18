@@ -20,7 +20,6 @@ import { AppConText } from "./AppConText";
     const { params } = route;
     const [cinema, setCinema] = useState();
     const [isLoading, setisLoading] = useState(null);
-
     const Back = () => {
       navigation.goBack();
     };
