@@ -125,7 +125,7 @@ const SeatCinemaSocket = (props) => {
   const [mySeats, setMySeats] = useState([]);
   const { movieId, setmovieId } = useContext(AppConText);
   const ImageURL = `http://149.28.159.68:3000/img/movies/${params.item.movie.imageCover}`
-  //console.log(ImageURL)
+
   const Back = () => {
     navigation.goBack();
   };
