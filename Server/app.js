@@ -11,9 +11,11 @@ const paymentRouter = require('./router/paymentRouter')
 const reviewRouter = require('./router/reviewRouter')
 const showtimeRouter = require('./router/showtimeRouter')
 const bookingRouter = require('./router/bookingRouter')
+const actorRouter = require('./router/actorRouter')
 
 const globalErrorHandler = require('./controller/errorController');
 const AppError = require('./utils/appError');
+const SeatLogs = require('./model/seatLogs');
 
 
 const app = express();
@@ -31,9 +33,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/api/users/reset-password/:token', (req, res, next) => {
   const currentUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
-  res.render('ResetPassword', {token: req.params.token, currentUrl})
+  res.render('ResetPassword', { token: req.params.token, currentUrl })
 })
-
+app.get('/api/logs', async(req, res, next) => {
+  try{
+    res.status(200).json({
+      status: 'success',
+      seat_logs: await SeatLogs.find(req.query)
+    })
+  } catch(err){
+    res.status(400).json({
+      status: 'failed',
+      message: err.message
+    })
+  }
+})
 app.use('/api/showtimes', showtimeRouter)
 app.use('/api/movies', productRouter)
 app.use('/api/users', usersRouter)
@@ -42,6 +56,8 @@ app.use('/api/cinemas', cinemaRouter)
 app.use('/api/tickets', ticketRouter)
 app.use('/api/payments', paymentRouter)
 app.use('/api/bookings', bookingRouter)
+app.use('/api/actors', actorRouter)
+app.use('/api/rooms', require('./router/roomRouter'))
 // error handler
 
 app.all('*', (req, res, next) => {

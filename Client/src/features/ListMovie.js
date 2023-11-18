@@ -17,7 +17,6 @@ const ListMovie = (props) => {
                 setdata(response.data.data);
                 setisLoading(false)
             } else {
-                ToastAndroid.show("Lay du lieu that bai", ToastAndroid.SHORT);
                 setisLoading(false)
                 setdata(null)
             }
@@ -47,14 +46,14 @@ const ListMovie = (props) => {
             setdata(respone.movie);
             setisLoading(false);
         } else {
-            ToastAndroid.show("Lay du lieu that bai", ToastAndroid.SHORT);
+            
         }
     }
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.Search}>
                 <Image source={require('../image/Layer3.png')} />
-                <TextInput placeholder='Search...' placeholderTextColor={'#ffff'} onChangeText={(text) => down(text)} style={styles.TextInputSearch}></TextInput>
+                <TextInput placeholder='Tìm kiếm...' placeholderTextColor={'#ffff'} onChangeText={(text) => down(text)} style={styles.TextInputSearch}></TextInput>
             </View>
             {
                 isLoading == true ? (

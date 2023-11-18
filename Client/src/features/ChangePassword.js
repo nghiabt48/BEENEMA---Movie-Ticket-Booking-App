@@ -21,12 +21,12 @@ const ChangePassword = (props) => {
                 newpassword: newPassword,
                 passwordconfirm: passwordConfirm
             });
-            ToastAndroid.show("Change Password Success", ToastAndroid.SHORT);
+            ToastAndroid.show("Đổi mật khẩu thành công", ToastAndroid.SHORT);
             //quay lại màn hình login
             setisLogin(false);
             await AsyncStorage.removeItem("token");
         } catch (e) {
-            ToastAndroid.show(e.response.data.message, ToastAndroid.SHORT);
+            ToastAndroid.show("Đổi mật khẩu thất bại", ToastAndroid.SHORT);
         }
 
     }
@@ -44,16 +44,16 @@ const ChangePassword = (props) => {
                 <Image style={styles.imagestyle} source={require('../icons/back.png')} />
             </TouchableOpacity>               
             <View style={{flex:1, justifyContent:'center', marginLeft:-50}}>
-                <Text style={[styles.textstyle, {textAlign:'center'}]}>Change Password</Text>
+                <Text style={[styles.textstyle, {textAlign:'center'}]}>Đổi mật khẩu</Text>
             </View>
         </View>
         {/* Phần nhập thông tin người dùng*/}
         <View style={styles.infocontainer}>
             {/* Phần nhập mật khẩu cũ */}
-            <Text style={styles.textstyle}>Current password:</Text>
+            <Text style={styles.textstyle}>Mật khẩu hiện tại</Text>
             <TextInput
                 style={styles.textinput}
-                placeholder="Enter current password"
+                placeholder="Nhập mật khẩu hiện tại..."
                 placeholderTextColor={'white'}
                 returnKeyType='next'
                 secureTextEntry={true}
@@ -61,20 +61,20 @@ const ChangePassword = (props) => {
                 onChangeText={setPassword}
             />
             {/* Phần nhập mật khẩu mới */}
-            <Text style={styles.textstyle}>Password:</Text>
+            <Text style={styles.textstyle}>Mật khẩu mới</Text>
             <TextInput 
                 style={styles.textinput}
-                placeholder="Enter new password"
+                placeholder="Nhập mật khẩu mới..."
                 placeholderTextColor={'white'}
                 secureTextEntry={true}
                 autoCorrect={false} 
                 onChangeText={setNewPassword}
                 />
             {/* Phần nhập lại mật khẩu mới */}
-            <Text style={styles.textstyle}>Confirm Password:</Text>
+            <Text style={styles.textstyle}>Xác nhận mật khẩu</Text>
             <TextInput 
                 style={styles.textinput}
-                placeholder="Enter Confirm password"
+                placeholder="Nhập xác nhận mật khẩu..."
                 placeholderTextColor={'white'}
                 secureTextEntry={true}
                 autoCorrect={false} 
@@ -89,7 +89,7 @@ const ChangePassword = (props) => {
                 colors={['#F34C30', '#DA004E']}>
                 <TouchableOpacity style={{flexDirection:'row', justifyContent:'center', alignItems:'center'}} onPress={ChangePassword}>
                     <Image style={{marginRight:'5%'}} source={require('../icons/password.png')}></Image>
-                    <Text style={styles.textstyle2}>Change Password</Text>
+                    <Text style={styles.textstyle2}>Đổi mật khẩu</Text>
                 </TouchableOpacity>
             </LinearGradient>         
         </View>    

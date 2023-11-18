@@ -1,11 +1,12 @@
 import { ActivityIndicator, FlatList, Image, ScrollView, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import ItemReview from '../Item/ItemReview'
 import { LinearGradient } from 'expo-linear-gradient'
 import ItemActor from '../Item/ItemActor'
 import AxiosIntance from './AxiosIntance'
 import { MaterialIcons } from '@expo/vector-icons';
+import { AppConText } from './AppConText'
 
 const DetailMovie = (props) => {
     const { route } = props
@@ -15,6 +16,8 @@ const DetailMovie = (props) => {
     const [isLoading, setisLoading] = useState(null);
     const [review, setreview] = useState("");
     const [rating, setrating] = useState("");
+    const [showFullText, setShowFullText] = useState(false)
+    const { infoUser, setinfoUser, movieId,setmovieId } = useContext(AppConText);
 
     useEffect(() => {
 
@@ -35,17 +38,31 @@ const DetailMovie = (props) => {
             setreview(null);
         }
     }
+    const ReviewsUser = async () => {
+
+        const response = await AxiosIntance().get(`movies/${params.data._id}/reviews?user=${infoUser._id}`);
+        if (response.status == "success") {
+            console.log(infoUser._id)
+        } else {
+
+        }
+    }
 
     const Post = async () => {
-        setisLoading(true)
-        const response = await AxiosIntance().post(`movies/${params.data._id}/reviews`, { review: review, rating: rating });
-        if (response.status == "success") {
-            ToastAndroid.show("Đăng review thành công", ToastAndroid.SHORT);
-            fetchReviews();
+
+        try {
+            setisLoading(true)
+            const response = await AxiosIntance().post(`movies/${params.data._id}/reviews`, { review: review, rating: rating });
+            if (response.status == "success") {
+                ToastAndroid.show("Đánh giá thành công", ToastAndroid.SHORT);
+                fetchReviews();
+                setisLoading(false)
+            }
+        } catch (error) {
+            ToastAndroid.show("Chỉ đánh giá được một lần", ToastAndroid.SHORT);
             setisLoading(false)
-        } else {
-            ToastAndroid.show("Đăng review thất bại", ToastAndroid.SHORT);
         }
+
     }
     const Back = () => {
         navigation.navigate("ListMovie")
@@ -53,6 +70,15 @@ const DetailMovie = (props) => {
     const TrailerClick = () => {
         navigation.navigate("Trailer", { trailer: params.data.trailer, title: params.data.title })
     }
+
+    const showTimeClick = async => {
+        navigation.navigate("ShowTime", { _id: params.data.id })
+    }
+    const showCinema = async =>{
+        navigation.navigate("ChooseCinema", {_id:params.data.id})
+        setmovieId({_id:params.data.id})
+    }
+    
     return (
 
         <SafeAreaView style={styles.container}>
@@ -85,19 +111,23 @@ const DetailMovie = (props) => {
                     renderItem={({ item }) => <ItemActor data={item} />}
                     keyExtractor={(item) => item._id}
                     showsVerticalScrollIndicator={false} />
-                <View style={styles.Group3}>
-                    <Text style={styles.text5}>{params.data.description}</Text>
+                <View style={styles.Group8}>
+                    <Text style={styles.text5} numberOfLines={showFullText ? undefined : 3}>{params.data.description}</Text>
+                    {
+                        !showFullText ? <TouchableOpacity onPress={() => setShowFullText(true)}><Text style={styles.text8}>Xem thêm</Text></TouchableOpacity>
+                            : <TouchableOpacity onPress={() => setShowFullText(false)}><Text style={styles.text8}>Thu gọn</Text></TouchableOpacity>
+                    }
                 </View>
                 {/* btn BooKing */}
                 <View style={styles.Group4}>
-                    <TouchableOpacity style={styles.buttonBooking}>
+                    <TouchableOpacity style={styles.buttonBooking} onPress={showCinema}>
                         <LinearGradient
                             colors={['#F34C30', '#DA004E']}
                             style={styles.gradient}
                             end={{ x: 0.01, y: 1 }}
                         >
                             <View style={styles.fixToText2}>
-                                <Text style={styles.text6}>BooKing</Text>
+                                <Text style={styles.text6}>Đặt vé</Text>
                                 <Image source={require('../image/arrowleft.png')} style={styles.boxImage5} />
                             </View>
                         </LinearGradient>
@@ -105,7 +135,7 @@ const DetailMovie = (props) => {
                 </View>
                 {/* edt review */}
                 <View style={styles.Group5}>
-                    <TextInput placeholder='Create your Review...'
+                    <TextInput placeholder='Tạo đánh giá của bạn...'
                         placeholderTextColor={'#ffff'}
                         style={styles.TextInputReview}
                         onChangeText={setreview}></TextInput>
@@ -118,7 +148,7 @@ const DetailMovie = (props) => {
                     }
                 </View>
                 <View style={styles.container1}>
-                    <Text style={styles.heading}>Tap to rate</Text>
+                    <Text style={styles.heading}>Xếp hạng cho phim này</Text>
                     <View style={styles.stars}>
                         <TouchableOpacity onPress={() => setrating(1)}>
                             <MaterialIcons
@@ -126,6 +156,9 @@ const DetailMovie = (props) => {
                                 size={32}
                                 style={rating >= 1 ? styles.starSelected : styles.starUnselected}
                             />
+                            {
+
+                            }
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => setrating(2)}>
                             <MaterialIcons
@@ -157,9 +190,12 @@ const DetailMovie = (props) => {
                         </TouchableOpacity>
                     </View>
                 </View>
-                <Text style={styles.text7}>REVIEWS</Text>
+                <View style={styles.Group7}>
+
+                </View>
+                <Text style={styles.text7}>Đánh giá</Text>
                 {/* get all review */}
-                <ScrollView horizontal={true}>
+                <ScrollView horizontal={true} style={styles.Group6}>
                     {
                         isLoading == true ? (
                             <ActivityIndicator size="large" />
@@ -188,11 +224,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#130B2B',
     },
     container1: {
-        backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
         padding: 20,
-        marginTop:15,
+        marginTop: 15,
     },
     boxImage1: {
         width: 40,
@@ -245,7 +280,7 @@ const styles = StyleSheet.create({
     },
     Group3: {
         width: '100%',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     Group4: {
         width: '100%',
@@ -257,17 +292,21 @@ const styles = StyleSheet.create({
         width: '100%',
         flexDirection: 'row',
         alignItems: 'center',
-        borderWidth: 1,
+        borderWidth: 0.5,
         borderColor: '#DA004E',
         marginTop: 15,
+
     },
     Group6: {
-        justifyContent: 'space-around',
-        flexDirection: 'row',
-        marginTop: 5,
-        borderWidth: 1,
-        borderColor: '#fff',
-        borderRadius: 5
+        borderColor: '#DA004E',
+        margin: 10,
+    },
+    Group7: {
+        borderTopColor: '#DA004E',
+        borderTopWidth: 0.5
+    },
+    Group8: {
+
     },
     text1: {
         width: '100%',
@@ -297,6 +336,8 @@ const styles = StyleSheet.create({
     text5: {
         color: '#fff',
         fontSize: 15,
+        marginStart: 15,
+        marginEnd: 15,
     },
     text6: {
         color: '#fff',
@@ -307,6 +348,12 @@ const styles = StyleSheet.create({
         color: '#DA004E',
         fontSize: 30,
         alignSelf: "center"
+    },
+    text8: {
+        color: '#DA004E',
+        fontSize: 14,
+        textDecorationLine: 'underline',
+        marginStart: 15
     },
     buttonTrailer: {
         width: 150,
@@ -328,7 +375,7 @@ const styles = StyleSheet.create({
     },
     TextInputReview: {
         flex: 1,
-        borderWidth: 1,
+        borderWidth: 0.5,
         borderColor: '#DA004E',
         padding: 8,
         borderRadius: 5,
@@ -354,7 +401,14 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 20,
+        color: '#fff'
     },
+    starSelected: {
+        color: '#FFD700'
+    },
+    starUnselected: {
+        color: '#fff'
+    }
 })
 const data =
     [

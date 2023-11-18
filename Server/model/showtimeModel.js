@@ -9,8 +9,11 @@ const showtimeSchema = new mongoose.Schema({
       type: mongoose.Schema.ObjectId,
       ref: 'Movie'
   },
-  time: [String],
-  price: Number
+  start_time: Date,
+  end_time: Date,
+  price: Number ,
+  booked_seats: [String]
+
 })
 
 const Showtime = mongoose.model('Showtime', showtimeSchema)

@@ -2,9 +2,8 @@ const catchAsync = require('./../utils/catchAsync')
 const AppError = require('./../utils/appError')
 const APIFeatures = require('./../utils/apiFeatures');
 
-exports.getAll = (Model, populateOptions) =>
+exports.getAll = (Model, populateOptions, populateOptions1) =>
   catchAsync(async (req, res, next) => {
-    // To allow for nested GET reviews on tour (hack)
     let filter = {};
     if (req.params.movieId) filter = { movie: req.params.movieId };
 
@@ -16,6 +15,9 @@ exports.getAll = (Model, populateOptions) =>
     let query = features.query
     if(populateOptions){
       query = query.populate(populateOptions)
+    }
+    if(populateOptions1){
+      query = query.populate(populateOptions1)
     }
     const doc = await query;
     // SEND RESPONSE
@@ -48,7 +50,8 @@ exports.updateOne = (Model, filteredBody) => catchAsync(async (req, res, next) =
     }
   })
 })
-exports.createOne = Model => catchAsync(async (req, res, next) => {
+exports.createOne = (Model) => catchAsync(async (req, res, next) => {
+  if(req.file) req.body.avatar = req.file.filename
   let document = await Model.create(req.body)
   res.status(201).json({
     status: 'success',
