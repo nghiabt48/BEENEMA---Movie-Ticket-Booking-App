@@ -45,7 +45,7 @@ const UpdateProfile = (props) => {
 
   //chọn hình trong kho ảnh để đăng lên (chưa tìm được cách để tạm ảnh hay nói thẳng là ngu nên xài api luôn)
   const pickImage = async () => {
-    try{
+    try {
       //Chọn hình
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -69,16 +69,16 @@ const UpdateProfile = (props) => {
         if (respone.status == "success") {
           console.log(respone);
           ToastAndroid.show("Update Image Successfully", ToastAndroid.SHORT);
-          setinfoUser({...infoUser, avatar: respone.path});
+          setinfoUser({ ...infoUser, avatar: respone.path });
         } else {
           ToastAndroid.show("Update Image Failed", ToastAndroid.SHORT);
         }
       }
     }
-    catch(e){
+    catch (e) {
       console.log(e);
     }
-    
+
   };
 
   const goBack = () => {
@@ -88,7 +88,7 @@ const UpdateProfile = (props) => {
   //Cập nhật profile
   const UpdateProfile = async () => {
     try {
-      
+
       const respone = await AxiosIntance().patch(
         "users/update-me",
         {
@@ -98,15 +98,15 @@ const UpdateProfile = (props) => {
           avatar: infoUser.avatar
         }
       );
-     
+
       if (respone.status == "success") {
         ToastAndroid.show("Update Profile Successfully", ToastAndroid.SHORT);
         console.log(respone.data);
       } else {
         ToastAndroid.show("Update Profile Failed", ToastAndroid.SHORT);
       }
-   
-      
+
+
     } catch (e) {
       ToastAndroid.show("Update Profile Failed", ToastAndroid.SHORT);
       console.log(e);
@@ -116,18 +116,14 @@ const UpdateProfile = (props) => {
   return (
     <View style={styles.container}>
       {/* Phần đầu */}
-      <View style={styles.header}>
+      <View style={styles.viewGroup1}>
         <TouchableOpacity onPress={goBack}>
           <Image
-            style={styles.imagestyle}
-            source={require("../icons/back.png")}
-          />
+            style={styles.ImageBack}
+            source={require("../image/Back.png")}
+          ></Image>
         </TouchableOpacity>
-        <View style={{ flex: 1, justifyContent: "center", marginLeft: -50 }}>
-          <Text style={[styles.textstyle, { textAlign: "center" }]}>
-            Update Profile
-          </Text>
-        </View>
+        <Text style={styles.textseat}>Cập nhật thông tin</Text>
       </View>
 
       {/* Phần cập nhật hình ảnh*/}
@@ -265,11 +261,28 @@ const styles = StyleSheet.create({
   updateimagecontainer: {
     justifyContent: "center",
     alignItems: "center",
+    marginTop:'10%'
   },
   updateimage: {
     width: "50%",
     height: undefined,
     aspectRatio: 1,
     borderRadius: 27,
+  },
+  ImageBack: {
+    width: 50,
+    height: 50,
+  },
+  viewGroup1: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
+  },
+  textseat: {
+    color: "white",
+    fontSize: 20,
+    fontWeight: "400",
+    flex: 1,
+    textAlign: "center",
   },
 });

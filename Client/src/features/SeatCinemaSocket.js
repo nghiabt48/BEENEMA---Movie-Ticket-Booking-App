@@ -125,6 +125,7 @@ const SeatCinemaSocket = (props) => {
   const [mySeats, setMySeats] = useState([]);
   const { movieId, setmovieId } = useContext(AppConText);
   const ImageURL = `http://149.28.159.68:3000/img/movies/${params.item.movie.imageCover}`
+
   const Back = () => {
     navigation.goBack();
   };
@@ -175,9 +176,9 @@ const SeatCinemaSocket = (props) => {
   const renderSeats = () => {
     const seatLayout = [];
     const reserved_seat = require("../image/reserved_seat.png");
-    const selected_seat = require("../image/selected_seat.png");
+    const selected_seat = require("../image/my_seat.png");
     const available_seat = require("../image/available_seat.png");
-    const my_seat = require("../image/my_seat.png");
+    const my_seat = require("../image/selected_seat.png");
 
     for (let column = 1; column <= 6; column++) {
       const rowSeats = [];
@@ -240,7 +241,7 @@ const SeatCinemaSocket = (props) => {
               source={require("../image/back3.png")}
             ></Image>
           </TouchableOpacity>
-          <Text style={styles.textseat}>Choose seats</Text>
+          <Text style={styles.textseat}>Chọn ghế</Text>
         </View>
         <View style={styles.viewGroup2}>
           <Image
@@ -275,17 +276,21 @@ const SeatCinemaSocket = (props) => {
         <View style={styles.viewGroup5}>
           <View style={styles.Group5}>
             <View style={styles.viewwhite}></View>
-            <Text style={styles.textAvailable}>Available</Text>
+            <Text style={styles.textAvailable}>Chưa đặt</Text>
           </View>
           <View style={styles.Group5}>
             <View style={styles.viewred}></View>
-            <Text style={styles.textAvailable}>Resered</Text>
+            <Text style={styles.textAvailable}>Đã đặt</Text>
           </View>
           <View style={styles.Group5}>
             <View style={styles.viewgreen}></View>
-            <Text style={styles.textAvailable}>Selected</Text>
+            <Text style={styles.textAvailable}>Đã được chọn</Text>
           </View>
         </View>
+        <View style={styles.Group6}>
+            <View style={styles.viewgblue}></View>
+            <Text style={styles.textAvailable2}>Đã được người khác chọn</Text>
+          </View>
         {/* btn booking */}
 
         <View style={styles.Group4}>
@@ -306,7 +311,7 @@ const SeatCinemaSocket = (props) => {
                   </Text>
                 </View>
 
-                <Text style={styles.text6}>Continue</Text>
+                <Text style={styles.text6}>Tiếp tục</Text>
               </View>
             </LinearGradient>
           </TouchableOpacity>
@@ -436,9 +441,20 @@ const styles = StyleSheet.create({
     fontWeight: "300",
     marginLeft: "7%",
   },
+  textAvailable2: {
+    color: "white",
+    fontSize: 12,
+    fontWeight: "300",
+    marginLeft: "2%"
+  },
   Group5: {
     flexDirection: "row",
     alignItems: "center",
+  },
+  Group6: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginStart: 10,
   },
   viewwhite: {
     backgroundColor: "white",
@@ -454,6 +470,12 @@ const styles = StyleSheet.create({
   },
   viewgreen: {
     backgroundColor: "#6AFF70",
+    width: 12,
+    height: 12,
+    borderRadius: 100,
+  },
+  viewgblue: {
+    backgroundColor: "#3CCFEF",
     width: 12,
     height: 12,
     borderRadius: 100,
