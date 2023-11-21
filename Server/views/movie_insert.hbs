@@ -1,0 +1,83 @@
+<script src="/menu/sidemenu.js"></script>
+<link rel="stylesheet" type="text/css" href="/menu/sidemenu.css" media="screen">
+
+<div class="row">
+            <div class="col-1 d-flex justify-content-center">
+                <div id="mySidenav" class="sidenav">
+                    <a href="/index"><i class="bi bi-film p-2"></i>Movie</a>
+                    <a href="/index/insert_getmovie"><i class="bi bi-file-plus p-2"></i>Insert Movie</a>
+                    <a href="/user"><i class="bi bi-person p-2"></i>User</a>    
+                </div>
+            </div>
+</div>
+<!--Navbar-->
+<nav class="navbar navbar-light bg-dark" style="box-shadow: 0px 0px 8px #888888;">
+    <!-- Collapse button -->
+    <button class="navbar-toggler hamburger-button" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation" onclick="Nav()" style="z-index: 2">
+        <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+    <!-- Navbar brand -->
+    <div class="mx-auto order-0">
+        <a class="navbar-brand mx-auto text-white fw-bold" href="#">{{titles}}</a>
+    </div>
+</nav>
+<!--/.Navbar-->
+<!-- Nội dung -->
+<div class="container">
+        <form action="/index/insert_postmovie" method="post">
+            <div class="mb-3 mt-3">
+                <label for="room">Title</label>
+                <input type="text" class="form-control" id="title" name="title">
+            </div>
+            <div class="mb-3">
+                <label for="day">Category:</label>
+                <select class="form-control" id="category" name="category" required>
+                    <option >action</option>
+                    <option >comedy</option>
+                    <option >science-fiction</option>
+                    <option >drama</option>
+                    <option >fantasy</option>
+                    <option >tragedy</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="time">Ratings Average:</label>
+                <input type="number" class="form-control" id="ratingsAverage" name="ratingsAverage" min="1.0" max="5.0" required>
+            </div>
+            <div class="mb-3">
+                <label for="course_name">Ratings Quantity:</label>
+                <input type="text" class="form-control" id="ratingsQuantity" name="ratingsQuantity">
+            </div>
+            <div class="mb-3">
+                <label for="class_name">Image Cover</label>
+                <input type="file" class="form-control" id="imageCover" name="imageCover">
+            </div>
+            <div class="mb-3">
+                <label for="teacher_name">Actor:</label>
+                <input type="text" class="form-control" id="actor" name="actor" required>
+            </div>
+            <div class="mb-3">
+                <label for="address">Trailer:</label>
+                <input type="text" class="form-control" id="trailer" name="trailer">
+            </div>
+            <div class="mb-3">
+                <label for="address">Duration:</label>
+                <input type="text" class="form-control" id="duration" name="duration">
+            </div>
+            <div class="mb-3">
+                <label for="address">Release Date:</label>
+                <input type="text" class="form-control" id="release_date" name="release_date">
+            </div>
+            <div class="mb-3">
+                <label for="address">Description:</label>
+                <input type="text" class="form-control" id="description" name="description">
+            </div>
+            <div class="mb-3">
+                <label for="address">Country:</label>
+                <input type="text" class="form-control" id="country" name="country">
+            </div>
+            <button name="submit" type="submit" class="btn btn-success">Add Movie</button>
+        </form>
+    </div>
+
+<!-- Nội dung -->

@@ -16,18 +16,27 @@ const catchAsync = require('./utils/catchAsync');
 dotenv.config({ path: './config.env' });
 
 // db connection
-const DB = process.env.DATABASE.replace(
-  '<PASSWORD>',
-  process.env.DATABASE_PASSWORD
-);
+// const DB = process.env.DATABASE.replace(
+//   '<PASSWORD>',
+//   process.env.DATABASE_PASSWORD
+// );
 
-mongoose
-  .connect(DB, {
-    useNewUrlParser: true
+// mongoose
+//   .connect(DB, {
+//     useNewUrlParser: true
 
-  })
-  .then(() => console.log('DB connection successful!'));
-
+//   })
+//   .then(() => console.log('DB connection successful!'));
+async function connectDB(){
+  const uri = "mongodb+srv://hungdgps23169:1234@cluster0.gzwkhgi.mongodb.net/"
+  try{
+      await mongoose.connect(uri);
+      console.log("Mongodb Successfully");
+  }catch(e){
+      console.log(e);
+  }
+}
+connectDB();
 
 /**
  * Get port from environment and store in Express.

@@ -5,7 +5,7 @@
                 <div id="mySidenav" class="sidenav">
                     <a href="/index"><i class="bi bi-film p-2"></i>Movie</a>
                     <a href="/index/insert_getmovie"><i class="bi bi-file-plus p-2"></i>Insert Movie</a>
-                    <a href="/user"><i class="bi bi-person p-2"></i>User</a>    
+                    <a href="/user"><i class="bi bi-person p-2"></i>User</a>     
                 </div>
             </div>
 </div>
@@ -26,22 +26,17 @@
     <table class="table table-striped text-center">
       <thead>
         <tr>
-          <th>Title</th>
-          <th>Category</th>
-          <th>Ratings Average</th>
-          <th>Interact</th>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Role</th>
         </tr>
       </thead>
       <tbody>
-        {{#each movies}}
+        {{#each users}}
         <tr>
-            <td>{{this.title}}</td>
-            <td>{{this.category}}</td>
-            <td>{{this.ratingsAverage}}</td>
-            <td>
-              <a href='/index/deletemovie/{{this.id}}' class='btn btn-danger'>Delete</a>
-              <a href='/index/detailmovie/{{this.id}}' class='btn btn-primary'>Update</a>
-            </td>
+            <td>{{this.username}}</td>
+            <td>{{this.email}}</td>
+            <td>{{this.role}}</td>
         </tr>
         {{/each}}
       </tbody>
