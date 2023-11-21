@@ -8,6 +8,7 @@ import {
   Image,
   ScrollView,
   ToastAndroid,
+  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { io } from "socket.io-client";
@@ -134,6 +135,12 @@ const SeatCinemaSocket = (props) => {
   useEffect(() => {
     socketRef.current = io.connect(host);
     socketRef.current.on("seat_changed", (dataGot) => {
+      // chua co ai chon ghe
+      if(dataGot.length == 0) {
+        setSelectedSeats([])
+        setMySeats([])
+        return
+      }
       if(dataGot[0].showtime == showtimeId && dataGot[0].room == roomId)
       {
         setSelectedSeats(dataGot.map((item) => item.seat_number));
@@ -177,7 +184,38 @@ const SeatCinemaSocket = (props) => {
     };
     socketRef.current.emit("showtime:modify", seat_obj);
   };
+  const checkout = async(my_seats) => {
+    try {
+      // 1. Get checkout session
+      const response = await AxiosIntance().post(`tickets/checkout/${showtimeId}`, {
+        seats: my_seats
+      })
+      // 2. Create checkout form + charge credit card
+      //Số thẻ để test: 4242 4242 4242 4242
+      const initResponse = await initPaymentSheet({
+        merchantDisplayName: 'BEENEMA',
+        paymentIntentClientSecret: response.paymentIntent,
+      })
+      if (initResponse.error) {
+        console.log(initResponse.error)
+        Alert.alert("Something went wrong at initialize payment sheet")
+        return
+      }
+      // 3.Present the payment sheet to the user
 
+      const paymentResponse = await presentPaymentSheet()
+      if (paymentResponse.error) {
+        Alert.alert(`Error: ${paymentResponse.error.code}`, paymentResponse.error.message)
+        return
+      }
+      Alert.alert(`Success`, 'The payment was confirmed successfully')
+      // 4. After paying, create the ticket
+      await AxiosIntance().post(`tickets/checkout/${showtimeId}/create-ticket`, {  seat_number: my_seats })
+    } catch (err) {
+      console.log("Err at book function: " + err.response.data.message)
+    }
+
+  }
   const renderSeats = () => {
     const seatLayout = [];
     const reserved_seat = require("../image/reserved_seat.png");
@@ -299,7 +337,7 @@ const SeatCinemaSocket = (props) => {
         {/* btn booking */}
 
         <View style={styles.Group4}>
-          <TouchableOpacity style={styles.buttonBooking}>
+          <TouchableOpacity style={styles.buttonBooking} onPress={() => checkout(mySeats)}>
             <LinearGradient
               colors={["#F34C30", "#DA004E"]}
               style={styles.gradient}

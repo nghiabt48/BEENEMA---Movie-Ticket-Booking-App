@@ -12,12 +12,15 @@ const ticketSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'Showtime'
   },
-  obtained_seat: String,
-  booking_Time: {
+  seats: [String],
+  booking_time: {
     type: Date,
     default: Date.now()
   },
-  price: Number
+  ticket_code: {
+    type: String,
+    default: "GKSNDS" // random strings for ticket codes
+  }
 })
 ticketSchema.statics.calculatePrice = async function (ticketID) {
   try {
