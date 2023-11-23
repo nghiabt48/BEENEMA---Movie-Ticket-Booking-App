@@ -24,6 +24,7 @@ import SeatCinemaSocket from "./SeatCinemaSocket";
 import ChooseCinema from "./ChooseCinema";
 
 import AxiosIntance from "./AxiosIntance";
+import ListTicket from "./ListTicket";
 
 
 const Stack = createNativeStackNavigator();
@@ -94,6 +95,7 @@ const Profile = () => {
       <Stack.Screen name="ProfileSettings" component={ProfileSettings} />
       <Stack.Screen name="UpdateProfile" component={UpdateProfile} />
       <Stack.Screen name="ChangePassword" component={ChangePassword} />
+      <Stack.Screen name="ListTicket" component={ListTicket} />
     </Stack.Navigator>
   );
 };

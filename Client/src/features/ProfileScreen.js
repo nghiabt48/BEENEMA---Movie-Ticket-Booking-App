@@ -51,6 +51,9 @@ const ProfileScreen = (props) => {
   const changePassword = () =>{
     navigation.navigate('ChangePassword');
   }
+  const myTicket = () =>{
+    navigation.navigate('ListTicket');
+  }
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
@@ -70,7 +73,7 @@ const ProfileScreen = (props) => {
         <View style={styles.ViewGroup}>
         {/* Button My Tickets*/}
         <View style={styles.viewBtn}>
-          <TouchableOpacity style={styles.btnMine}>
+          <TouchableOpacity style={styles.btnMine} onPress={myTicket}>
             <Image
               style={styles.imgView}
               source={require("../image/Ticket.png")}
