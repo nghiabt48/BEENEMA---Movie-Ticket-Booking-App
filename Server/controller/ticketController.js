@@ -30,11 +30,11 @@ exports.getShowtime = catchAsync(async (req, res, next) => {
 })
 exports.getTicketFromOneUser = catchAsync(async (req, res, next) => {
   const user = req.user.id
-  const tickets = await Ticket.find({ user }).populate({ path: 'movie', select: 'title' }).populate({ path: 'showtime', select: 'start_time' })
+  const tickets = await Ticket.find({ user })
   res.status(200).json({
     status: 'success',
     data: {
-      ticket: tickets
+      tickets
     }
   })
 })
