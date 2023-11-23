@@ -72,13 +72,13 @@ exports.createTicketCheckout = catchAsync(async (req, res, next) => {
   const { seat_number } = req.body
 
   if (!req.user.id || !showtime || !seat_number) return next(new AppError("Don't have enough fields to create a ticket"), 400)
-  const ticket = await Ticket.create({
+  const ticket = Ticket.create({
     user: req.user.id, 
     showtime: showtime._id, 
     seats: seat_number, 
   })
   res.status(201).json({
     status: 'success',
-    data: ticket
+    data: await ticket
   })
 })

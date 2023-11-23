@@ -13,6 +13,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { io } from "socket.io-client";
 import { AppConText } from "./AppConText";
+import { useStripe } from '@stripe/stripe-react-native'
 const host = "http://149.28.159.68:3000";
 import AxiosIntance from "./AxiosIntance";
 const seats = [
@@ -113,7 +114,6 @@ const seats = [
   "L7",
   "L8",
 ];
-const specialSeats = ["D4", "A5", "C1"];
 const SeatCinemaSocket = (props) => {
   const { route } = props;
   const { navigation } = props;
@@ -122,10 +122,10 @@ const SeatCinemaSocket = (props) => {
   const { infoUser } = useContext(AppConText);
   const showtimeId = params.item._id;
   const roomId = params.item.room._id
-  const [info, setInfo] = useState();
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [mySeats, setMySeats] = useState([]);
-  const { movieId, setmovieId } = useContext(AppConText);
+  const { initPaymentSheet, presentPaymentSheet } = useStripe()
+  const [specialSeats, setspecialSeats] = useState([])
   const ImageURL = `http://149.28.159.68:3000/img/movies/${params.item.movie.imageCover}`
 
   const Back = () => {
@@ -143,6 +143,7 @@ const SeatCinemaSocket = (props) => {
       }
       if(dataGot[0].showtime == showtimeId && dataGot[0].room == roomId)
       {
+        setspecialSeats(filterReservedSeats(dataGot))
         setSelectedSeats(dataGot.map((item) => item.seat_number));
         setMySeats(filterMySeats(dataGot));
       }
@@ -152,11 +153,13 @@ const SeatCinemaSocket = (props) => {
     };
   }, []);
   useEffect(() => {
+
     const seat_init = async () => {
       try {
         const response = await AxiosIntance().get(
           `logs?showtime=${showtimeId}&room=${roomId}`
         );
+        setspecialSeats(filterReservedSeats(response.seat_logs))
         setSelectedSeats(response.seat_logs.map((item) => item.seat_number));
         setMySeats(filterMySeats(response.seat_logs));
       } catch (e) {
@@ -169,8 +172,12 @@ const SeatCinemaSocket = (props) => {
     seat_init();
     return () => {};
   }, []);
+  const filterReservedSeats = (arr) => {
+    arr = arr.filter((item) => item.status == "reserved");
+    return arr.length > 0 ? arr.map((item) => item.seat_number) : specialSeats;
+  }
   const filterMySeats = (arr) => {
-    arr = arr.filter((item) => item.user == infoUser._id);
+    arr = arr.filter((item) => item.user == infoUser._id && item.status != "reserved");
     return arr.map((item) => item.seat_number);
   };
   const handleSeatPress = (seatNumber) => {
@@ -190,6 +197,7 @@ const SeatCinemaSocket = (props) => {
       const response = await AxiosIntance().post(`tickets/checkout/${showtimeId}`, {
         seats: my_seats
       })
+
       // 2. Create checkout form + charge credit card
       //Số thẻ để test: 4242 4242 4242 4242
       const initResponse = await initPaymentSheet({
@@ -211,8 +219,13 @@ const SeatCinemaSocket = (props) => {
       Alert.alert(`Success`, 'The payment was confirmed successfully')
       // 4. After paying, create the ticket
       await AxiosIntance().post(`tickets/checkout/${showtimeId}/create-ticket`, {  seat_number: my_seats })
+      socketRef.current.emit("showtime:reserved", {
+        showtime: showtimeId,
+        user: infoUser._id,
+        room: roomId      
+      })
     } catch (err) {
-      console.log("Err at book function: " + err.response.data.message)
+      console.log("Err at book function: " + err)
     }
 
   }

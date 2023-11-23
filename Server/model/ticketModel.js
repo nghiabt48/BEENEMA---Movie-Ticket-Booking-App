@@ -3,6 +3,9 @@ const Movie = require('./movieModel');
 const Showtime = require('./showtimeModel');
 const AppError = require('../utils/appError');
 
+const currentTimestamp = Date.now(); 
+const offsetHours = 7; 
+const date = new Date(currentTimestamp + offsetHours * 60 * 60 * 1000);
 const ticketSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.ObjectId,
@@ -15,7 +18,7 @@ const ticketSchema = new mongoose.Schema({
   seats: [String],
   booking_time: {
     type: Date,
-    default: Date.now()
+    default: date.toLocaleString()
   },
   ticket_code: {
     type: String,
