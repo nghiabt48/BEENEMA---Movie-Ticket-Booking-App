@@ -6,12 +6,14 @@ import MapView, { Callout, Marker, Polyline } from "react-native-maps";
 import cinemaMarkerImage from "../image/cinema3.png";
 import userMarkerImage from "../image/userlocation.png";
 import AxiosIntance from "./AxiosIntance";
+import Autocomplete from "react-native-autocomplete-input";
 const Maps = () => {
   const [location, setLocation] = useState(null);
   const mapRef = useRef(null); // Ref cho MapView
   const [theaters, setTheaters] = useState([]);
   const [distances, setDistances] = useState([]);
-  const [data, setdata] = useState(null);
+  const [data, setdata] = useState([]);
+  const [query, setQuery] = useState("");
   useEffect(() => {
     const getPermissions = async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -63,17 +65,6 @@ const Maps = () => {
     }
   };
 
-  // set time out
-  let timeOut = null;
-  const down = (searchText) => {
-    if (timeOut) {
-      clearTimeout(timeOut);
-    }
-    timeOut = setTimeout(() => {
-      searchCinema(searchText);
-    }, 1000);
-  };
-
   const navigateToCinemaLocation = (latitude, longitude) => {
     // Sử dụng hàm setRegion của MapView để cập nhật vị trí hiện tại của bản đồ
     mapRef.current.animateToRegion({
@@ -84,36 +75,55 @@ const Maps = () => {
     });
   };
 
-  const searchCinema = async (searchText) => {
-    const respone = await AxiosIntance().get("/cinemas?name=" + searchText);
-    if (respone.status == "success") {
-      const cinemaData = respone.data.data;
-      setdata(cinemaData[0]);
+  const searchCinema = async (text) => {
+    const respone = await AxiosIntance().get("/cinemas?name=" + text);
+    if (respone.status === "success") {
+      const cinemaData = respone.data;
+      setdata(cinemaData);
+      // console.log(cinemaData);
 
       // Kiểm tra xem có dữ liệu vị trí không trước khi chuyển đến vị trí đầu tiên
-      if (data.location) {
-        const firstCinemaLocation = data.location.coordinates;
-       
-        //  console.log(data.location.coordinates)
+      if (cinemaData.length > 0 && cinemaData[0].location) {
+        const firstCinemaLocation = cinemaData[0].location.coordinates;
+
         navigateToCinemaLocation(
           firstCinemaLocation[1],
           firstCinemaLocation[0]
         );
       }
     } else {
+      // Xử lý trường hợp lỗi
     }
   };
 
+ 
+
+  const renderSuggestions = ({ item }) => {
+    console.log(item); // Log giá trị của trường "name" trong đối tượng item
+    return (
+      <View>
+        <Text>{item}</Text>
+      </View>
+    );
+  };
+  
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#130B2B" }}>
       <View style={styles.Search}>
-        <Image source={require("../image/Layer3.png")} />
-        <TextInput
+        <Autocomplete
+          data={data}
+          value={query}
+          onChangeText={(text) => {
+            setQuery(text);
+            searchCinema(text);
+        
+          }}
+          flatListProps={{
+            keyExtractor: (_, idx) => idx,
+            renderItem: ({ item }) => <Text style={{color:"red",fontSize:16,padding:10}}>{item.name}</Text>,
+          }}
           placeholder="Tìm kiếm..."
-          placeholderTextColor={"#ffff"}
-          onChangeText={(text) => down(text)}
-          style={styles.TextInputSearch}
-        ></TextInput>
+        />
       </View>
       <MapView
         style={styles.map}
@@ -164,8 +174,6 @@ const Maps = () => {
             </Marker>
           );
         })}
-        
-       
       </MapView>
     </SafeAreaView>
   );
@@ -186,7 +194,7 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     alignItems: "center",
-    padding: 10,
+    marginTop:10
   },
   TextInputSearch: {
     flex: 1,
