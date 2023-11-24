@@ -58,6 +58,9 @@ exports.checkOut = catchAsync(async (req, res, next) => {
     currency: "vnd",
     automatic_payment_methods: {
       enabled: true
+    },
+    metadata: {
+      name: req.user.username
     }
   })
   // Return the secret
