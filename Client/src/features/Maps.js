@@ -92,21 +92,10 @@ const Maps = () => {
         );
       }
     } else {
-      // Xử lý trường hợp lỗi
+      
     }
   };
 
- 
-
-  const renderSuggestions = ({ item }) => {
-    console.log(item); // Log giá trị của trường "name" trong đối tượng item
-    return (
-      <View>
-        <Text>{item}</Text>
-      </View>
-    );
-  };
-  
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#130B2B" }}>
       <View style={styles.Search}>
@@ -167,7 +156,7 @@ const Maps = () => {
                   <Text style={styles.txt}>{theater.name}</Text>
                 </Text>
                 <Text>
-                  <Text>Khoảang Cách : </Text>
+                  <Text>Khoảng Cách : </Text>
                   <Text style={styles.txt}>{distance} Kilometers</Text>
                 </Text>
               </Callout>
