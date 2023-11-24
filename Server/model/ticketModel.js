@@ -22,9 +22,18 @@ const ticketSchema = new mongoose.Schema({
   },
   ticket_code: {
     type: String,
-    default: "GKSNDS" // random strings for ticket codes
+    default: generateRandomString(5) // random strings for ticket codes
   }
 })
+function generateRandomString(length) {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      result += characters.charAt(randomIndex);
+  }
+  return result;
+}
 ticketSchema.statics.calculatePrice = async function (ticketID) {
   try {
     const ticket = await this.aggregate([
