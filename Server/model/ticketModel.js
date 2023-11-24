@@ -72,7 +72,7 @@ ticketSchema.pre(/^find/, async function (next) {
     path: 'showtime',
     populate: [
       { path: 'room', model: 'Room', select: 'name', populate: { path: 'cinema', model: 'Cinema', select: 'name'} },
-      { path: 'movie', model: 'Movie', select: 'title' }
+      { path: 'movie', model: 'Movie', select: 'title imageCover' }
     ]
   })
   next();
