@@ -48,7 +48,7 @@ exports.resizeMovieImages = catchAsync(async (req, res, next) => {
 exports.TopSellingMovie = (req, res, next) => {
   req.query.limit = '5';
   req.query.sort = '-ratingsAverage';
-  req.query.fields = 'title, genre, image, duration ,price, ratingsAverage';
+  req.query.fields = 'title, category, imageCover, duration, ratingsAverage, trailer, description, release_date, ratingsQuantity, actor';
   next();
 };
 exports.getAllMovies = factory.getAll(Movie)
