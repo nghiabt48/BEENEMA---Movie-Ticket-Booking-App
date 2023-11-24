@@ -1,27 +1,5 @@
-<script src="/menu/sidemenu.js"></script>
-<link rel="stylesheet" type="text/css" href="/menu/sidemenu.css" media="screen">
+{{> menu}}
 
-<div class="row">
-            <div class="col-1 d-flex justify-content-center">
-                <div id="mySidenav" class="sidenav">
-                    <a href="/index"><i class="bi bi-film p-2"></i>Movie</a>
-                    <a href="/index/insert_getmovie"><i class="bi bi-file-plus p-2"></i>Insert Movie</a>
-                    <a href="/user"><i class="bi bi-person p-2"></i>User</a>     
-                </div>
-            </div>
-</div>
-<!--Navbar-->
-<nav class="navbar navbar-light bg-dark" style="box-shadow: 0px 0px 8px #888888;">
-    <!-- Collapse button -->
-    <button class="navbar-toggler hamburger-button" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation" onclick="Nav()" style="z-index: 2">
-        <div class="animated-icon"><span></span><span></span><span></span></div>
-    </button>
-    <!-- Navbar brand -->
-    <div class="mx-auto order-0">
-        <a class="navbar-brand mx-auto text-white fw-bold" href="#">{{titles}}</a>
-    </div>
-</nav>
-<!--/.Navbar-->
 <!-- Nội dung -->
 <div class="container">
         <form action="/index/update_postmovie/{{_id}}" method="post">
@@ -33,12 +11,9 @@
                 <label for="category">Category:</label>
                 <select class="form-control" id="category" name="category">
                     <option selected>{{category}}</option>
-                    <option>action</option>
-                    <option>comedy</option>
-                    <option>science-fiction</option>
-                    <option>drama</option>
-                    <option>fantasy</option>
-                    <option>tragedy</option>
+                    {{#each option_category}}
+                        <option>{{name}}</option>
+                    {{/each}}
                 </select>
             </div>
             <div class="mb-3">
@@ -55,7 +30,12 @@
             </div>
             <div class="mb-3">
                 <label for="actor">Actor:</label>
-                <input type="text" class="form-control" id="actor" name="actor" value="{{actor}}">
+                <select class="form-control" id="actor" name="actor">
+                    <option selected>{{actor}}</option>
+                    {{#each option_actor}}
+                        <option>{{_id}}</option>
+                    {{/each}}
+                </select>
             </div>
             <div class="mb-3">
                 <label for="trailer">Trailer:</label>
@@ -77,8 +57,10 @@
                 <label for="country">Country:</label>
                 <input type="text" class="form-control" id="country" name="country" value="{{country}}">
             </div>
+            
             <button name="submit" type="submit" class="btn btn-primary">Update Movie</button>
         </form>
     </div>
+    
 
-<!-- Nội dung -->
+

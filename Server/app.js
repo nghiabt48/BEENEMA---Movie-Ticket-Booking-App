@@ -2,6 +2,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var exphbs = require('express-handlebars');
 
 var usersRouter = require('./router/userRouter');
 const productRouter = require('./router/movieRouter')
@@ -32,6 +33,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+const hbs = exphbs.create({
+  defaultLayout: "layout",
+  extname: '.hbs',
+  partialsDir: path.join(__dirname, 'views/partials/'),
+});
+app.engine("hbs", hbs.engine);
+app.set("view engine", "hbs");
 
 app.get('/api/users/reset-password/:token', (req, res, next) => {
   const currentUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
@@ -68,6 +76,7 @@ app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
 app.use(globalErrorHandler)
+
 
 
 module.exports = app;

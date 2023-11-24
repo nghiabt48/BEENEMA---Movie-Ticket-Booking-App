@@ -1,31 +1,10 @@
-<script src="/menu/sidemenu.js"></script>
-<link rel="stylesheet" type="text/css" href="/menu/sidemenu.css" media="screen">
-<div class="row">
-            <div class="col-1 d-flex justify-content-center">
-                <div id="mySidenav" class="sidenav">
-                    <a href="/index"><i class="bi bi-film p-2"></i>Movie</a>
-                    <a href="/index/insert_getmovie"><i class="bi bi-file-plus p-2"></i>Insert Movie</a>
-                    <a href="/user"><i class="bi bi-person p-2"></i>User</a>     
-                </div>
-            </div>
-</div>
-<!--Navbar-->
-<nav class="navbar navbar-light bg-dark" style="box-shadow: 0px 0px 8px #888888;">
-    <!-- Collapse button -->
-    <button class="navbar-toggler hamburger-button" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation" onclick="Nav()" style="z-index: 2">
-        <div class="animated-icon"><span></span><span></span><span></span></div>
-    </button>
-    <!-- Navbar brand -->
-    <div class="mx-auto order-0">
-        <a class="navbar-brand mx-auto text-white fw-bold" href="#">{{titles}}</a>
-    </div>
-</nav>
-<!--/.Navbar-->
+{{> menu}}
+
 <!-- Nội dung -->
 <div class="bg-light p-4">
-    <table class="table table-striped text-center">
+    <table class="table text-center">
       <thead>
-        <tr>
+        <tr class="table-dark">
           <th>Username</th>
           <th>Email</th>
           <th>Role</th>
@@ -41,6 +20,6 @@
         {{/each}}
       </tbody>
     </table>
-    </div>
+</div>
 <!-- Nội dung -->
 

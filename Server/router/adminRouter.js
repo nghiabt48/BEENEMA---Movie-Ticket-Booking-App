@@ -5,11 +5,13 @@ const adminController = require('./../controller/adminController');
 router.get('/', function(req, res, next) {
     res.render('login', {title:'Admin'});
 });
+router.post('/login', adminController.login);
+//router.use(adminController.protect);
 // trang chủ
-// router.get('/index', function(req, res, next) {
+router.get('/test', function(req, res, next) {
 
-//     res.render('index', {title:'Admin Home'});
-// });
+    res.render('test');
+});
 //Movie
 router.get('/index', adminController.getAllMovies);
 router.get('/index/detailmovie/:id', adminController.movieDetail);
@@ -21,6 +23,11 @@ router.post('/index/update_postmovie/:id', adminController.updateMoviePost);
 //User
 router.get('/user', adminController.getAllUsers);
 
-
+//Category
+router.get('/category', adminController.getAllCategory);
+router.post('/category/insert_postcategory', adminController.insertCategoryPost);
+router.get('/category/deletecategory/:id', adminController.deleteCategory);
+router.get('/category/:id', adminController.detailCategory);
+router.post('/category/update_postcategory/:id', adminController.updateCategoryPost);
 
 module.exports = router
