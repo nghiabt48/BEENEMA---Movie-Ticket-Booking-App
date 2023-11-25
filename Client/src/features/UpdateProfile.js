@@ -20,6 +20,7 @@ const UpdateProfile = (props) => {
   const { navigation } = props;
   const [isLoading, setisLoading] = useState(null);
   const { infoUser, setinfoUser } = useContext(AppConText);
+  const [image, setImage] = useState(null);
   const ImageURL = "http://149.28.159.68:3000/img/users/";
 
   //Lấy thông tin user
@@ -29,6 +30,7 @@ const UpdateProfile = (props) => {
       const respone = await AxiosIntance().get("users/me");
       if (respone.status == "success") {
         setinfoUser(respone.data.document);
+        setImage(respone.data.document.avatar);
         setisLoading(false);
       } else {
         ToastAndroid.show("Get Data Failed Successfully", ToastAndroid.SHORT);
@@ -58,7 +60,7 @@ const UpdateProfile = (props) => {
       formData.append("avatar", {
         uri: result.assets[0].uri,
         type: "image/jpeg",
-        name: "image.jpg",
+        name:"image.jpg"
       });
       //chạy api
       const respone = await AxiosIntance("multipart/form-data").patch(
@@ -67,11 +69,9 @@ const UpdateProfile = (props) => {
       );
       if (!result.canceled) {
         if (respone.status == "success") {
-          setTimeout(() =>{
             console.log(respone);
             ToastAndroid.show("Update Image Successfully", ToastAndroid.SHORT);
-            setinfoUser({ ...infoUser, avatar: respone.url });
-          },1000);
+            setImage(respone.url);
         } else {
           ToastAndroid.show("Update Image Failed", ToastAndroid.SHORT);
         }
@@ -100,13 +100,13 @@ const UpdateProfile = (props) => {
           email: infoUser.email,
           username: infoUser.username,
           phone_number: infoUser.phone_number,
-          avatar: infoUser.avatar
+          avatar: image
         }
       );
 
       if (respone.status == "success") {
-        ToastAndroid.show("Update Profile Successfully", ToastAndroid.SHORT);
-        console.log(respone.data);
+        ToastAndroid.show("Update Profile Successfully", ToastAndroid.SHORT);``
+        setinfoUser(respone.data.user);
       } else {
         ToastAndroid.show("Update Profile Failed", ToastAndroid.SHORT);
       }
@@ -139,7 +139,7 @@ const UpdateProfile = (props) => {
           ) : infoUser.avatar != null ? (
             <Image
               style={styles.updateimage}
-              source={{ uri: `${ImageURL}${infoUser.avatar}` }}
+              source={{ uri: `${ImageURL}${image}` }}
             />
           ) : (
             <Image
