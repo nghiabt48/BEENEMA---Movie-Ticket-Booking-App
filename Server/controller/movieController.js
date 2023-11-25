@@ -33,8 +33,8 @@ exports.uploadMovieImageAndTrailer = upload.fields([
 exports.resizeMovieImages = catchAsync(async (req, res, next) => {
   if (!req.files || req.files.imageCover === undefined) return next();
   // 1) Cover image
-  req.body.imageCover = `movie-${Date.now()}-${req.files.imageCover[0].originalname}-cover.jpeg`;
-  await sharp(req.files.imageCover[0].buffer)
+  req.body.imageCover = `movie-${Date.now()}-${req.files.imageCover.originalname}-cover.jpeg`;
+  await sharp(req.files.imageCover.buffer)
     .resize(2000, 1333)
     .toFormat('jpeg')
     .jpeg({ quality: 90 })
@@ -65,14 +65,14 @@ exports.getMovieByName = catchAsync(async (req, res, next) => {
 
 exports.saveMovieTrailerToStorage = catchAsync(async (req, res, next) => {
   if(!req.files || req.files.trailer == undefined) return next()
-    const storageRef = ref(storage, `files/${req.files.trailer[0].originalname}`);
+    const storageRef = ref(storage, `files/${req.files.trailer.originalname}`);
     // Create file metadata including the content type
     const metadata = {
-        contentType: req.files.trailer[0].mimetype,
+        contentType: req.files.trailer.mimetype,
     };
 
     // Upload the file in the bucket storage
-    const snapshot = await uploadBytesResumable(storageRef, req.files.trailer[0].buffer, metadata);
+    const snapshot = await uploadBytesResumable(storageRef, req.files.trailer.buffer, metadata);
     //by using uploadBytesResumable we can control the progress of uploading like pause, resume, cancel
 
     // Grab the public url
