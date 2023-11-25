@@ -69,7 +69,7 @@ const UpdateProfile = (props) => {
         if (respone.status == "success") {
           console.log(respone);
           ToastAndroid.show("Update Image Successfully", ToastAndroid.SHORT);
-          setinfoUser({ ...infoUser, avatar: respone.path });
+          setinfoUser({ ...infoUser, avatar: respone.url });
         } else {
           ToastAndroid.show("Update Image Failed", ToastAndroid.SHORT);
         }
