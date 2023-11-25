@@ -11,6 +11,7 @@ exports.getAll = (Model, populateOptions, populateOptions1) =>
       .limitFields()
       .paginate();
     let query = features.query
+    // movie query
     if (req.query.category) {
       req.query.category = req.query.category.split(',');
       query = Model.find(req.query)

@@ -4,6 +4,7 @@ const router = express.Router()
 
 router
   .route('/')
+  .get(showtimeController.getShowtimeByName)
   .get(showtimeController.getShowtimeByCinema)
   .get(showtimeController.getAllShowtimes)
   .post(showtimeController.createShowTime)
