@@ -25,6 +25,7 @@ import ChooseCinema from "./ChooseCinema";
 
 import AxiosIntance from "./AxiosIntance";
 import ListTicket from "./ListTicket";
+import Search from "./Search";
 
 
 const Stack = createNativeStackNavigator();
@@ -111,6 +112,7 @@ const BooKing = () => {
       <Stack.Screen name="ShowTime" component={ShowTimes} />
       <Stack.Screen name="SeatCinemaSocket" component={SeatCinemaSocket} />
       <Stack.Screen name="ChooseCinema" component={ChooseCinema} />
+      <Stack.Screen name="Search" component={Search} />
     </Stack.Navigator>
   );
 };

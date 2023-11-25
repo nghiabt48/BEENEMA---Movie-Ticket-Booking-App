@@ -26,16 +26,16 @@ const ItemShowTime = (props) => {
     <View style={styles.container1}>
       <TouchableOpacity onPress={RoomClick}>
       <View style={{ justifyContent: "space-between", flexDirection: "row" }}>
-        <Text style={styles.txt2}>{item.room.name}</Text>
-        <Text style={styles.txtRole}>giá: {formattedAmount}</Text>
+        <Text style={styles.txt2}>Ngày chiếu: {datePart}</Text>
+        <Text style={styles.txtRole}>{formattedAmount}</Text>
       </View>
       <View style={styles.container2}>
         <Text style={styles.time}>Thời gian chiếu: </Text>
-        <Text style={styles.time}>{datePart} | </Text>
         <Text style={styles.time}>{timePart} </Text>
         <Text style={styles.time}>- </Text>
         <Text style={styles.time}>{endtimePart}</Text>
       </View>
+      <Text style={styles.time2}>Phòng: {item.room.name}</Text>
       <Image style={styles.line} source={require("../image/line.png")} />
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Image style={styles.img} source={require("../image/seat.png")} />
@@ -94,7 +94,6 @@ const styles = StyleSheet.create({
     marginStart: 21,
     marginEnd: 19,
     borderRadius: 5,
-    height: 81,
   },
   row: {
     flexDirection: "row",
@@ -103,7 +102,7 @@ const styles = StyleSheet.create({
   },
   txt2: {
     color: "#fff",
-    fontSize: 10,
+    fontSize: 14,
     fontWeight: "400",
     marginTop: 6,
     marginStart: 12,
@@ -117,8 +116,14 @@ const styles = StyleSheet.create({
   },
   time: {
     color: "#fff",
-    fontSize: 12,
-    fontWeight: "500",
+    fontSize: 10,
+    fontWeight: "400",
+  },
+  time2: {
+    color: "#fff",
+    fontSize: 10,
+    fontWeight: "400",
+    marginStart:12
   },
   container2: {
     flexDirection: "row",
