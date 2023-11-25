@@ -32,7 +32,6 @@ exports.uploadMovieImageAndTrailer = upload.fields([
 ]);
 exports.resizeMovieImages = catchAsync(async (req, res, next) => {
   if (!req.files || req.files.imageCover === undefined) return next();
-  console.log("gotoresize")
   // 1) Cover image
   req.body.imageCover = `movie-${Date.now()}-${req.files.imageCover[0].originalname}-cover.jpeg`;
   await sharp(req.files.imageCover[0].buffer)
