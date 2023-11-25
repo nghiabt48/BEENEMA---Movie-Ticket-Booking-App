@@ -31,7 +31,8 @@ exports.uploadMovieImageAndTrailer = upload.fields([
   { name: 'trailer', maxCount: 1 }
 ]);
 exports.resizeMovieImages = catchAsync(async (req, res, next) => {
-  if (!req.files.imageCover) return next();
+  if (!req.files || req.files.imageCover === undefined) return next();
+  console.log("gotoresize")
   // 1) Cover image
   req.body.imageCover = `movie-${Date.now()}-${req.files.imageCover[0].originalname}-cover.jpeg`;
   await sharp(req.files.imageCover[0].buffer)
@@ -64,7 +65,7 @@ exports.getMovieByName = catchAsync(async (req, res, next) => {
 })
 
 exports.saveMovieTrailerToStorage = catchAsync(async (req, res, next) => {
-  if(!req.files.trailer) return next()
+  if(!req.files || req.files.trailer == undefined) return next()
     const storageRef = ref(storage, `files/${req.files.trailer[0].originalname}`);
     // Create file metadata including the content type
     const metadata = {
