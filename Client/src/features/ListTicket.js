@@ -7,6 +7,7 @@ import {
   Dimensions,
   TextInput,
   FlatList,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState, useContext } from "react";
 import ItemTicket from "../Item/ItemTicket";
@@ -54,16 +55,20 @@ const ListTicket = (props) => {
         </View>
       </View>
       {/* Danh sách vé đã mua */}
-      <View style={{ marginVertical: "5%", flex: 1 }}>
-        <FlatList
-          data={ticket}
-          horizontal={true}
-          renderItem={({ item }) => (
-            <ItemTicket item={item} navigation={navigation} />
-          )}
-          keyExtractor={(item) => item._id}
-        />
-      </View>
+      {isLoading === true ? (
+        <ActivityIndicator size="large" />
+      ) : (
+        <View style={{ marginVertical: "5%", flex: 1 }}>
+          <FlatList
+            data={ticket}
+            horizontal={true}
+            renderItem={({ item }) => (
+              <ItemTicket item={item} navigation={navigation} />
+            )}
+            keyExtractor={(item) => item._id}
+          />
+        </View>
+      )}
     </View>
   );
 };
