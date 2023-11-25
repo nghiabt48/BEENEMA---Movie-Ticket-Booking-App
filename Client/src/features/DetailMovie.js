@@ -13,20 +13,31 @@ const DetailMovie = (props) => {
     const { navigation } = props;
     const { params } = route
     const [reviews, setreviews] = useState([])
+    const [myreviews, setmyreviews] = useState([])
     const [isLoading, setisLoading] = useState(null);
     const [review, setreview] = useState("");
     const [rating, setrating] = useState("");
     const [showFullText, setShowFullText] = useState(false)
     const { infoUser, setinfoUser, movieId,setmovieId } = useContext(AppConText);
-
+    const data = params.data.actor
     useEffect(() => {
 
         fetchReviews()
+        fetchmyReviews()
         return () => {
 
         }
     }, [])
-
+    const fetchmyReviews = async () => {
+        setisLoading(true)
+        const response = await AxiosIntance().get(`movies/${params.data._id}/reviews?user=${infoUser._id}`);
+        if (response.data.length > 0) {
+            setmyreviews(response.data[0]);
+            setisLoading(false)
+        } else {
+            setisLoading(false)
+        }
+    }
     const fetchReviews = async () => {
         setisLoading(true)
         const response = await AxiosIntance().get(`movies/${params.data._id}/reviews`);
@@ -75,7 +86,7 @@ const DetailMovie = (props) => {
         navigation.navigate("ShowTime", { _id: params.data.id })
     }
     const showCinema = async =>{
-        navigation.navigate("ChooseCinema", {_id:params.data.id})
+        navigation.navigate("ChooseCinema", {_id:params.data.id, title: params.data.title })
         setmovieId({_id:params.data.id})
     }
     
@@ -138,7 +149,8 @@ const DetailMovie = (props) => {
                     <TextInput placeholder='Tạo đánh giá của bạn...'
                         placeholderTextColor={'#ffff'}
                         style={styles.TextInputReview}
-                        onChangeText={setreview}></TextInput>
+                        onChangeText={setreview}
+                        value={myreviews.review? myreviews.review: null}></TextInput>
                     {/* btn Post */}
                     {
                         rating >= 1 && review != "" ? <TouchableOpacity onPress={Post}>
@@ -410,22 +422,4 @@ const styles = StyleSheet.create({
         color: '#fff'
     }
 })
-const data =
-    [
-        {
-            "_id": "1",
 
-        },
-        {
-            "_id": "2",
-
-        },
-        {
-            "_id": "3",
-
-        },
-        {
-            "_id": "4",
-
-        },
-    ]

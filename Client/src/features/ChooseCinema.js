@@ -31,15 +31,15 @@ const ChooseCinema = (props) => {
 
   const fetchCinema = async () => {
     setisLoading(true);
-    const response = await AxiosIntance().get(`/cinemas`);
+    const response = await AxiosIntance().get(`/showtimes?title=${params.title}`);
     if (response.status === "success") {
-      setCinema(response.data.data);
+      setCinema(response.data.map(item=> item.room.cinema));
       setisLoading(false);
     } else {
       setisLoading(false);
     }
-  };
-
+  }
+  
   return (
     <SafeAreaView style={styles.container}>
       <View style={{ flexDirection: "row" }}>
