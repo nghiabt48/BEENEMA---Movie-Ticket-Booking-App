@@ -213,10 +213,10 @@ const SeatCinemaSocket = (props) => {
 
       const paymentResponse = await presentPaymentSheet()
       if (paymentResponse.error) {
-        Alert.alert(`Error: ${paymentResponse.error.code}`, paymentResponse.error.message)
+        Alert.alert(`Thất bại`, 'Thanh toán đã bị hủy')
         return
       }
-      Alert.alert(`Success`, 'The payment was confirmed successfully')
+      Alert.alert(`Hoàn thành`, 'Thanh toán đã được xác nhận thành công')
       // 4. After paying, create the ticket
       await AxiosIntance().post(`tickets/checkout/${showtimeId}/create-ticket`, {  seat_number: my_seats })
       socketRef.current.emit("showtime:reserved", {

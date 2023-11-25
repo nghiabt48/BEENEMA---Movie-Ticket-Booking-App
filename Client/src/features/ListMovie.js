@@ -2,10 +2,12 @@ import {
   ActivityIndicator,
   FlatList,
   Image,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
   ToastAndroid,
+  TouchableOpacity,
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
@@ -71,8 +73,13 @@ const ListMovie = (props) => {
       setdata(null);
     }
   };
+
+  const SearchClik = function() {
+    navigation.navigate('Search')
+  }
   return (
     <SafeAreaView style={styles.container}>
+      <TouchableOpacity onPress={SearchClik}>
       <View style={styles.Search}>
         <Image source={require("../image/Layer3.png")} />
         <TextInput
@@ -80,8 +87,11 @@ const ListMovie = (props) => {
           placeholderTextColor={"#ffff"}
           onChangeText={(text) => down(text)}
           style={styles.TextInputSearch}
+          editable={false}
         ></TextInput>
       </View>
+      </TouchableOpacity>
+      <ScrollView>
       <Text style={styles.textTop}>Top 5 bộ phim có Rating cao nhất:</Text>
       <View>
         <FlatList
@@ -108,8 +118,10 @@ const ListMovie = (props) => {
           )}
           keyExtractor={(item) => item._id}
           showsVerticalScrollIndicator={false}
+          scrollEnabled={false}
         />
       )}
+      </ScrollView>
     </SafeAreaView>
   );
 };
