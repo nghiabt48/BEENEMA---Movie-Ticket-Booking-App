@@ -7,13 +7,22 @@ exports.setMovieAndUserId = (req, res, next) => {
   req.body.user = req.user.id
   next()
 }
-exports.getAllReviewsOnMovie = catchAsync(async(req, res, next) => {
+exports.getMyReviewsOnMovie = catchAsync(async(req, res, next) => {
+  if(!req.query.user) return next()
   res.json({
     status: 'success',
     data: await Review.find({
       movie: req.params.movieId,
-      user: req.user.id
+      user: req.query.user
     })
+  })
+})
+exports.getAllReviewsOnMovie = catchAsync(async(req, res, next) => {
+  res.json({
+    status: 'success',
+    data: await Review.find({
+      movie: req.params.movieId
+        })
   })
 })
 exports.getAllReviews = factory.getAll(Review)
