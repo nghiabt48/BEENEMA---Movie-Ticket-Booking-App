@@ -13,17 +13,15 @@ const DetailMovie = (props) => {
     const { navigation } = props;
     const { params } = route
     const [reviews, setreviews] = useState([])
-    const [myreviews, setmyreviews] = useState([])
     const [isLoading, setisLoading] = useState(null);
     const [review, setreview] = useState("");
     const [rating, setrating] = useState("");
     const [showFullText, setShowFullText] = useState(false)
     const { infoUser, setinfoUser, movieId,setmovieId } = useContext(AppConText);
-    const data = params.data.actor
+
     useEffect(() => {
 
         fetchReviews()
-        fetchmyReviews()
         return () => {
 
         }
@@ -39,20 +37,6 @@ const DetailMovie = (props) => {
             setisLoading(false)
             setreview(null);
         }
-
-        
-    }
-    const fetchmyReviews = async () => {
-        setisLoading(true)
-        const response = await AxiosIntance().get(`movies/${params.data._id}/reviews?user=${infoUser._id}`);
-        if (response.data.length > 0) {
-            setmyreviews(response.data[0]);
-            setisLoading(false)
-        } else {
-            setisLoading(false)
-
-        }
-
     }
     const ReviewsUser = async () => {
 
@@ -91,7 +75,7 @@ const DetailMovie = (props) => {
         navigation.navigate("ShowTime", { _id: params.data.id })
     }
     const showCinema = async =>{
-        navigation.navigate("ChooseCinema", {_id: params.data.id, title: params.data.title})
+        navigation.navigate("ChooseCinema", {_id:params.data.id})
         setmovieId({_id:params.data.id})
     }
     
@@ -120,6 +104,7 @@ const DetailMovie = (props) => {
                 </View>
                 {/* get actor */}
                 <FlatList
+
                     data={data}
                     horizontal={true}
                     style={styles.FlatList}
@@ -148,8 +133,19 @@ const DetailMovie = (props) => {
                         </LinearGradient>
                     </TouchableOpacity>
                 </View>
-                <View style={styles.Group7}>
-
+                {/* edt review */}
+                <View style={styles.Group5}>
+                    <TextInput placeholder='Tạo đánh giá của bạn...'
+                        placeholderTextColor={'#ffff'}
+                        style={styles.TextInputReview}
+                        onChangeText={setreview}></TextInput>
+                    {/* btn Post */}
+                    {
+                        rating >= 1 && review != "" ? <TouchableOpacity onPress={Post}>
+                            <Image source={require('../image/plane48.png')} style={styles.boxImage6} />
+                        </TouchableOpacity>
+                            : null
+                    }
                 </View>
                 <View style={styles.container1}>
                     <Text style={styles.heading}>Xếp hạng cho phim này</Text>
@@ -194,22 +190,9 @@ const DetailMovie = (props) => {
                         </TouchableOpacity>
                     </View>
                 </View>
-                {/* edt review */}
-                <View style={styles.Group5}>
-                    <TextInput placeholder='Tạo đánh giá của bạn...'
-                        placeholderTextColor={'#ffff'}
-                        style={styles.TextInputReview}
-                        onChangeText={setreview} 
-                        value={myreviews.review? myreviews.review: null}></TextInput>
-                    {/* btn Post */}
-                    {
-                        rating >= 1 && review != "" ? <TouchableOpacity onPress={Post}>
-                            <Image source={require('../image/plane48.png')} style={styles.boxImage6} />
-                        </TouchableOpacity>
-                            : null
-                    }
+                <View style={styles.Group7}>
+
                 </View>
-                
                 <Text style={styles.text7}>Đánh giá</Text>
                 {/* get all review */}
                 <ScrollView horizontal={true} style={styles.Group6}>
@@ -320,8 +303,7 @@ const styles = StyleSheet.create({
     },
     Group7: {
         borderTopColor: '#DA004E',
-        borderTopWidth: 0.5,
-        marginTop: 20,
+        borderTopWidth: 0.5
     },
     Group8: {
 
@@ -428,22 +410,22 @@ const styles = StyleSheet.create({
         color: '#fff'
     }
 })
-// const data =
-//     [
-//         {
-//             "_id": "1",
+const data =
+    [
+        {
+            "_id": "1",
 
-//         },
-//         {
-//             "_id": "2",
+        },
+        {
+            "_id": "2",
 
-//         },
-//         {
-//             "_id": "3",
+        },
+        {
+            "_id": "3",
 
-//         },
-//         {
-//             "_id": "4",
+        },
+        {
+            "_id": "4",
 
-//         },
-//     ]
+        },
+    ]

@@ -3,11 +3,10 @@ import React from 'react'
 
 const ItemActor = (props) => {
     const { data } = props;
-    const ImageURL = `http://149.28.159.68:3000/img/actors/${data.avatar}`
   return (
     <View style={styles.container}> 
-        <Image source={{uri: ImageURL}} style={styles.Image}/>
-        <Text style={styles.Text1}>{data.name}</Text>
+        <Image source={require('../image/avatar.png')} style={styles.Image}/>
+        <Text style={styles.Text1}>dfgdg</Text>
     </View>
   )
 }
@@ -21,8 +20,8 @@ const styles = StyleSheet.create({
         alignItems:'center'
       },
       Text1: {
-        fontSize: 10,
-        fontWeight: '500',
+        fontSize: 15,
+        fontWeight: '600',
         color: '#ffff',
       },
       Image:{
