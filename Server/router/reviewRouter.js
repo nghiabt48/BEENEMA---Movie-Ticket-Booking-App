@@ -10,7 +10,8 @@ router
   .get(reviewController.getMyReviewsOnMovie)
   .get(reviewController.getAllReviews)
   // nest with movies/12345678/reviews
-  .post(authController.restrictTo('user'), reviewController.setMovieAndUserId,reviewController.createReview)
+  .post(authController.restrictTo('user'), reviewController.setMovieAndUserId,
+  reviewController.reviewCheck, reviewController.createReview)
 
 router.route('/:id')
   .get(reviewController.getReview)
