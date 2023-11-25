@@ -42,8 +42,7 @@ const DetailMovie = (props) => {
         setisLoading(true)
         const response = await AxiosIntance().get(`movies/${params.data._id}/reviews`);
         if (response.status == "success") {
-            setreviews(response.data.data);
-            console.log(response.data)
+            setreviews(response.data);
             setisLoading(false)
         } else {
             setisLoading(false)
