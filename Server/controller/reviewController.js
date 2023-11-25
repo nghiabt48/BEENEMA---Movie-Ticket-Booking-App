@@ -25,12 +25,14 @@ exports.getMyReviewsOnMovie = catchAsync(async(req, res, next) => {
     })
   })
 })
-exports.getAllReviewsOnMovie = catchAsync(async(req, res, next) => {
+exports.getMyReviewsOnMovie = catchAsync(async(req, res, next) => {
+  if(!req.query.user) return next()
   res.json({
     status: 'success',
     data: await Review.find({
-      movie: req.params.movieId
-        })
+      movie: req.body.movie,
+      user: req.body.user
+    })
   })
 })
 exports.getAllReviewsOnMovie = catchAsync(async(req, res, next) => {
