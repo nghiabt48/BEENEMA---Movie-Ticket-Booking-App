@@ -53,7 +53,8 @@ const userSchema = new mongoose.Schema({
     coordinates: [Number], // [longtitude, latitude]
     description: String
   },
-  address: String
+  address: String,
+  avatar: String
 })
 userSchema.index({ location: '2dsphere' })
 userSchema.pre('save', async function(next) {
