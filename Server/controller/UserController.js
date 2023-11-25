@@ -36,7 +36,7 @@ exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
 
   res.status(201).json({
     status: 'success',
-    url: req.protocol + '://' + req.get('host') + `/img/users/${req.file.filename}`
+    url: req.file.filename
   })
 });
 const filterObj = (obj, ...allowedFields) => {
