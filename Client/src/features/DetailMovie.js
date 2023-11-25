@@ -42,23 +42,14 @@ const DetailMovie = (props) => {
         setisLoading(true)
         const response = await AxiosIntance().get(`movies/${params.data._id}/reviews`);
         if (response.status == "success") {
-            setreviews(response.data);
+            setreviews(response.data.data);
+            console.log(response.data)
             setisLoading(false)
         } else {
             setisLoading(false)
             setreview(null);
         }
     }
-    const ReviewsUser = async () => {
-
-        const response = await AxiosIntance().get(`movies/${params.data._id}/reviews?user=${infoUser._id}`);
-        if (response.status == "success") {
-            console.log(infoUser._id)
-        } else {
-
-        }
-    }
-
     const Post = async () => {
 
         try {
