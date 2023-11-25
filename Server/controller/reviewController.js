@@ -1,3 +1,4 @@
+const AppError = require('../utils/appError');
 const Review = require('./../model/reviewModel')
 const catchAsync = require('./../utils/catchAsync')
 const factory = require('./handleFactory');
@@ -7,13 +8,29 @@ exports.setMovieAndUserId = (req, res, next) => {
   req.body.user = req.user.id
   next()
 }
+exports.reviewCheck = catchAsync(async(req, res, next) => {
+  const review = await Review.findOne({
+    user: req.user.id,
+    movie: req.params.movieId
+  })
+  if(review) return next(new AppError("Binh luan roi", 400))
+})
+exports.getMyReviewsOnMovie = catchAsync(async(req, res, next) => {
+  if(!req.query.user) return next()
+  res.json({
+    status: 'success',
+    data: await Review.find({
+      movie: req.body.movie,
+      user: req.body.user
+    })
+  })
+})
 exports.getAllReviewsOnMovie = catchAsync(async(req, res, next) => {
   res.json({
     status: 'success',
     data: await Review.find({
-      movie: req.params.movieId,
-      user: req.user.id
-    })
+      movie: req.params.movieId
+        })
   })
 })
 exports.getAllReviews = factory.getAll(Review)
