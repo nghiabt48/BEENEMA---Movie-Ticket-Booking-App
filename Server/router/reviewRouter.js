@@ -8,7 +8,7 @@ router.use(authController.protect);
 router
   .route('/')
   .get(reviewController.getMyReviewsOnMovie)
-  .get(reviewController.getAllReviews)
+  .get(reviewController.getAllReviewsOnMovie)
   // nest with movies/12345678/reviews
   .post(authController.restrictTo('user'), reviewController.setMovieAndUserId,
   reviewController.reviewCheck, reviewController.createReview)
