@@ -57,7 +57,7 @@ exports.getAllMovies = factory.getAll(Movie, 'actor')
 exports.getMovieByID = factory.getOne(Movie, { path: 'reviews', select: '-__v' })
 exports.getMovieByName = catchAsync(async (req, res, next) => {
   const title = req.query.title
-  const movie = await Movie.find({ title: { $regex: title, $options: 'i' } })
+  const movie = await Movie.find({ title: { $regex: title, $options: 'i' } }).populate('actor')
   res.status(200).json({
     status: 'success',
     movie
