@@ -51,7 +51,7 @@ exports.TopSellingMovie = (req, res, next) => {
   req.query.fields = 'title, category, imageCover, duration, ratingsAverage, trailer, description, release_date, ratingsQuantity, actor';
   next();
 };
-exports.getAllMovies = factory.getAll(Movie)
+exports.getAllMovies = factory.getAll(Movie, 'actor')
 //Get product by _id
 exports.getMovieByID = factory.getOne(Movie, { path: 'reviews', select: '-__v' })
 exports.getMovieByName = catchAsync(async (req, res, next) => {
@@ -89,7 +89,9 @@ exports.createMovie = catchAsync(async (req, res, next) => {
     data: movie
   })
 })
-
+exports.getCinemaByMovie = catchAsync(async(req, res, next) => {
+  
+})
 // Update product
 exports.updateMovie = factory.updateOne(Movie)
 exports.deleteMovie = factory.deleteOne(Movie)

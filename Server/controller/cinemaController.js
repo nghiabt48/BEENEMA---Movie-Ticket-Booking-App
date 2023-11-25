@@ -7,12 +7,13 @@ exports.createCinema = factory.createOne(Cinema)
 exports.getAllCinemas = factory.getAll(Cinema)
 exports.getCinema = catchAsync(async (req, res, next) => {
   if(!req.query.name) return next()
-  const cinema = await Cinema.findOne({name: {$regex: req.query.name, $options: 'i'}})
+  const cinema = await Cinema.find({name: {$regex: req.query.name, $options: 'i'}})
   res.status(200).json({
     status: 'success',
     data: cinema
   })
 })
+
 exports.getCinemasWithin = catchAsync(async (req, res, next) => {
   const { distance, latlng } = req.params
   const [lat, lng] = latlng.split(',')
