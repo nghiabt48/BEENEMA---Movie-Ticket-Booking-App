@@ -76,23 +76,37 @@ const Maps = () => {
   };
 
   const searchCinema = async (text) => {
-    const respone = await AxiosIntance().get("/cinemas?name=" + text);
-    if (respone.status === "success") {
-      const cinemaData = respone.data;
-      setdata(cinemaData);
-      // console.log(cinemaData);
+    try {
+      const respone = await AxiosIntance().get("/cinemas?name=" + text);
+      if (respone.status === "success") {
+        const cinemaData = respone.data;
+        setdata(cinemaData);
+        // console.log(cinemaData);
+        // Kiểm tra xem có dữ liệu vị trí không trước khi chuyển đến vị trí đầu tiên
+        if (cinemaData.length > 0 && cinemaData[0].location) {
+          const firstCinemaLocation = cinemaData[0].location.coordinates;
+          navigateToCinemaLocation(
+            firstCinemaLocation[1],
+            firstCinemaLocation[0]
+          );
+        }
+        else{
+          let currentLocation = await Location.getCurrentPositionAsync({});
+          setLocation(currentLocation);
 
-      // Kiểm tra xem có dữ liệu vị trí không trước khi chuyển đến vị trí đầu tiên
-      if (cinemaData.length > 0 && cinemaData[0].location) {
-        const firstCinemaLocation = cinemaData[0].location.coordinates;
-
-        navigateToCinemaLocation(
-          firstCinemaLocation[1],
-          firstCinemaLocation[0]
-        );
+          // Di chuyển bản đồ đến vị trí hiện tại
+          if (currentLocation) {
+            mapRef.current.animateToRegion({
+              latitude: currentLocation.coords.latitude,
+              longitude: currentLocation.coords.longitude,
+              latitudeDelta: 0.01,
+              longitudeDelta: 0.01,
+            });
+          }
+        }
       }
-    } else {
-      
+    } catch (e) {
+      setdata(null);
     }
   };
 
@@ -105,11 +119,14 @@ const Maps = () => {
           onChangeText={(text) => {
             setQuery(text);
             searchCinema(text);
-        
           }}
           flatListProps={{
             keyExtractor: (_, idx) => idx,
-            renderItem: ({ item }) => <Text style={{color:"red",fontSize:16,padding:10}}>{item.name}</Text>,
+            renderItem: ({ item }) => (
+              <Text style={{ color: "red", fontSize: 16, padding: 10 }}>
+                {item.name}
+              </Text>
+            ),
           }}
           placeholder="Tìm kiếm..."
         />
@@ -183,7 +200,7 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     alignItems: "center",
-    marginTop:10
+    marginTop: 10,
   },
   TextInputSearch: {
     flex: 1,
@@ -192,5 +209,6 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 20,
     color: "#ffff",
+  
   },
 });

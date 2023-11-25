@@ -5,6 +5,7 @@ import {
   Image,
   FlatList,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState, useContext, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -13,14 +14,13 @@ import AxiosIntance from "./AxiosIntance";
 import ItemShowTime from "../Item/ItemShowTime";
 import { AppConText } from "./AppConText";
 
-
 const ShowTimes = (props) => {
   const { navigation } = props;
   const { route } = props;
   const { params } = route;
   const [showtime, setshowtime] = useState();
   const [isLoading, setisLoading] = useState(null);
-  const {movieId,setmovieId } = useContext(AppConText);
+  const { movieId, setmovieId } = useContext(AppConText);
 
   const Back = () => {
     navigation.goBack();
@@ -33,16 +33,18 @@ const ShowTimes = (props) => {
 
   const fetchShowTime = async () => {
     setisLoading(true);
-    const response = await AxiosIntance().get(`/showtimes?cinema=${params.item._id}`);
+    const response = await AxiosIntance().get(
+      `/showtimes?cinema=${params.item._id}`
+    );
     if (response.status == "success") {
-      setshowtime(response.data.showtimes.filter(item => item.movie.id == movieId._id));
+      setshowtime(
+        response.data.showtimes.filter((item) => item.movie.id == movieId._id)
+      );
       setisLoading(false);
     } else {
       setisLoading(false);
     }
   };
-
-  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -56,12 +58,17 @@ const ShowTimes = (props) => {
 
         <Text style={styles.txt1}>Chọn xuất chiếu</Text>
       </View>
-
-      <FlatList
-        data={showtime}
-        renderItem={({ item }) => <ItemShowTime item={item}  navigation={navigation}/>}
-        keyExtractor={(item) => item._id}
-      />
+      {isLoading === true ? (
+        <ActivityIndicator size="large" />
+      ) : (
+        <FlatList
+          data={showtime}
+          renderItem={({ item }) => (
+            <ItemShowTime item={item} navigation={navigation} />
+          )}
+          keyExtractor={(item) => item._id}
+        />
+      )}
     </SafeAreaView>
   );
 };

@@ -37,10 +37,6 @@ const ItemShowTime = (props) => {
       </View>
       <Text style={styles.time2}>Phòng: {item.room.name}</Text>
       <Image style={styles.line} source={require("../image/line.png")} />
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <Image style={styles.img} source={require("../image/seat.png")} />
-        <Text style={styles.txtType}>{item.type}</Text>
-      </View>
       </TouchableOpacity>
     </View>
   );

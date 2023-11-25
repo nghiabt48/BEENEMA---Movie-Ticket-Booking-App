@@ -74,53 +74,57 @@ const ListMovie = (props) => {
     }
   };
 
-  const SearchClik = function() {
-    navigation.navigate('Search')
-  }
+  const SearchClik = function () {
+    navigation.navigate("Search");
+  };
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity onPress={SearchClik}>
-      <View style={styles.Search}>
-        <Image source={require("../image/Layer3.png")} />
-        <TextInput
-          placeholder="Tìm kiếm..."
-          placeholderTextColor={"#ffff"}
-          onChangeText={(text) => down(text)}
-          style={styles.TextInputSearch}
-          editable={false}
-        ></TextInput>
-      </View>
+        <View style={styles.Search}>
+          <Image source={require("../image/Layer3.png")} />
+          <TextInput
+            placeholder="Tìm kiếm..."
+            placeholderTextColor={"#ffff"}
+            onChangeText={(text) => down(text)}
+            style={styles.TextInputSearch}
+            editable={false}
+          ></TextInput>
+        </View>
       </TouchableOpacity>
       <ScrollView>
-      <Text style={styles.textTop}>Top 5 bộ phim có Rating cao nhất:</Text>
-      <View>
-        <FlatList
-          data={top5}
-          horizontal={true}
-          renderItem={({ item }) => (
-            <ItemTop5 data={item} navigation={navigation} />
+        <Text style={styles.textTop}>Top 5 bộ phim có Rating cao nhất:</Text>
+        <View>
+          {isLoading === true ? (
+            <ActivityIndicator size="large" />
+          ) : (
+            <FlatList
+              data={top5}
+              horizontal={true}
+              renderItem={({ item }) => (
+                <ItemTop5 data={item} navigation={navigation} />
+              )}
+              keyExtractor={(item) => item._id}
+            />
           )}
-          keyExtractor={(item) => item._id}
-        />
-      </View>
+        </View>
 
-      <View>
-        <Text style={styles.textTop}>Danh sách phim:</Text>
-      </View>
-      {isLoading == true ? (
-        <ActivityIndicator size="large" />
-      ) : (
-        <FlatList
-          data={data}
-          numColumns={2}
-          renderItem={({ item }) => (
-            <ItemMovie data={item} navigation={navigation} />
-          )}
-          keyExtractor={(item) => item._id}
-          showsVerticalScrollIndicator={false}
-          scrollEnabled={false}
-        />
-      )}
+        <View>
+          <Text style={styles.textTop}>Danh sách phim:</Text>
+        </View>
+        {isLoading == true ? (
+          <ActivityIndicator size="large" />
+        ) : (
+          <FlatList
+            data={data}
+            numColumns={2}
+            renderItem={({ item }) => (
+              <ItemMovie data={item} navigation={navigation} />
+            )}
+            keyExtractor={(item) => item._id}
+            showsVerticalScrollIndicator={false}
+            scrollEnabled={false}
+          />
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -156,9 +160,9 @@ const styles = StyleSheet.create({
   },
   textTop: {
     color: "white",
-    marginTop:5,
-    marginStart:10,
-    fontSize:20,
-    fontWeight:"bold"
+    marginTop: 5,
+    marginStart: 10,
+    fontSize: 20,
+    fontWeight: "bold",
   },
 });
