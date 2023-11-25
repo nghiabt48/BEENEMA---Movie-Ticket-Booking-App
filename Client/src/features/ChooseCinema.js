@@ -14,6 +14,22 @@ import AxiosIntance from "./AxiosIntance";
 import ItemCinema from "../Item/ItemCinema";
 import { AppConText } from "./AppConText";
 
+
+    useEffect(() => {
+        fetchCinema();
+        return () => {};
+      }, []);
+    
+      const fetchCinema = async () => {
+        setisLoading(true);
+        const response = await AxiosIntance().get(`/showtimes?title=${params.title}`);
+        if (response.status === "success") {
+          setCinema(response.data.map(item=> item.room.cinema));
+          setisLoading(false);
+        } else {
+          setisLoading(false);
+        }
+     
 const ChooseCinema = (props) => {
   const { navigation } = props;
   const { route } = props;
@@ -24,21 +40,10 @@ const ChooseCinema = (props) => {
     navigation.goBack();
   };
 
-  useEffect(() => {
-    fetchCinema();
-    return () => {};
-  }, []);
 
-  const fetchCinema = async () => {
-    setisLoading(true);
-    const response = await AxiosIntance().get(`/cinemas`);
-    if (response.status === "success") {
-      setCinema(response.data.data);
-      setisLoading(false);
-    } else {
-      setisLoading(false);
-    }
-  };
+
+  
+
 
   return (
     <SafeAreaView style={styles.container}>
