@@ -6,7 +6,8 @@ const factory = require('./handleFactory');
 exports.createCinema = factory.createOne(Cinema)
 exports.getAllCinemas = factory.getAll(Cinema)
 exports.getCinema = catchAsync(async (req, res, next) => {
-  const cinema = await Cinema.findOne({name: req.query.name})
+  if(!req.query.name) return next()
+  const cinema = await Cinema.findOne({name: {$regex: req.query.name, $options: 'i'}})
   res.status(200).json({
     status: 'success',
     data: cinema
