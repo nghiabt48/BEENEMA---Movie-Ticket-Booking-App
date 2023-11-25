@@ -67,12 +67,17 @@ const UpdateProfile = (props) => {
       );
       if (!result.canceled) {
         if (respone.status == "success") {
-          console.log(respone);
-          ToastAndroid.show("Update Image Successfully", ToastAndroid.SHORT);
-          setinfoUser({ ...infoUser, avatar: respone.url });
+          setTimeout(() =>{
+            console.log(respone);
+            ToastAndroid.show("Update Image Successfully", ToastAndroid.SHORT);
+            setinfoUser({ ...infoUser, avatar: respone.url });
+          },1000);
         } else {
           ToastAndroid.show("Update Image Failed", ToastAndroid.SHORT);
         }
+      }
+      else{
+        ToastAndroid.show("Network Error", ToastAndroid.SHORT);
       }
     }
     catch (e) {
