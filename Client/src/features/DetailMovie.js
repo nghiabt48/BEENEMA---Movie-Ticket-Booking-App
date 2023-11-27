@@ -18,8 +18,17 @@ const DetailMovie = (props) => {
     const [review, setreview] = useState("");
     const [rating, setrating] = useState("");
     const [showFullText, setShowFullText] = useState(false)
-    const { infoUser, setinfoUser, movieId,setmovieId } = useContext(AppConText);
+    const { infoUser, setinfoUser, movieId, setmovieId } = useContext(AppConText);
     const data = params.data.actor
+    const [numberOfLines, setNumberOfLines] = useState(3);
+    const handleTextLayout = (event) => {
+        const { lines } = event.nativeEvent;
+        // Check if the number of lines exceeds the limit
+        if (lines.length > 3) {
+            setNumberOfLines(lines.length);
+        }
+    };
+
     useEffect(() => {
 
         fetchReviews()
@@ -75,11 +84,11 @@ const DetailMovie = (props) => {
     const showTimeClick = async => {
         navigation.navigate("ShowTime", { _id: params.data.id })
     }
-    const showCinema = async =>{
-        navigation.navigate("ChooseCinema", {_id:params.data.id, title: params.data.title })
-        setmovieId({_id:params.data.id})
+    const showCinema = async => {
+        navigation.navigate("ChooseCinema", { _id: params.data.id, title: params.data.title })
+        setmovieId({ _id: params.data.id })
     }
-    
+
     return (
 
         <SafeAreaView style={styles.container}>
@@ -113,10 +122,19 @@ const DetailMovie = (props) => {
                     keyExtractor={(item) => item._id}
                     showsVerticalScrollIndicator={false} />
                 <View style={styles.Group8}>
-                    <Text style={styles.text5} numberOfLines={showFullText ? undefined : 3}>{params.data.description}</Text>
+                    <Text style={styles.text5} numberOfLines={showFullText ? undefined : 3} onTextLayout={handleTextLayout}>{params.data.description}</Text>
                     {
-                        !showFullText ? <TouchableOpacity onPress={() => setShowFullText(true)}><Text style={styles.text8}>Xem thêm</Text></TouchableOpacity>
-                            : <TouchableOpacity onPress={() => setShowFullText(false)}><Text style={styles.text8}>Thu gọn</Text></TouchableOpacity>
+                        numberOfLines > 3 && (
+                            !showFullText ? (
+                                <TouchableOpacity onPress={() => setShowFullText(true)}>
+                                    <Text style={styles.text8}>Xem thêm</Text>
+                                </TouchableOpacity>
+                            ) : (
+                                <TouchableOpacity onPress={() => setShowFullText(false)}>
+                                    <Text style={styles.text8}>Thu gọn</Text>
+                                </TouchableOpacity>
+                            )
+                        )
                     }
                 </View>
                 {/* btn BooKing */}
@@ -134,67 +152,135 @@ const DetailMovie = (props) => {
                         </LinearGradient>
                     </TouchableOpacity>
                 </View>
-                {/* edt review */}
-                <View style={styles.Group5}>
-                    <TextInput placeholder='Tạo đánh giá của bạn...'
-                        placeholderTextColor={'#ffff'}
-                        style={styles.TextInputReview}
-                        onChangeText={setreview}
-                        value={myreviews.review? myreviews.review: null}></TextInput>
-                    {/* btn Post */}
-                    {
-                        rating >= 1 && review != "" ? <TouchableOpacity onPress={Post}>
-                            <Image source={require('../image/plane48.png')} style={styles.boxImage6} />
-                        </TouchableOpacity>
-                            : null
-                    }
-                </View>
-                <View style={styles.container1}>
-                    <Text style={styles.heading}>Xếp hạng cho phim này</Text>
-                    <View style={styles.stars}>
-                        <TouchableOpacity onPress={() => setrating(1)}>
-                            <MaterialIcons
-                                name={rating >= 1 ? 'star' : 'star-border'}
-                                size={32}
-                                style={rating >= 1 ? styles.starSelected : styles.starUnselected}
-                            />
-                            {
+                {
+                    !myreviews.review ?
+                        <View>
+                            <View style={styles.Group7}>
 
-                            }
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => setrating(2)}>
-                            <MaterialIcons
-                                name={rating >= 2 ? 'star' : 'star-border'}
-                                size={32}
-                                style={rating >= 2 ? styles.starSelected : styles.starUnselected}
-                            />
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => setrating(3)}>
-                            <MaterialIcons
-                                name={rating >= 3 ? 'star' : 'star-border'}
-                                size={32}
-                                style={rating >= 3 ? styles.starSelected : styles.starUnselected}
-                            />
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => setrating(4)}>
-                            <MaterialIcons
-                                name={rating >= 4 ? 'star' : 'star-border'}
-                                size={32}
-                                style={rating >= 4 ? styles.starSelected : styles.starUnselected}
-                            />
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => setrating(5)}>
-                            <MaterialIcons
-                                name={rating >= 5 ? 'star' : 'star-border'}
-                                size={32}
-                                style={rating >= 5 ? styles.starSelected : styles.starUnselected}
-                            />
-                        </TouchableOpacity>
-                    </View>
-                </View>
-                <View style={styles.Group7}>
+                            </View>
+                            <View style={styles.container1}>
+                                <Text style={styles.heading}>Xếp hạng cho bộ phim này</Text>
+                                <View style={styles.stars}>
+                                    <TouchableOpacity onPress={() => setrating(1)}>
+                                        <MaterialIcons
+                                            name={rating >= 1 ? 'star' : 'star-border'}
+                                            size={32}
+                                            style={rating >= 1 ? styles.starSelected : styles.starUnselected} />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => setrating(2)}>
+                                        <MaterialIcons
+                                            name={rating >= 2 ? 'star' : 'star-border'}
+                                            size={32}
+                                            style={rating >= 2 ? styles.starSelected : styles.starUnselected} />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => setrating(3)}>
+                                        <MaterialIcons
+                                            name={rating >= 3 ? 'star' : 'star-border'}
+                                            size={32}
+                                            style={rating >= 3 ? styles.starSelected : styles.starUnselected} />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => setrating(4)}>
+                                        <MaterialIcons
+                                            name={rating >= 4 ? 'star' : 'star-border'}
+                                            size={32}
+                                            style={rating >= 4 ? styles.starSelected : styles.starUnselected} />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => setrating(5)}>
+                                        <MaterialIcons
+                                            name={rating >= 5 ? 'star' : 'star-border'}
+                                            size={32}
+                                            style={rating >= 5 ? styles.starSelected : styles.starUnselected} />
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                            {/* edt review */}
+                            <View style={styles.Group5}>
+                                <TextInput placeholder='Mô tả trải nghiệm của bạn...'
+                                    placeholderTextColor={'#ffff'}
+                                    style={styles.TextInputReview}
+                                    onChangeText={setreview}
+                                ></TextInput>
+                                {/* btn Post */}
+                                {
+                                    rating >= 1 && review != "" ? <TouchableOpacity onPress={Post}>
+                                        <Image source={require('../image/plane48.png')} style={styles.boxImage6} />
+                                    </TouchableOpacity>
+                                        : null
+                                }
+                            </View>
+                        </View>
+                        :
+                        <View>
+                            <Text style={styles.headingmy}>Đánh giá của tôi</Text>
+                            <View style={styles.container2}>
+                                {
+                                    myreviews.user ? <Image style={styles.Image} source={{ uri: `http://149.28.159.68:3000/img/users/${myreviews.user.avatar}` }}></Image> : null
+                                }
+                                <View style={styles.Group9}>
+                                    {
+                                        myreviews.user ? <Text style={styles.textUser}>{myreviews.user.username}</Text> : null
+                                    }
+                                    <View style={styles.stars}>
+                                        {
+                                            myreviews.rating >= 1 ? <MaterialIcons
+                                                name={'star'}
+                                                size={16}
+                                                style={styles.starSelected} />
+                                                : <MaterialIcons
+                                                    name={'star-border'}
+                                                    size={16}
+                                                    style={styles.starUnselected} />
+                                        }
+                                        {
+                                            myreviews.rating >= 2 ? <MaterialIcons
+                                                name={'star'}
+                                                size={16}
+                                                style={styles.starSelected} />
+                                                : <MaterialIcons
+                                                    name={'star-border'}
+                                                    size={16}
+                                                    style={styles.starUnselected} />
+                                        }
+                                        {
+                                            myreviews.rating >= 3 ? <MaterialIcons
+                                                name={'star'}
+                                                size={16}
+                                                style={styles.starSelected} />
+                                                : <MaterialIcons
+                                                    name={'star-border'}
+                                                    size={16}
+                                                    style={styles.starUnselected} />
+                                        }
+                                        {
+                                            myreviews.rating >= 4 ? <MaterialIcons
+                                                name={'star'}
+                                                size={16}
+                                                style={styles.starSelected} />
+                                                : <MaterialIcons
+                                                    name={'star-border'}
+                                                    size={16}
+                                                    style={styles.starUnselected} />
+                                        }
+                                        {
+                                            myreviews.rating >= 5 ? <MaterialIcons
+                                                name={'star'}
+                                                size={16}
+                                                style={styles.starSelected} />
+                                                : <MaterialIcons
+                                                    name={'star-border'}
+                                                    size={16}
+                                                    style={styles.starUnselected} />
+                                        }
+                                    </View>
+                                    {
+                                        myreviews.review ? <Text style={styles.textReview}>{myreviews.review}</Text> : null
+                                    }
+                                </View>
+                            </View>
+                        </View>
+                }
 
-                </View>
+
                 <Text style={styles.text7}>Đánh giá</Text>
                 {/* get all review */}
                 <ScrollView horizontal={true} style={styles.Group6}>
@@ -305,10 +391,14 @@ const styles = StyleSheet.create({
     },
     Group7: {
         borderTopColor: '#DA004E',
-        borderTopWidth: 0.5
+        borderTopWidth: 0.5,
+        marginTop: 20
     },
     Group8: {
 
+    },
+    Group9: {
+        marginLeft: 10
     },
     text1: {
         width: '100%',
@@ -410,6 +500,31 @@ const styles = StyleSheet.create({
     },
     starUnselected: {
         color: '#fff'
-    }
+    },
+    Image: {
+        borderRadius: 100,
+        height: 50,
+        width: 50,
+    },
+    container2: {
+        flexDirection: 'row',
+        margin: 10,
+        marginLeft: 20,
+    },
+    textUser: {
+        fontSize: 16,
+        color: '#ffff',
+        fontWeight: '600'
+    },
+    textReview: {
+        color: '#fff'
+    },
+    headingmy: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 20,
+        color: '#fff',
+        textAlign: 'center'
+    },
 })
 
