@@ -30,7 +30,7 @@ const Search = (props) => {
     "tragedy",
   ]);
   const [movies, setMovies] = useState([]);
-
+  const [searchEnabled, setSearchEnabled] = useState(true);
   
   const handleOpenModal = () => {
     setIsVisible(true);
@@ -49,6 +49,7 @@ const Search = (props) => {
 
   const getMoviesByGenre = async (selectedGenre) => {
      try {
+      setSearchEnabled(false);
       setisLoading2(true);
       const respone = await AxiosIntance().get(`/movies?category=${selectedGenre}`)
       if(respone.status === "success"){
@@ -73,6 +74,9 @@ const Search = (props) => {
   //get movie by title
   const search = async (searchText) => {
     setisLoading(true);
+    if (!searchEnabled) {
+      return; // Ngăn chặn việc thực hiện tìm kiếm nếu đang thực hiện hàm getGenres
+    }
     const respone = await AxiosIntance().get(
       "/movies/search?title=" + searchText
     );
@@ -87,6 +91,15 @@ const Search = (props) => {
     }
   };
 
+  const renderContent = () => {
+    if (!searchEnabled) {
+      return null;
+    } else if(isLoading === true){
+      return <ActivityIndicator size="large" />;
+    }else{
+      
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -130,8 +143,8 @@ const Search = (props) => {
     </View>
       </View>
 
-      {isLoading == true ? (
-        <ActivityIndicator size="large" />
+      { !searchEnabled ? (
+        null
       ) : (
         <FlatList
           data={data}
