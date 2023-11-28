@@ -415,14 +415,14 @@ const styles = StyleSheet.create({
     },
     text2: {
         color: '#fff',
-        fontSize: 26,
+        fontSize: 22,
         fontWeight: 'bold',
         marginStart: 15,
 
     },
     text3: {
         color: '#F74346',
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: '600',
         marginStart: 15
     },
@@ -444,7 +444,7 @@ const styles = StyleSheet.create({
     },
     text7: {
         color: '#DA004E',
-        fontSize: 30,
+        fontSize: 24,
         alignSelf: "center"
     },
     text8: {
@@ -496,7 +496,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     heading: {
-        fontSize: 24,
+        fontSize: 20,
         fontWeight: 'bold',
         marginBottom: 20,
         color: '#fff'
@@ -518,7 +518,7 @@ const styles = StyleSheet.create({
         marginLeft: 20,
     },
     textUser: {
-        fontSize: 16,
+        fontSize: 14,
         color: '#ffff',
         fontWeight: '600'
     },
@@ -526,11 +526,12 @@ const styles = StyleSheet.create({
         color: '#fff'
     },
     headingmy: {
-        fontSize: 24,
+        fontSize: 20,
         fontWeight: 'bold',
         marginBottom: 20,
         color: '#fff',
-        textAlign: 'center'
+        textAlign: 'center',
+        marginTop:10
     },
     loading: {
         flex: 1,

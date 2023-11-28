@@ -14,7 +14,7 @@ const ItemActor = (props) => {
   return (
     <View style={styles.container}> 
         <Image source={{uri: ImageURL}} style={styles.Image}/>
-        <Text style={styles.Text1}>{shortenText(data.name,14)}</Text>
+        <Text style={styles.Text1}>{data.name}</Text>
     </View>
   )
 }
@@ -25,12 +25,15 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         marginStart:10,
-        alignItems:'center'
+        alignItems:'center',
+        
       },
       Text1: {
         fontSize: 10,
         fontWeight: '500',
         color: '#ffff',
+        width: 60,
+        textAlign:'center'
       },
       Image:{
         borderRadius:100,
