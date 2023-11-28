@@ -31,15 +31,30 @@ const Search = (props) => {
   ]);
   const [movies, setMovies] = useState([]);
   const [searchEnabled, setSearchEnabled] = useState(true);
-  
+  const [reset, setReset] = useState(false);
+
+  //hàm này để reset dữ liệu đã chọn từ modal
+  const handleReset = () => {
+    // Đặt lại trạng thái reset bằng cách đảo ngược giá trị hiện tại
+    setReset((prevReset) => !prevReset);
+
+    // Đặt lại trạng thái của các trường dữ liệu cần reset
+    setSelectedGenre(null);
+    setMovies([]);
+    setIsVisible(false);
+  };
+
+  //mở modal
   const handleOpenModal = () => {
     setIsVisible(true);
   };
 
+  //đóng modal
   const handleCloseModal = () => {
     setIsVisible(false);
   };
 
+  //chọn thể loại từ modal
   const handleSelectGenre = (genre) => {
     setSelectedGenre(genre);
     handleCloseModal();
@@ -48,18 +63,22 @@ const Search = (props) => {
   };
 
   const getMoviesByGenre = async (selectedGenre) => {
-     try {
+    try {
+      //nếu thể loại đã được chọn thì searchEnabled sẽ == false
       setSearchEnabled(false);
+      //tạo isloading2 vì để không bị trùng với search
       setisLoading2(true);
-      const respone = await AxiosIntance().get(`/movies?category=${selectedGenre}`)
-      if(respone.status === "success"){
+      const respone = await AxiosIntance().get(
+        `/movies?category=${selectedGenre}`
+      );
+      if (respone.status === "success") {
         setMovies(respone.data.data);
         setisLoading2(false);
       }
-     } catch (error) {
-      console.log(error)
+    } catch (error) {
+      console.log(error);
       setisLoading2(false);
-     }
+    }
   };
   // set time out
   let timeOut = null;
@@ -74,9 +93,6 @@ const Search = (props) => {
   //get movie by title
   const search = async (searchText) => {
     setisLoading(true);
-    if (!searchEnabled) {
-      return; // Ngăn chặn việc thực hiện tìm kiếm nếu đang thực hiện hàm getGenres
-    }
     const respone = await AxiosIntance().get(
       "/movies/search?title=" + searchText
     );
@@ -91,13 +107,24 @@ const Search = (props) => {
     }
   };
 
-  const renderContent = () => {
+  //nếu searchEnabled == false thì sẽ trả về null
+  const listSearch = function () {
     if (!searchEnabled) {
       return null;
-    } else if(isLoading === true){
+    } else if (isLoading === true) {
       return <ActivityIndicator size="large" />;
-    }else{
-      
+    } else {
+      return (
+        <FlatList
+          data={data}
+          numColumns={2}
+          renderItem={({ item }) => (
+            <ItemMovie data={item} navigation={navigation} />
+          )}
+          keyExtractor={(item) => item._id}
+          showsVerticalScrollIndicator={false}
+        />
+      );
     }
   };
 
@@ -112,53 +139,68 @@ const Search = (props) => {
           style={styles.TextInputSearch}
         ></TextInput>
         <View>
-      <TouchableOpacity onPress={handleOpenModal}>
-        <Text style={{color:"white", marginStart:10}}>{selectedGenre || 'Select a genre'}</Text>
-      </TouchableOpacity>
+          <TouchableOpacity onPress={handleOpenModal}>
+            {selectedGenre == null ? (
+              <Image
+                style={{ marginStart: 10 }}
+                source={require("../image/filter.png")}
+              />
+            ) : (
+              <Text style={{ color: "white", marginStart: 10,fontSize:16,fontWeight:"600" }}>
+                {selectedGenre}
+              </Text>
+            )}
+          </TouchableOpacity>
 
-      <Modal
-        transparent={true}
-        animationType="slide"
-        visible={isVisible}
-        onRequestClose={handleCloseModal}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <FlatList
-              data={genres}
-              keyExtractor={(item) => item}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  style={styles.genreItem}
-                  onPress={() => handleSelectGenre(item)}
-                >
-                  <Text style={{ color: '#F74346', fontSize:14,fontWeight:"600", padding:10}}>{item}</Text>
-                  <Image source={require("../image/line.png")} />
+          <Modal
+            transparent={true}
+            animationType="slide"
+            visible={isVisible}
+            onRequestClose={handleCloseModal}
+          >
+            <View style={styles.modalContainer}>
+              <View style={styles.modalContent}>
+                {/* nút reset */}
+                <TouchableOpacity style={styles.reset} onPress={handleReset}>
+                  <Image style={{alignSelf:"center",justifyContent:"center"}} source={require("../image/undo.png")} />
+                  <Text style={{ color: "#F74346",fontSize:14,  fontWeight: "600",textAlign: "center" ,alignSelf:"center",marginStart:5}}>
+                    Reset
+                  </Text>
                 </TouchableOpacity>
-              )}
-            />
-          </View>
+                {/* List thể loại */}
+                <FlatList
+                  data={genres}
+                  keyExtractor={(item) => item}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity
+                      style={styles.genreItem}
+                      onPress={() => handleSelectGenre(item)}
+                    >
+                      <Text
+                        style={{
+                          color: "#F74346",
+                          fontSize: 14,
+                          fontWeight: "600",
+                          padding: 10,
+                        }}
+                      >
+                        {item}
+                      </Text>
+                      <Image source={require("../image/line.png")} />
+                    </TouchableOpacity>
+                  )}
+                />
+              </View>
+            </View>
+          </Modal>
         </View>
-      </Modal>
-    </View>
       </View>
 
-      { !searchEnabled ? (
-        null
-      ) : (
-        <FlatList
-          data={data}
-          numColumns={2}
-          renderItem={({ item }) => (
-            <ItemMovie data={item} navigation={navigation} />
-          )}
-          keyExtractor={(item) => item._id}
-          showsVerticalScrollIndicator={false}
-        />
-      )}
+      {/* danh sach list cua search */}
+      {listSearch()}
 
-       {/* The loai */}
-       {isLoading2 == true ? (
+      {/* The loai */}
+      {isLoading2 == true ? (
         <ActivityIndicator size="large" />
       ) : (
         <FlatList
@@ -214,5 +256,14 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
+  },
+  reset: {
+    backgroundColor: "rgba(0, 0, 0, 0.3)",
+    width: 100,
+    height:25,
+    borderRadius: 10,
+    flexDirection:"row",
+    justifyContent: "center",
+    alignSelf:"flex-end"
   },
 });

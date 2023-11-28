@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity,Image, StyleSheet, Dimensions, TextInput, ImageBackground} from 'react-native'
 import React from 'react'
 import { LinearGradient } from 'expo-linear-gradient';
-
+import QRCode from 'react-native-qrcode-svg';
 const ItemTicket = (props) => {
     const { item, navigation } = props;
     const ImageURL = `http://149.28.159.68:3000/img/movies/${item.showtime.movie.imageCover}`
@@ -25,6 +25,19 @@ const formattedDate = `${day < 10 ? '0' : ''}${day}-${month < 10 ? '0' : ''}${mo
 
 
 //   console.log(`Ngày thứ ${dayOfWeek}`);
+
+const BarcodeGenerator = ({ code }) => {
+  return (
+    <View style={{ alignItems: 'center' ,marginTop:10,marginStart:10}}>
+      <QRCode
+        value={code}
+        size={50}
+        color="black"  // Màu của mã vạch
+        backgroundColor="white"  // Màu nền của mã vạch
+      />
+    </View>
+  );
+};
 
     return (
         <TouchableOpacity >
@@ -71,25 +84,23 @@ const formattedDate = `${day < 10 ? '0' : ''}${day}-${month < 10 ? '0' : ''}${mo
             </View>
           </View>
           <View style={styles.ticketSeatContainer}>
-            <View style={styles.subtitleContainer}>
+            <View style={styles.subtitleContainer3}>
               <Text style={styles.subheading}>Phòng</Text>
               <Text style={styles.subtitle}>{item.showtime.room.name}</Text>
             </View>
-            <View style={styles.subtitleContainer}>
+            <View style={styles.subtitleContainer2}>
               <Text style={styles.subheading}>Ghế</Text>
               <Text style={styles.subtitle}>{item.seats}</Text>
             </View>
             <View style={styles.subtitleContainer}>
-              <Text style={styles.subheading}>Mã vé</Text>
-              <Text style={styles.subtitle}>
-              {item.ticket_code}
-              </Text>
+           
             </View>
           </View>
-          <Image
-            source={require('../image/barcode.png')}
-            style={styles.barcodeImage}
-          />
+          <Text style={styles.subheading2}>Rạp</Text>
+              <Text style={styles.subtitle2}>
+              {item.showtime.room.cinema.name}
+              </Text>
+          <BarcodeGenerator code={item.ticket_code} />
           </View>
           </View>
           
@@ -157,13 +168,31 @@ const styles = StyleSheet.create({
         color: "white",
         fontWeight:'bold'
       },
+      subtitle2:{
+        fontSize: 14,
+        color: "white",
+        fontWeight:'bold',
+        marginStart:10
+      },
       subheading: {
-    
         fontSize: 18,
         color: "white",
       },
+      subheading2:{
+        fontSize: 18,
+        color: "white",
+        marginStart:10
+      },
       subtitleContainer: {
         alignItems: 'center',
+      },
+      subtitleContainer2:{
+        alignItems: 'center',
+       marginStart:50
+      },
+      subtitleContainer3:{
+        alignItems: 'center',
+       marginStart:50
       },
       barcodeImage: {
         height: 50,
