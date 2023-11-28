@@ -17,7 +17,7 @@ router.get('/index', adminController.getAllMovies);
 router.get('/index/detailmovie/:id', adminController.movieDetail);
 router.get('/index/deletemovie/:id', adminController.movie_delete);
 router.get('/index/insert_getmovie', adminController.insertMovieGet);
-router.post('/index/insert_postmovie', adminController.insertMoviePost);
+router.post('/index/insert_postmovie',adminController.insertMoviePost);
 router.post('/index/update_postmovie/:id', adminController.updateMoviePost);
 
 //User

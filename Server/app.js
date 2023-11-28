@@ -60,7 +60,7 @@ app.get('/api/logs', async(req, res, next) => {
   }
 })
 app.use('/api/showtimes', showtimeRouter)
-app.use('/api/movies', productRouter)
+// app.use('/api/movies', productRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/reviews', reviewRouter)
 app.use('/api/cinemas', cinemaRouter)

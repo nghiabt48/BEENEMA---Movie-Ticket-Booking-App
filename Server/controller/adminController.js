@@ -9,7 +9,24 @@ const Ticket = require('../model/ticketModel');
 const catchAsync = require('./../utils/catchAsync');
 const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
-const AppError = require('./../utils/appError');
+const multer = require('multer');
+//firebase
+const { initializeApp } = require("firebase/app");
+
+//lưu ảnh, lưu trailer
+const firebaseConfig = {
+    apiKey: "AIzaSyDzV1nParF1zL5w_S5n7TY6HI1gqcAVm-4",
+    authDomain: "fir-lord.firebaseapp.com",
+    projectId: "fir-lord",
+    storageBucket: "fir-lord.appspot.com",
+    messagingSenderId: "493975364860",
+    appId: "1:493975364860:web:37ea3441ab5c2af2aee379",
+    measurementId: "G-ELHK60D8FY"
+  };
+initializeApp(firebaseConfig);
+
+
+
 //Admin Login
 // const signToken = id => {
 //     return jwt.sign({id}, process.env.JWT_SECRET, {
@@ -140,8 +157,8 @@ exports.insertMoviePost = async(req, res) => {
             description: req.body.description,
             country: req.body.country
         });
-        await movies.save();
-        res.redirect('/index');
+        // await movies.save();
+        // res.redirect('/index');
     } catch (error) {
         console.log(`${error.name}: ${error.message}`);
         res.render("error.hbs");
