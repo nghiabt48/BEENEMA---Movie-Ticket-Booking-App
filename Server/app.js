@@ -45,6 +45,7 @@ app.get('/api/users/reset-password/:token', (req, res, next) => {
   const currentUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
   res.render('ResetPassword', { token: req.params.token, currentUrl })
 })
+
 app.get('/api/logs', async(req, res, next) => {
   try{
     res.status(200).json({

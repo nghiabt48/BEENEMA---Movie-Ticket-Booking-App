@@ -2,6 +2,9 @@
 const mongoose = require('mongoose')
 const Movie = require('./movieModel')
 
+const currentTimestamp = Date.now(); 
+const offsetHours = 7; 
+const date = new Date(currentTimestamp + offsetHours * 60 * 60 * 1000);
 const reviewSchema = new mongoose.Schema({
   review: {
     type: String,
@@ -15,7 +18,7 @@ const reviewSchema = new mongoose.Schema({
   },
   created_At: {
     type: Date,
-    default: Date.now
+    default: date.toLocaleString()
   },
   movie: {
     type: mongoose.Types.ObjectId,
@@ -26,7 +29,6 @@ const reviewSchema = new mongoose.Schema({
     type: mongoose.Types.ObjectId,
     ref: 'User',
     required: [true, "Review must belong to a user"],
-    unique: [true, "Each user only has one review on each movie"]
   }
 },
   {

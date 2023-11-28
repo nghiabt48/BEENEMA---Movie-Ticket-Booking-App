@@ -8,10 +8,12 @@ import {
   Image,
   ScrollView,
   ToastAndroid,
+  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { io } from "socket.io-client";
 import { AppConText } from "./AppConText";
+import { useStripe } from '@stripe/stripe-react-native'
 const host = "http://149.28.159.68:3000";
 import AxiosIntance from "./AxiosIntance";
 const seats = [
@@ -112,7 +114,6 @@ const seats = [
   "L7",
   "L8",
 ];
-const specialSeats = ["D4", "A5", "C1"];
 const SeatCinemaSocket = (props) => {
   const { route } = props;
   const { navigation } = props;
@@ -120,12 +121,13 @@ const SeatCinemaSocket = (props) => {
   const socketRef = useRef();
   const { infoUser } = useContext(AppConText);
   const showtimeId = params.item._id;
-  const [info, setInfo] = useState();
+  const roomId = params.item.room._id
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [mySeats, setMySeats] = useState([]);
-  const { movieId, setmovieId } = useContext(AppConText);
+  const { initPaymentSheet, presentPaymentSheet } = useStripe()
+  const [specialSeats, setspecialSeats] = useState([])
   const ImageURL = `http://149.28.159.68:3000/img/movies/${params.item.movie.imageCover}`
-  console.log(ImageURL)
+
   const Back = () => {
     navigation.goBack();
   };
@@ -133,19 +135,31 @@ const SeatCinemaSocket = (props) => {
   useEffect(() => {
     socketRef.current = io.connect(host);
     socketRef.current.on("seat_changed", (dataGot) => {
-      setSelectedSeats(dataGot.map((item) => item.seat_number));
-      setMySeats(filterMySeats(dataGot));
+      // chua co ai chon ghe
+      if(dataGot.length == 0) {
+        setSelectedSeats([])
+        setMySeats([])
+        return
+      }
+      if(dataGot[0].showtime == showtimeId && dataGot[0].room == roomId)
+      {
+        setspecialSeats(filterReservedSeats(dataGot))
+        setSelectedSeats(dataGot.map((item) => item.seat_number));
+        setMySeats(filterMySeats(dataGot));
+      }
     });
     return () => {
       socketRef.current.disconnect();
     };
   }, []);
   useEffect(() => {
+
     const seat_init = async () => {
       try {
         const response = await AxiosIntance().get(
-          `logs?showtime=${showtimeId}`
+          `logs?showtime=${showtimeId}&room=${roomId}`
         );
+        setspecialSeats(filterReservedSeats(response.seat_logs))
         setSelectedSeats(response.seat_logs.map((item) => item.seat_number));
         setMySeats(filterMySeats(response.seat_logs));
       } catch (e) {
@@ -158,8 +172,12 @@ const SeatCinemaSocket = (props) => {
     seat_init();
     return () => {};
   }, []);
+  const filterReservedSeats = (arr) => {
+    arr = arr.filter((item) => item.status == "reserved");
+    return arr.length > 0 ? arr.map((item) => item.seat_number) : specialSeats;
+  }
   const filterMySeats = (arr) => {
-    arr = arr.filter((item) => item.user == infoUser._id);
+    arr = arr.filter((item) => item.user == infoUser._id && item.status != "reserved");
     return arr.map((item) => item.seat_number);
   };
   const handleSeatPress = (seatNumber) => {
@@ -168,17 +186,55 @@ const SeatCinemaSocket = (props) => {
     const seat_obj = {
       showtime: showtimeId,
       seat_number: seatNumber,
+      room: roomId,
       user: infoUser._id,
     };
     socketRef.current.emit("showtime:modify", seat_obj);
   };
+  const checkout = async(my_seats) => {
+    try {
+      // 1. Get checkout session
+      const response = await AxiosIntance().post(`tickets/checkout/${showtimeId}`, {
+        seats: my_seats
+      })
 
+      // 2. Create checkout form + charge credit card
+      //Số thẻ để test: 4242 4242 4242 4242
+      const initResponse = await initPaymentSheet({
+        merchantDisplayName: 'BEENEMA',
+        paymentIntentClientSecret: response.paymentIntent,
+      })
+      if (initResponse.error) {
+        console.log(initResponse.error)
+        Alert.alert("Something went wrong at initialize payment sheet")
+        return
+      }
+      // 3.Present the payment sheet to the user
+
+      const paymentResponse = await presentPaymentSheet()
+      if (paymentResponse.error) {
+        Alert.alert(`Thất bại`, 'Thanh toán đã bị hủy')
+        return
+      }
+      Alert.alert(`Hoàn thành`, 'Thanh toán đã được xác nhận thành công')
+      // 4. After paying, create the ticket
+      await AxiosIntance().post(`tickets/checkout/${showtimeId}/create-ticket`, {  seat_number: my_seats })
+      socketRef.current.emit("showtime:reserved", {
+        showtime: showtimeId,
+        user: infoUser._id,
+        room: roomId      
+      })
+    } catch (err) {
+      console.log("Err at book function: " + err)
+    }
+
+  }
   const renderSeats = () => {
     const seatLayout = [];
     const reserved_seat = require("../image/reserved_seat.png");
-    const selected_seat = require("../image/selected_seat.png");
+    const selected_seat = require("../image/my_seat.png");
     const available_seat = require("../image/available_seat.png");
-    const my_seat = require("../image/my_seat.png");
+    const my_seat = require("../image/selected_seat.png");
 
     for (let column = 1; column <= 6; column++) {
       const rowSeats = [];
@@ -241,7 +297,7 @@ const SeatCinemaSocket = (props) => {
               source={require("../image/back3.png")}
             ></Image>
           </TouchableOpacity>
-          <Text style={styles.textseat}>Choose seats</Text>
+          <Text style={styles.textseat}>Chọn ghế</Text>
         </View>
         <View style={styles.viewGroup2}>
           <Image
@@ -276,21 +332,25 @@ const SeatCinemaSocket = (props) => {
         <View style={styles.viewGroup5}>
           <View style={styles.Group5}>
             <View style={styles.viewwhite}></View>
-            <Text style={styles.textAvailable}>Available</Text>
+            <Text style={styles.textAvailable}>Chưa đặt</Text>
           </View>
           <View style={styles.Group5}>
             <View style={styles.viewred}></View>
-            <Text style={styles.textAvailable}>Resered</Text>
+            <Text style={styles.textAvailable}>Đã đặt</Text>
           </View>
           <View style={styles.Group5}>
             <View style={styles.viewgreen}></View>
-            <Text style={styles.textAvailable}>Selected</Text>
+            <Text style={styles.textAvailable}>Đã được chọn</Text>
           </View>
         </View>
+        <View style={styles.Group6}>
+            <View style={styles.viewgblue}></View>
+            <Text style={styles.textAvailable2}>Đã được người khác chọn</Text>
+          </View>
         {/* btn booking */}
 
         <View style={styles.Group4}>
-          <TouchableOpacity style={styles.buttonBooking}>
+          <TouchableOpacity style={styles.buttonBooking} onPress={() => checkout(mySeats)}>
             <LinearGradient
               colors={["#F34C30", "#DA004E"]}
               style={styles.gradient}
@@ -307,7 +367,7 @@ const SeatCinemaSocket = (props) => {
                   </Text>
                 </View>
 
-                <Text style={styles.text6}>Continue</Text>
+                <Text style={styles.text6}>Tiếp tục</Text>
               </View>
             </LinearGradient>
           </TouchableOpacity>
@@ -437,9 +497,20 @@ const styles = StyleSheet.create({
     fontWeight: "300",
     marginLeft: "7%",
   },
+  textAvailable2: {
+    color: "white",
+    fontSize: 12,
+    fontWeight: "300",
+    marginLeft: "2%"
+  },
   Group5: {
     flexDirection: "row",
     alignItems: "center",
+  },
+  Group6: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginStart: 10,
   },
   viewwhite: {
     backgroundColor: "white",
@@ -455,6 +526,12 @@ const styles = StyleSheet.create({
   },
   viewgreen: {
     backgroundColor: "#6AFF70",
+    width: 12,
+    height: 12,
+    borderRadius: 100,
+  },
+  viewgblue: {
+    backgroundColor: "#3CCFEF",
     width: 12,
     height: 12,
     borderRadius: 100,

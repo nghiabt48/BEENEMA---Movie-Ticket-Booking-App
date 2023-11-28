@@ -22,7 +22,7 @@ const ForgotEmail = (props) => {
         email: emailUser,
       });
 
-      if (response.data.status === "success") {
+      if (response.status === "success") {
         ToastAndroid.show(
           "Kiểm tra email của bạn để lấy lại mật khẩu!",
           ToastAndroid.SHORT
@@ -70,7 +70,7 @@ const ForgotEmail = (props) => {
           style={styles.gradient}
           end={{ x: 0.01, y: 1 }}
         >
-          <Text style={styles.Text5}>Đăng Nhập</Text>
+          <Text style={styles.Text5}>Quên mật khẩu</Text>
         </LinearGradient>
       </TouchableOpacity>
 

@@ -3,6 +3,9 @@ const Movie = require('./movieModel');
 const Showtime = require('./showtimeModel');
 const AppError = require('../utils/appError');
 
+const currentTimestamp = Date.now(); 
+const offsetHours = 7; 
+const date = new Date(currentTimestamp + offsetHours * 60 * 60 * 1000);
 const ticketSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.ObjectId,
@@ -12,13 +15,25 @@ const ticketSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'Showtime'
   },
-  obtained_seat: String,
-  booking_Time: {
+  seats: [String],
+  booking_time: {
     type: Date,
-    default: Date.now()
+    default: date.toLocaleString()
   },
-  price: Number
+  ticket_code: {
+    type: String,
+    default: generateRandomString(5) // random strings for ticket codes
+  }
 })
+function generateRandomString(length) {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      result += characters.charAt(randomIndex);
+  }
+  return result;
+}
 ticketSchema.statics.calculatePrice = async function (ticketID) {
   try {
     const ticket = await this.aggregate([

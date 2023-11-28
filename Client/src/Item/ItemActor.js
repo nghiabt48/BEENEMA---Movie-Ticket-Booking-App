@@ -3,10 +3,18 @@ import React from 'react'
 
 const ItemActor = (props) => {
     const { data } = props;
+    const ImageURL = `http://149.28.159.68:3000/img/actors/${data.avatar}`
+
+    const shortenText = (text, maxLength) => {
+      if (text.length > maxLength) {
+        return text.substring(0, maxLength - 3) + '...';
+      }
+      return text;
+    };
   return (
     <View style={styles.container}> 
-        <Image source={require('../image/avatar.png')} style={styles.Image}/>
-        <Text style={styles.Text1}>dfgdg</Text>
+        <Image source={{uri: ImageURL}} style={styles.Image}/>
+        <Text style={styles.Text1}>{shortenText(data.name,14)}</Text>
     </View>
   )
 }
@@ -20,8 +28,8 @@ const styles = StyleSheet.create({
         alignItems:'center'
       },
       Text1: {
-        fontSize: 15,
-        fontWeight: '600',
+        fontSize: 10,
+        fontWeight: '500',
         color: '#ffff',
       },
       Image:{

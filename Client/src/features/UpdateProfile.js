@@ -20,6 +20,7 @@ const UpdateProfile = (props) => {
   const { navigation } = props;
   const [isLoading, setisLoading] = useState(null);
   const { infoUser, setinfoUser } = useContext(AppConText);
+  const [image, setImage] = useState(null);
   const ImageURL = "http://149.28.159.68:3000/img/users/";
 
   //Lấy thông tin user
@@ -29,6 +30,7 @@ const UpdateProfile = (props) => {
       const respone = await AxiosIntance().get("users/me");
       if (respone.status == "success") {
         setinfoUser(respone.data.document);
+        setImage(respone.data.document.avatar);
         setisLoading(false);
       } else {
         ToastAndroid.show("Get Data Failed Successfully", ToastAndroid.SHORT);
@@ -45,7 +47,7 @@ const UpdateProfile = (props) => {
 
   //chọn hình trong kho ảnh để đăng lên (chưa tìm được cách để tạm ảnh hay nói thẳng là ngu nên xài api luôn)
   const pickImage = async () => {
-    try{
+    try {
       //Chọn hình
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -58,7 +60,7 @@ const UpdateProfile = (props) => {
       formData.append("avatar", {
         uri: result.assets[0].uri,
         type: "image/jpeg",
-        name: "image.jpg",
+        name:"image.jpg"
       });
       //chạy api
       const respone = await AxiosIntance("multipart/form-data").patch(
@@ -67,18 +69,21 @@ const UpdateProfile = (props) => {
       );
       if (!result.canceled) {
         if (respone.status == "success") {
-          console.log(respone);
-          ToastAndroid.show("Update Image Successfully", ToastAndroid.SHORT);
-          setinfoUser({...infoUser, avatar: respone.path});
+            console.log(respone);
+            ToastAndroid.show("Update Image Successfully", ToastAndroid.SHORT);
+            setImage(respone.url);
         } else {
           ToastAndroid.show("Update Image Failed", ToastAndroid.SHORT);
         }
       }
+      else{
+        ToastAndroid.show("Network Error", ToastAndroid.SHORT);
+      }
     }
-    catch(e){
+    catch (e) {
       console.log(e);
     }
-    
+
   };
 
   const goBack = () => {
@@ -88,25 +93,25 @@ const UpdateProfile = (props) => {
   //Cập nhật profile
   const UpdateProfile = async () => {
     try {
-      
+
       const respone = await AxiosIntance().patch(
         "users/update-me",
         {
           email: infoUser.email,
           username: infoUser.username,
           phone_number: infoUser.phone_number,
-          avatar: infoUser.avatar
+          avatar: image
         }
       );
-     
+
       if (respone.status == "success") {
-        ToastAndroid.show("Update Profile Successfully", ToastAndroid.SHORT);
-        console.log(respone.data);
+        ToastAndroid.show("Update Profile Successfully", ToastAndroid.SHORT);``
+        setinfoUser(respone.data.user);
       } else {
         ToastAndroid.show("Update Profile Failed", ToastAndroid.SHORT);
       }
-   
-      
+
+
     } catch (e) {
       ToastAndroid.show("Update Profile Failed", ToastAndroid.SHORT);
       console.log(e);
@@ -116,18 +121,14 @@ const UpdateProfile = (props) => {
   return (
     <View style={styles.container}>
       {/* Phần đầu */}
-      <View style={styles.header}>
+      <View style={styles.viewGroup1}>
         <TouchableOpacity onPress={goBack}>
           <Image
-            style={styles.imagestyle}
-            source={require("../icons/back.png")}
-          />
+            style={styles.ImageBack}
+            source={require("../image/Back.png")}
+          ></Image>
         </TouchableOpacity>
-        <View style={{ flex: 1, justifyContent: "center", marginLeft: -50 }}>
-          <Text style={[styles.textstyle, { textAlign: "center" }]}>
-            Update Profile
-          </Text>
-        </View>
+        <Text style={styles.textseat}>Cập nhật thông tin</Text>
       </View>
 
       {/* Phần cập nhật hình ảnh*/}
@@ -138,7 +139,7 @@ const UpdateProfile = (props) => {
           ) : infoUser.avatar != null ? (
             <Image
               style={styles.updateimage}
-              source={{ uri: `${ImageURL}${infoUser.avatar}` }}
+              source={{ uri: `${ImageURL}${image}` }}
             />
           ) : (
             <Image
@@ -265,11 +266,28 @@ const styles = StyleSheet.create({
   updateimagecontainer: {
     justifyContent: "center",
     alignItems: "center",
+    marginTop:'10%'
   },
   updateimage: {
     width: "50%",
     height: undefined,
     aspectRatio: 1,
     borderRadius: 27,
+  },
+  ImageBack: {
+    width: 50,
+    height: 50,
+  },
+  viewGroup1: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
+  },
+  textseat: {
+    color: "white",
+    fontSize: 20,
+    fontWeight: "400",
+    flex: 1,
+    textAlign: "center",
   },
 });

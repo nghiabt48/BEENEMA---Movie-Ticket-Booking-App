@@ -12,7 +12,6 @@ const showtimeSchema = new mongoose.Schema({
   start_time: Date,
   end_time: Date,
   price: Number ,
-  booked_seats: [String]
 
 })
 

@@ -9,6 +9,10 @@ const logsSchema = new mongoose.Schema({
     type: mongoose.Types.ObjectId,
     ref: 'User',
   },
+  room: {
+    type: mongoose.Types.ObjectId,
+    ref: 'Room',
+  },
   seat_number: String,
   status: {
     type: String,
