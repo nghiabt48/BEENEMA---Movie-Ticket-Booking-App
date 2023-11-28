@@ -11,44 +11,44 @@ const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
 const AppError = require('./../utils/appError');
 //Admin Login
-const signToken = id => {
-    return jwt.sign({id}, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRES_IN
-    })
-  }
-  const sendToken = (user, statusCode, req, res) => {
-    const token = signToken(user._id);
-    res.cookie('jwt', token, {
-      expires: new Date(
-        Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-      ),
-      httpOnly: true,
-      secure: req.secure || req.headers['x-forwarded-proto'] === 'https'
-    });
+// const signToken = id => {
+//     return jwt.sign({id}, process.env.JWT_SECRET, {
+//       expiresIn: process.env.JWT_EXPIRES_IN
+//     })
+//   }
+//   const sendToken = (user, statusCode, req, res) => {
+//     const token = signToken(user._id);
+//     res.cookie('jwt', token, {
+//       expires: new Date(
+//         Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+//       ),
+//       httpOnly: true,
+//       secure: req.secure || req.headers['x-forwarded-proto'] === 'https'
+//     });
   
-    // Remove password from output
-    user.password = undefined;
+//     // Remove password from output
+//     user.password = undefined;
   
-    res.redirect('/index');
-  };
+//     res.redirect('/index');
+//   };
 
   
-exports.login = catchAsync(async (req, res, next) => {
-    const { email, password } = req.body;
+// exports.login = catchAsync(async (req, res, next) => {
+//     const { email, password } = req.body;
     
-    // 1) Check if email and password exist
-    if (!email || !password) {
-        res.render("error.hbs");
-    }
-    // 2) Check if user exists && password is correct
-    const user = await User.findOne({ email }).select('+password');
-    if (!user) {
-        res.render("error.hbs");
-    }
+//     // 1) Check if email and password exist
+//     if (!email || !password) {
+//         res.render("error.hbs");
+//     }
+//     // 2) Check if user exists && password is correct
+//     const user = await User.findOne({ email }).select('+password');
+//     if (!user) {
+//         res.render("error.hbs");
+//     }
   
-    // 3) If everything ok, send token to client
-    sendToken(user, 200,req, res);
-  });
+//     // 3) If everything ok, send token to client
+//     sendToken(user, 200,req, res);
+//   });
 
 //Movie
 exports.getAllMovies = async(req, res) => {
@@ -253,9 +253,11 @@ exports.detailCategory = async(req, res) => {
 exports.getAllRoom = async(req, res) => {
     try{
         const rooms = await Room.find({}).lean();
+        const cinemas = await Cinema.find({}).lean();
         res.render("room.hbs", {
             titles: "List Rooms",
-            rooms: rooms
+            rooms: rooms,
+            cinema: cinemas
         });
        
     }
@@ -264,6 +266,7 @@ exports.getAllRoom = async(req, res) => {
         res.render("error.hbs");
     };
 };
+
 exports.insertRoomPost = async(req, res) => {
     try {
         const rooms = new Room({
@@ -286,32 +289,137 @@ exports.deleteRoom = async(req, res) => {
         res.render("error.hbs");
     };
 };
-exports.detailRoom = async(req, res) => {
-    try {
-        const rooms = await Room.findById(req.params.id).lean();
-        res.render("room_detail.hbs", {
-            titles:"Room Detail",
-            cinema: rooms.cinema,
-            name: rooms.name,
-            _id: rooms._id
+// exports.detailRoom = async(req, res) => {
+//     try {
+//         const rooms = await Room.findById(req.params.id).lean();
+//         res.render("room_detail.hbs", {
+//             titles:"Room Detail",
+//             cinema: rooms.cinema,
+//             name: rooms.name,
+//             _id: rooms._id
+//         });
+//     } catch (error) {
+//         console.log(`${error.name}: ${error.message}`);
+//         res.render("error.hbs");
+//     };
+// };
+// exports.updateRoomPost = async(req, res) => {
+//     try {
+//         const rooms = {
+//             cinema: req.body.name,
+//             name: req.body.name
+//         };
+//         const result = await Category.findByIdAndUpdate(req.params.id, rooms, { new: true }).lean();
+//         res.redirect('/room')
+//     } catch (error) {
+//         console.log(`${error.name}: ${error.message}`);
+//         res.render("error.hbs");
+//     };
+// };
+
+//Cinema
+exports.getAllCinema = async(req, res) => {
+    try{
+        const cinemas = await Cinema.find({}).lean();
+        res.render("cinema.hbs", {
+            titles: "List Cinemas",
+            cinemas: cinemas
         });
-    } catch (error) {
+       
+    }
+    catch (error){
         console.log(`${error.name}: ${error.message}`);
         res.render("error.hbs");
     };
 };
-exports.updateRoomPost = async(req, res) => {
+
+exports.insertCinemaPost = async(req, res) => {
     try {
-        const rooms = {
-            cinema: req.body.name,
-            name: req.body.name
-        };
-        const result = await Category.findByIdAndUpdate(req.params.id, rooms, { new: true }).lean();
-        res.redirect('/room')
+        const cinemas = new Cinema({
+            name: req.body.name,
+            location:[
+                req.body.coordinates, 
+                req.body.address, 
+                req.body.description
+            ]
+        });
+        console.log(req.body);
+        await cinemas.save();
+        res.redirect('/cinema');
     } catch (error) {
         console.log(`${error.name}: ${error.message}`);
         res.render("error.hbs");
     };
 };
 
+exports.deleteCinema = async(req, res) => {
+    try {
+        const cinemas = await Cinema.findByIdAndRemove(req.params.id).lean();
+        res.redirect("/cinema");
+    } catch (error) {
+        console.log(`${error.name}: ${error.message}`);
+        res.render("error.hbs");
+    };
+};
+exports.detailCinema = async(req, res) => {
+    try {
+        const cinemas = await Cinema.findById(req.params.id).lean();
+        res.render("cinema_detail.hbs", {
+            //movie
+            titles:"Cinema Detail",
+            name: cinemas.name,
+            location: cinemas.location
+        });
+        console.log(cinemas)
+    } catch (error) {
+        console.log(`${error.name}: ${error.message}`);
+        res.render("error.hbs");
+    };
+};
+//Showtime
 //Cinema
+exports.getAllShowtime = async(req, res) => {
+    try{
+        const showtimes = await Showtime.find({}).lean();
+        const rooms = await Room.find({}).lean();
+        const movies = await Movie.find({}).lean();
+        res.render("showtime.hbs", {
+            titles: "List Cinemas",
+            showtimes: showtimes,
+            rooms: rooms,
+            movies: movies
+        });
+       
+    }
+    catch (error){
+        console.log(`${error.name}: ${error.message}`);
+        res.render("error.hbs");
+    };
+};
+
+exports.insertShowtimePost = async(req, res) => {
+    try {
+        const showtimes = new Showtime({
+            room: req.body.room,
+            movie: req.body.movie,
+            start_time: req.body.start_time,
+            end_time: req.body.end_time,
+            price: req.body.price
+        });
+        await showtimes.save();
+        res.redirect('/showtime');
+    } catch (error) {
+        console.log(`${error.name}: ${error.message}`);
+        res.render("error.hbs");
+    };
+};
+
+exports.deleteShowtime = async(req, res) => {
+    try {
+        const showtimes = await Showtime.findByIdAndRemove(req.params.id).lean();
+        res.redirect("/showtime");
+    } catch (error) {
+        console.log(`${error.name}: ${error.message}`);
+        res.render("error.hbs");
+    };
+};

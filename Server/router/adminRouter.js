@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 const adminController = require('./../controller/adminController');
 //login
-router.get('/', function(req, res, next) {
-    res.render('login', {title:'Admin'});
-});
-router.post('/login', adminController.login);
+// router.get('/', function(req, res, next) {
+//     res.render('login', {title:'Admin'});
+// });
+// router.post('/login', adminController.login);
 //router.use(adminController.protect);
 // trang chủ
 router.get('/test', function(req, res, next) {
@@ -29,5 +29,22 @@ router.post('/category/insert_postcategory', adminController.insertCategoryPost)
 router.get('/category/deletecategory/:id', adminController.deleteCategory);
 router.get('/category/:id', adminController.detailCategory);
 router.post('/category/update_postcategory/:id', adminController.updateCategoryPost);
+
+//Room
+router.get('/room', adminController.getAllRoom);
+router.post('/room/insert_postroom', adminController.insertRoomPost);
+router.get('/room/deleteroom/:id', adminController.deleteRoom);
+
+//
+router.get('/cinema', adminController.getAllCinema);
+router.get('/cinema/:id', adminController.detailCinema);
+router.post('/cinema/insert_postcinema', adminController.insertCinemaPost);
+router.get('/cinema/deletecinema/:id', adminController.deleteCinema);
+
+//Showtime
+router.get('/showtime', adminController.getAllShowtime);
+//router.get('/showtime/:id', adminController.detailShowtime);
+router.post('/showtime/insert_postshowtime', adminController.insertShowtimePost);
+router.get('/showtime/deleteshowtime/:id', adminController.deleteShowtime);
 
 module.exports = router
