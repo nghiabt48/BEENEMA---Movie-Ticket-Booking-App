@@ -9,7 +9,8 @@ router.post('/checkout/:showtimeId', authCOntroller.protect, ticketController.ge
 ticketController.seatsCheck, ticketController.checkOut)
 router.post('/checkout/:showtimeId/create-ticket',ticketController.getShowtime, ticketController.createTicketCheckout) 
 router.route('/user').get(ticketController.getTicketFromOneUser)
-
+router.route('/thong-ke')
+  .get(ticketController.ThongKeVeTheoThangNam)
 router.route('/:id')
   .get(ticketController.getTicket)
   .patch(ticketController.updateTicket)

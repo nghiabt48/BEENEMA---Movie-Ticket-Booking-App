@@ -16,9 +16,10 @@ const logsSchema = new mongoose.Schema({
   seat_number: String,
   status: {
     type: String,
-    enum: ['available', 'selected', 'reserved']
+    enum: ['available', 'selected', 'reserved'],
+    default: 'available'
   }
 })
-
+logsSchema.index({ showtime: 1, user: 1})
 const SeatLogs = mongoose.model('SeatLogs', logsSchema)
 module.exports = SeatLogs

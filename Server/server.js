@@ -55,41 +55,40 @@ io.on('connection', (socket) => {
       console.log("list", e)
     }
   });
-  socket.on("showtime:modify", async (data) => {
-    try {
-      // check seat nay co nguoi select chua
-      const log = await SeatLogs.findOne({
-        showtime: data.showtime,
-        seat_number: data.seat_number, 
-        room: data.room
-      })
-      // neu seat dang dc select -> check user dang click co phai user da select ghe khong
-      if (log) {
-        if(log.user == data.user)
-        {
-          // thay doi trang thai ghe neu dung
-          await SeatLogs.findOneAndDelete(log._id)
-          return io.emit('seat_changed', await SeatLogs.find({ showtime: data.showtime, room: data.room }))
-        }
+  socket.on('joinRoom', (room) => {
+    socket.join(room);
+    socket.on("showtime:modify", async (data) => {
+      try {
+        await SeatLogs.create({
+          showtime: room,
+          seat_number: data.seat_number,
+          user: data.user,
+          status: 'selected'
+        })
+        return socket.broadcast.to(room).emit('seat_changed', await SeatLogs.find({showtime: room}));
+      } catch (e) {
+        console.log("modify", e)
       }
-      else {
-        await SeatLogs.create(data)
-        return io.emit('seat_changed', await SeatLogs.find({ showtime: data.showtime, room: data.room }));
-      }
-    } catch (e) {
-      console.log("modify", e)
-    }
-  })
-  socket.on("showtime:reserved", async(data) => {
-    try{
-      await SeatLogs.updateMany({ showtime: data.showtime, user: data.user }, {
-        status: "reserved"
-      })
-      return io.emit('seat_changed', await SeatLogs.find({ showtime: data.showtime, room: data.room }));
-    } catch (e) {
+    })
+    socket.on("showtime:delete", async(data) => {
+      try {
+        await SeatLogs.findOneAndDelete({ showtime: room, seat_number: data.seatNumber })
+        socket.broadcast.to(room).emit('seat_changed', await SeatLogs.find({ showtime: room }))
+      } catch (e) {
 
-    }
-  })
+      }
+    })
+    socket.on("showtime:reserved", async (data) => {
+      try {
+        await SeatLogs.updateMany({ showtime: room, user: data.user }, {
+          status: "reserved"
+        })
+        return socket.broadcast.to(room).emit('seat_changed', await SeatLogs.find({ showtime: room }));
+      } catch (e) {
+
+      }
+    })
+  });
 }
 )
 

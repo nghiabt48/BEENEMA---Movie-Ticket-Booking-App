@@ -20,7 +20,12 @@ exports.createTicket = catchAsync(async function (req, res, next) {
   })
 })
 exports.getAllTickets = factory.getAll(Ticket)
-exports.getTicket = factory.getOne(Ticket, { path: 'showtime', select: 'start_time', populate: { path: 'cinema', select: 'name' } }, { path: 'movie', select: 'title' })
+exports.getTicket = factory.getOne(Ticket, {
+  path: 'showtime', populate: [
+    { path: 'room', model: 'Room', select: 'name', populate: { path: 'cinema', model: 'Cinema', select: 'name' } },
+    { path: 'movie', model: 'Movie', select: 'title imageCover' }
+  ]
+})
 exports.deleteTicket = factory.deleteOne(Ticket)
 exports.updateTicket = factory.updateOne(Ticket)
 
@@ -76,12 +81,34 @@ exports.createTicketCheckout = catchAsync(async (req, res, next) => {
 
   if (!req.user.id || !showtime || !seat_number) return next(new AppError("Don't have enough fields to create a ticket"), 400)
   const ticket = Ticket.create({
-    user: req.user.id, 
-    showtime: showtime._id, 
-    seats: seat_number, 
+    user: req.user.id,
+    showtime: showtime._id,
+    seats: seat_number,
   })
   res.status(201).json({
     status: 'success',
     data: await ticket
+  })
+})
+exports.ThongKeVeTheoThangNam = catchAsync(async function (req, res, next) {
+  const query = await Ticket.aggregate([
+    {
+      $match: {
+        $expr: {
+          $and: [
+            { $eq: [{ $month: "$booking_time" }, parseInt(req.query.month)] },
+            { $eq: [{ $year: "$booking_time" }, parseInt(req.query.year)] }
+          ]
+        }
+      }
+    }
+  ])
+  const results = await Ticket.populate(query, 'showtime')
+  const priceArr = results.map(item => item.showtime.price)
+  res.json({
+    status: 'success',
+    so_luong_ve: results.length,
+    tong_tien: priceArr.reduce((accumulator, currentValue) => accumulator + currentValue,
+      0)
   })
 })

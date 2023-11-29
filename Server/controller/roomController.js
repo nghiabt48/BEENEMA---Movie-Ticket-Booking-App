@@ -7,7 +7,7 @@ const Room = require('../model/roomModel')
 
 
 exports.createRoom = factory.createOne(Room)
-exports.getAllRooms = factory.getAll(Room)
+exports.getAllRooms = factory.getAll(Room, 'cinema')
 exports.getRoom = factory.getOne(Room)
 exports.deleteRoom = factory.deleteOne(Room)
 exports.updateRoom = factory.updateOne(Room)

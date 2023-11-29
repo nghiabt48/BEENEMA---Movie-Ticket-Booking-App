@@ -14,6 +14,7 @@ exports.reviewCheck = catchAsync(async(req, res, next) => {
     movie: req.params.movieId
   })
   if(review) return next(new AppError("Binh luan roi", 400))
+  next()
 })
 exports.getMyReviewsOnMovie = catchAsync(async(req, res, next) => {
   if(!req.query.user) return next()
@@ -27,11 +28,12 @@ exports.getMyReviewsOnMovie = catchAsync(async(req, res, next) => {
 })
 exports.getMyReviewsOnMovie = catchAsync(async(req, res, next) => {
   if(!req.query.user) return next()
+  console.log(req.query.user)
   res.json({
     status: 'success',
     data: await Review.find({
-      movie: req.body.movie,
-      user: req.body.user
+      movie: req.params.movieId,
+      user: req.query.user
     })
   })
 })
