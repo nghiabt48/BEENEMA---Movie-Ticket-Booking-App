@@ -11,7 +11,14 @@ const ItemCinema = (props) => {
   const [distances, setDistances] = useState([]);
 
   useEffect(() => {
-  
+    const getPermissions = async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.log("Please grant location permission");
+        return;
+      }
+    };
+    getPermissions();
     getCinemaDistance();
   }, []);
   const getCinemaDistance = async () => {
