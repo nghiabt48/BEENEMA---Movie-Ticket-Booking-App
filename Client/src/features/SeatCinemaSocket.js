@@ -134,6 +134,7 @@ const SeatCinemaSocket = (props) => {
 
   useEffect(() => {
     socketRef.current = io.connect(host);
+    socketRef.current.emit('joinRoom', showtimeId)
     socketRef.current.on("seat_changed", (dataGot) => {
       // chua co ai chon ghe
       if(dataGot.length == 0) {
@@ -141,12 +142,9 @@ const SeatCinemaSocket = (props) => {
         setMySeats([])
         return
       }
-      if(dataGot[0].showtime == showtimeId && dataGot[0].room == roomId)
-      {
         setspecialSeats(filterReservedSeats(dataGot))
         setSelectedSeats(dataGot.map((item) => item.seat_number));
         setMySeats(filterMySeats(dataGot));
-      }
     });
     return () => {
       socketRef.current.disconnect();
@@ -157,7 +155,7 @@ const SeatCinemaSocket = (props) => {
     const seat_init = async () => {
       try {
         const response = await AxiosIntance().get(
-          `logs?showtime=${showtimeId}&room=${roomId}`
+          `logs?showtime=${showtimeId}`
         );
         setspecialSeats(filterReservedSeats(response.seat_logs))
         setSelectedSeats(response.seat_logs.map((item) => item.seat_number));
@@ -183,12 +181,19 @@ const SeatCinemaSocket = (props) => {
   const handleSeatPress = (seatNumber) => {
     if (selectedSeats.includes(seatNumber) && !mySeats.includes(seatNumber))
       return;
+    if(mySeats.length > 0 && mySeats.includes(seatNumber)) {
+      setMySeats(mySeats.filter(seat => seat !== seatNumber))
+      setSelectedSeats(selectedSeats.filter(seat => seat !== seatNumber)) //
+      socketRef.current.emit("showtime:delete", {
+        seatNumber: seatNumber
+      })
+      return
+    }
     const seat_obj = {
-      showtime: showtimeId,
       seat_number: seatNumber,
-      room: roomId,
       user: infoUser._id,
     };
+    setMySeats([...mySeats, seatNumber])
     socketRef.current.emit("showtime:modify", seat_obj);
   };
   const checkout = async(my_seats) => {
@@ -245,7 +250,7 @@ const SeatCinemaSocket = (props) => {
           ? selectedSeats.includes(seatNumber)
           : false;
         const isSpecialSeat = specialSeats.includes(seatNumber);
-        const isMySeat = mySeats.includes(seatNumber);
+        const isMySeat = mySeats?.includes(seatNumber);
 
         rowSeats.push(
           <TouchableOpacity
