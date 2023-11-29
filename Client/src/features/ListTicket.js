@@ -66,6 +66,7 @@ const ListTicket = (props) => {
               <ItemTicket item={item} navigation={navigation} />
             )}
             keyExtractor={(item) => item._id}
+            showsHorizontalScrollIndicator={false}
           />
         </View>
       )}
