@@ -49,7 +49,7 @@
         {{#each rooms}}
         <tr>
             <td>{{this.name}}</td>
-            <td>{{this.cinema}}</td>
+            <td>{{this.cinema.name}}</td>
             <td>
               <a href='/room/deleteroom/{{this._id}}' class='btn btn-danger'>Delete</a>
             </td>

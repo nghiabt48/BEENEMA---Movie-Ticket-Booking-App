@@ -12,6 +12,7 @@ router.get('/test', function(req, res, next) {
 
     res.render('test');
 });
+
 //Movie
 router.get('/index', adminController.getAllMovies);
 router.get('/index/detailmovie/:id', adminController.movieDetail);

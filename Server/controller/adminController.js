@@ -12,6 +12,7 @@ const { promisify } = require('util');
 const multer = require('multer');
 //firebase
 const { initializeApp } = require("firebase/app");
+const { getStorage, ref, getDownloadURL, uploadBytesResumable } = require("firebase/storage");
 
 //lưu ảnh, lưu trailer
 const firebaseConfig = {
@@ -24,7 +25,15 @@ const firebaseConfig = {
     measurementId: "G-ELHK60D8FY"
   };
 initializeApp(firebaseConfig);
+const storage = getStorage()
 
+const multerStorage = multer.memoryStorage()
+const upload = multer({
+  storage: multerStorage
+});
+exports.uploadMovieImage = upload.fields([
+  { name: 'imageCover', maxCount: 1 }
+]);
 
 
 //Admin Login
@@ -75,7 +84,7 @@ exports.getAllMovies = async(req, res) => {
             titles: "Movies",
             movies:movies
         });
-       
+       console.log(movies);
     }
     catch (error){
         console.log(`${error.name}: ${error.message}`);
@@ -85,8 +94,8 @@ exports.getAllMovies = async(req, res) => {
 
 exports.movieDetail = async(req, res) => {
     try {
-        const movies = await Movie.findById(req.params.id).lean();
-
+        const movies = await Movie.findById(req.params.id).populate({path:'actor', select:'name'}).lean();
+        console.log(movies.actor[0].name);
         let results = {
             option_category: await Category.find({}).lean(),
             option_actor: await Actor.find({}).lean()
@@ -100,7 +109,7 @@ exports.movieDetail = async(req, res) => {
             ratingsAverage: movies.ratingsAverage,
             ratingsQuantity: movies.ratingsQuantity,
             imageCover: movies.imageCover,
-            actor: movies.actor,
+            actor: movies.actor[0],
             trailer: movies.trailer,
             release_date: movies.release_date,
             description: movies.description,
@@ -131,7 +140,6 @@ exports.insertMovieGet = async(req, res) => {
             option_category: await Category.find({}).lean(),
             option_actor: await Actor.find({}).lean()
         }
-        console.log(results);
         res.render('movie_insert', {
             titles:'Insert Movie',
             option_category: results.option_category,
@@ -142,7 +150,6 @@ exports.insertMovieGet = async(req, res) => {
         res.render("error.hbs");
     };
 };
-
 exports.insertMoviePost = async(req, res) => {
     try {
         const movies = new Movie({
@@ -157,8 +164,8 @@ exports.insertMoviePost = async(req, res) => {
             description: req.body.description,
             country: req.body.country
         });
-        // await movies.save();
-        // res.redirect('/index');
+        await movies.save();
+        res.redirect('/index');
     } catch (error) {
         console.log(`${error.name}: ${error.message}`);
         res.render("error.hbs");
@@ -269,7 +276,7 @@ exports.detailCategory = async(req, res) => {
 //Room
 exports.getAllRoom = async(req, res) => {
     try{
-        const rooms = await Room.find({}).lean();
+        const rooms = await Room.find({}).populate({path: 'cinema', select: 'name'}).lean();
         const cinemas = await Cinema.find({}).lean();
         res.render("room.hbs", {
             titles: "List Rooms",
@@ -397,7 +404,7 @@ exports.detailCinema = async(req, res) => {
 //Cinema
 exports.getAllShowtime = async(req, res) => {
     try{
-        const showtimes = await Showtime.find({}).lean();
+        const showtimes = await Showtime.find({}).populate({path: 'movie room', select: 'title name'}).lean();
         const rooms = await Room.find({}).lean();
         const movies = await Movie.find({}).lean();
         res.render("showtime.hbs", {

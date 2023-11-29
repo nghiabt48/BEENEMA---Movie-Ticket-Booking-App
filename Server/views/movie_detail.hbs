@@ -32,7 +32,7 @@
             <div class="mb-3">
                 <label for="actor">Actor:</label>
                 <select class="form-control" id="actor" name="actor">
-                    <option selected>{{actor}}</option>
+                    <option value="{{actor._id}}" selected>{{actor.name}}</option>
                     {{#each option_actor}}
                         <option value="{{_id}}">{{name}}</option>
                     {{/each}}

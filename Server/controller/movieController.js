@@ -8,7 +8,7 @@
 // dotenv.config({ path: './config.env' });
 // const { initializeApp } = require("firebase/app");
 // const { getStorage, ref, getDownloadURL, uploadBytesResumable } = require("firebase/storage");
-// firebase config
+// // firebase config
 // const firebaseConfig = {
 //   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
 //   authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,

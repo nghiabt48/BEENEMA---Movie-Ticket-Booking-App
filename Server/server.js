@@ -15,7 +15,7 @@ const catchAsync = require('./utils/catchAsync');
 
 dotenv.config({ path: './config.env' });
 
-// db connection
+// // db connection
 // const DB = process.env.DATABASE.replace(
 //   '<PASSWORD>',
 //   process.env.DATABASE_PASSWORD
