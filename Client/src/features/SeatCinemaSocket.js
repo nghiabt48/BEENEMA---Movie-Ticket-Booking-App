@@ -9,6 +9,7 @@ import {
   ScrollView,
   ToastAndroid,
   Alert,
+  Switch,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { io } from "socket.io-client";
@@ -119,7 +120,8 @@ const SeatCinemaSocket = (props) => {
   const { navigation } = props;
   const { params } = route;
   const socketRef = useRef();
-  const { infoUser } = useContext(AppConText);
+  const { infoUser } = useContext(AppConText)
+  const [userVoucher, setUserVoucher] = useState({})
   const showtimeId = params.item._id;
   const roomId = params.item.room._id
   const [selectedSeats, setSelectedSeats] = useState([]);
@@ -127,50 +129,66 @@ const SeatCinemaSocket = (props) => {
   const { initPaymentSheet, presentPaymentSheet } = useStripe()
   const [specialSeats, setspecialSeats] = useState([])
   const ImageURL = `http://149.28.159.68:3000/img/movies/${params.item.movie.imageCover}`
-
+  const [useVoucher, setuseVoucher] = useState(false)
+  const toggleSwitch = () => setuseVoucher(previousState => !previousState);
   const Back = () => {
     navigation.goBack();
   };
 
   useEffect(() => {
     socketRef.current = io.connect(host);
+    socketRef.current.emit('joinRoom', showtimeId)
     socketRef.current.on("seat_changed", (dataGot) => {
       // chua co ai chon ghe
-      if(dataGot.length == 0) {
+      if (dataGot.length == 0) {
         setSelectedSeats([])
         setMySeats([])
         return
       }
-      if(dataGot[0].showtime == showtimeId && dataGot[0].room == roomId)
-      {
-        setspecialSeats(filterReservedSeats(dataGot))
-        setSelectedSeats(dataGot.map((item) => item.seat_number));
-        setMySeats(filterMySeats(dataGot));
-      }
+      setspecialSeats(filterReservedSeats(dataGot))
+      setSelectedSeats(dataGot.map((item) => item.seat_number));
+      setMySeats(filterMySeats(dataGot));
     });
     return () => {
       socketRef.current.disconnect();
     };
   }, []);
   useEffect(() => {
+    const getUserInfo = async () => {
+      try {
+        const response = await AxiosIntance().get(
+          `/users/me`
+        );
+        if (response.status == 'success' && response.data.document.voucher) {
+          setUserVoucher(response.data.document.voucher);
+        }
+
+      } catch (e) {
+        ToastAndroid.show(
+          "Error when fetch user info: " + e.message,
+          ToastAndroid.LONG
+        );
+      }
+    };
+    getUserInfo();
+    return () => { };
+  }, []);
+  useEffect(() => {
 
     const seat_init = async () => {
       try {
         const response = await AxiosIntance().get(
-          `logs?showtime=${showtimeId}&room=${roomId}`
+          `logs?showtime=${showtimeId}`
         );
         setspecialSeats(filterReservedSeats(response.seat_logs))
         setSelectedSeats(response.seat_logs.map((item) => item.seat_number));
         setMySeats(filterMySeats(response.seat_logs));
       } catch (e) {
-        ToastAndroid.show(
-          "Cannot render this showtime's seats because: " + e.message,
-          ToastAndroid.LONG
-        );
+        console.log(e.message);
       }
     };
     seat_init();
-    return () => {};
+    return () => { };
   }, []);
   const filterReservedSeats = (arr) => {
     arr = arr.filter((item) => item.status == "reserved");
@@ -183,19 +201,27 @@ const SeatCinemaSocket = (props) => {
   const handleSeatPress = (seatNumber) => {
     if (selectedSeats.includes(seatNumber) && !mySeats.includes(seatNumber))
       return;
+    if (mySeats.length > 0 && mySeats.includes(seatNumber)) {
+      setMySeats(mySeats.filter(seat => seat !== seatNumber))
+      setSelectedSeats(selectedSeats.filter(seat => seat !== seatNumber)) //
+      socketRef.current.emit("showtime:delete", {
+        seatNumber: seatNumber
+      })
+      return
+    }
     const seat_obj = {
-      showtime: showtimeId,
       seat_number: seatNumber,
-      room: roomId,
       user: infoUser._id,
     };
+    setMySeats([...mySeats, seatNumber])
     socketRef.current.emit("showtime:modify", seat_obj);
   };
-  const checkout = async(my_seats) => {
+  const checkout = async (my_seats) => {
     try {
       // 1. Get checkout session
       const response = await AxiosIntance().post(`tickets/checkout/${showtimeId}`, {
-        seats: my_seats
+        seats: my_seats,
+        voucher: useVoucher
       })
 
       // 2. Create checkout form + charge credit card
@@ -216,13 +242,20 @@ const SeatCinemaSocket = (props) => {
         Alert.alert(`Thất bại`, 'Thanh toán đã bị hủy')
         return
       }
+      if (useVoucher) {
+        await AxiosIntance().delete('users/voucher')
+        setUserVoucher({})
+      }
       Alert.alert(`Hoàn thành`, 'Thanh toán đã được xác nhận thành công')
       // 4. After paying, create the ticket
-      await AxiosIntance().post(`tickets/checkout/${showtimeId}/create-ticket`, {  seat_number: my_seats })
+      await AxiosIntance().post(`tickets/checkout/${showtimeId}/create-ticket`, { seat_number: my_seats })
       socketRef.current.emit("showtime:reserved", {
         showtime: showtimeId,
-        user: infoUser._id,
-        room: roomId      
+        user: infoUser._id
+      })
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'ListMovie' }]
       })
     } catch (err) {
       console.log("Err at book function: " + err)
@@ -245,7 +278,7 @@ const SeatCinemaSocket = (props) => {
           ? selectedSeats.includes(seatNumber)
           : false;
         const isSpecialSeat = specialSeats.includes(seatNumber);
-        const isMySeat = mySeats.includes(seatNumber);
+        const isMySeat = mySeats?.includes(seatNumber);
 
         rowSeats.push(
           <TouchableOpacity
@@ -259,10 +292,10 @@ const SeatCinemaSocket = (props) => {
                   isSpecialSeat
                     ? reserved_seat
                     : isMySeat
-                    ? my_seat
-                    : isSelected
-                    ? selected_seat
-                    : available_seat
+                      ? my_seat
+                      : isSelected
+                        ? selected_seat
+                        : available_seat
                 }
               ></Image>
             }
@@ -279,13 +312,13 @@ const SeatCinemaSocket = (props) => {
     return seatLayout;
   };
 
-    //format thoi gian
-    const inputTimestamp = params.item.start_time;
-    const endTime = params.item.end_time;
-    const endtimePart = endTime.slice(11, 16);
-    const datePart = inputTimestamp.slice(0, 10);
-    const timePart = inputTimestamp.slice(11, 16);
-  
+  //format thoi gian
+  const inputTimestamp = params.item.start_time;
+  const endTime = params.item.end_time;
+  const endtimePart = endTime.slice(11, 16);
+  const datePart = inputTimestamp.slice(0, 10);
+  const timePart = inputTimestamp.slice(11, 16);
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -302,7 +335,7 @@ const SeatCinemaSocket = (props) => {
         <View style={styles.viewGroup2}>
           <Image
             style={styles.ImageMovies}
-            source={{uri: ImageURL}}
+            source={{ uri: ImageURL }}
           ></Image>
           <View>
             <View style={styles.viewGroup4}>
@@ -344,11 +377,21 @@ const SeatCinemaSocket = (props) => {
           </View>
         </View>
         <View style={styles.Group6}>
-            <View style={styles.viewgblue}></View>
-            <Text style={styles.textAvailable2}>Đã được người khác chọn</Text>
-          </View>
-        {/* btn booking */}
+          <View style={styles.viewgblue}></View>
+          <Text style={styles.textAvailable2}>Đã được người khác chọn</Text>
+        </View>
+        {userVoucher && userVoucher.code && (<View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={styles.textAvailable2}>Sử dụng voucher</Text>
+          <Switch
+            trackColor={{ false: '#767577', true: '#81b0ff' }}
+            thumbColor={useVoucher ? '#f5dd4b' : '#f4f3f4'}
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={toggleSwitch}
+            value={useVoucher}
+          />
+        </View>)}
 
+        {/* btn booking */}
         <View style={styles.Group4}>
           <TouchableOpacity style={styles.buttonBooking} onPress={() => checkout(mySeats)}>
             <LinearGradient
@@ -363,7 +406,7 @@ const SeatCinemaSocket = (props) => {
                     style={styles.boxImage5}
                   />
                   <Text style={styles.textPice}>
-                    {params.item.price * mySeats.length}VND
+                    {(params.item.price * mySeats.length) - ((useVoucher && userVoucher.code && mySeats.length > 0) ? userVoucher.value : 0)}VND
                   </Text>
                 </View>
 

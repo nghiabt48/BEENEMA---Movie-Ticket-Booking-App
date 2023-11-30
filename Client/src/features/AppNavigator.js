@@ -26,7 +26,7 @@ import ChooseCinema from "./ChooseCinema";
 import AxiosIntance from "./AxiosIntance";
 import ListTicket from "./ListTicket";
 import Search from "./Search";
-
+import GameScreen from './minigame/GameScreen'
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -95,6 +95,7 @@ const Profile = () => {
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
       <Stack.Screen name="ProfileSettings" component={ProfileSettings} />
       <Stack.Screen name="UpdateProfile" component={UpdateProfile} />
+      <Stack.Screen name="MiniGame" component={GameScreen} />
       <Stack.Screen name="ChangePassword" component={ChangePassword} />
       <Stack.Screen name="ListTicket" component={ListTicket} />
     </Stack.Navigator>
