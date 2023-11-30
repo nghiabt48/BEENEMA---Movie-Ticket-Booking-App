@@ -51,6 +51,9 @@ const ProfileScreen = (props) => {
   const changePassword = () =>{
     navigation.navigate('ChangePassword');
   }
+  const gameCenter = () => {
+    navigation.navigate('MiniGame');
+  }
   const myTicket = () =>{
     navigation.navigate('ListTicket');
   }
@@ -110,7 +113,22 @@ const ProfileScreen = (props) => {
             />
           </TouchableOpacity>
         </View>
+        {/* Button Game*/}
+        <View style={styles.viewBtn3}>
+          <TouchableOpacity style={styles.btnMine} onPress={gameCenter}>
+            <Image
+              style={styles.imgView}
+              source={require("../image/game.png")}
+            />
+            <Text style={styles.buttonText3}>Mini Game</Text>
+            <Image
+              style={styles.btnArrow3}
+              source={require("../image/arrowleft.png")}
+            />
+          </TouchableOpacity>
         </View>
+        </View>
+         
         {/* Button Logout */}
         <View style={{ alignItems: "center", marginTop: 40, marginBottom: '20%' }}>
           <LinearGradient
