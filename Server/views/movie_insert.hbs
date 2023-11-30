@@ -2,7 +2,7 @@
 
 <!-- Nội dung -->
 <div class="container">
-        <form action="/index/insert_postmovie" method="post" enctype="multipart/form-data`">
+        <form action="/index/insert_postmovie" method="post" enctype="multipart/form-data">
             <div class="mb-3 mt-3">
                 <label for="room">Title</label>
                 <input type="text" class="form-control" id="title" name="title">
@@ -31,7 +31,7 @@
                 <label for="teacher_name">Actor:</label>
                 <select class="form-control" id="actor" name="actor" required>
                     {{#each option_actor}}
-                        <option>{{_id}}</option>
+                        <option value="{{_id}}">{{name}}</option>
                     {{/each}}
                 </select>
             </div>

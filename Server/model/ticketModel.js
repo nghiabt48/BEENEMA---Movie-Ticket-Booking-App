@@ -2,9 +2,10 @@ const mongoose = require('mongoose')
 const Movie = require('./movieModel');
 const Showtime = require('./showtimeModel');
 const AppError = require('../utils/appError');
+const { getShowtimeByCinema } = require('../controller/showtimeController');
 
-const currentTimestamp = Date.now(); 
-const offsetHours = 7; 
+const currentTimestamp = Date.now();
+const offsetHours = 7;
 const date = new Date(currentTimestamp + offsetHours * 60 * 60 * 1000);
 const ticketSchema = new mongoose.Schema({
   user: {
@@ -66,28 +67,15 @@ ticketSchema.statics.calculatePrice = async function (ticketID) {
     throw new Error(error);
   }
 };
-ticketSchema.pre('save', async function(next) {
-  if(!this.isModified('seat_number')) return next()
-  const showtime = await Showtime.findById(this.showtime)
-  this.price = showtime.price;
-// ***********************************
-  //Check ghế
-  const bookedSeats = this.obtained_seat;  
-  const availableSeats = showtime.available_seats;
-  let updatedAvailableSeats
-  // Check xem ghế có khả dụng không
-  if(bookedSeats.every(seats => availableSeats.includes(seats)))
-  {
-    // Lọc và xóa các ghế đã được đặt khỏi danh sách ghế khả dụng
-    updatedAvailableSeats = availableSeats.filter(
-      seat => !bookedSeats.includes(seat)
-    );
-    // Cập nhật danh sách ghế khả dụng mới vào suất chiếu
-    showtime.available_seats = updatedAvailableSeats
-    await showtime.save()
-  }
-  else return next(new AppError("Ghế đã được đặt, hãy chọn ghế khác.", 400))
-// ********************************
+ticketSchema.pre(/^find/, async function (next) {
+  this.populate({
+    path: 'showtime',
+    populate: [
+      { path: 'room', model: 'Room', select: 'name', populate: { path: 'cinema', model: 'Cinema', select: 'name'} },
+      { path: 'movie', model: 'Movie', select: 'title imageCover' }
+    ]
+  })
+  next();
 })
 const Ticket = mongoose.model('Ticket', ticketSchema)
 module.exports = Ticket

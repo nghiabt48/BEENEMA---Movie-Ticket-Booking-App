@@ -8,32 +8,12 @@ const Showtime = require('../model/showtimeModel');
 const Ticket = require('../model/ticketModel');
 const catchAsync = require('./../utils/catchAsync');
 const jwt = require('jsonwebtoken');
-const { promisify } = require('util');
-const multer = require('multer');
+
 //firebase
-const { initializeApp } = require("firebase/app");
-const { getStorage, ref, getDownloadURL, uploadBytesResumable } = require("firebase/storage");
+// const { initializeApp } = require("firebase/app");
+// const { getStorage, ref, getDownloadURL, uploadBytesResumable } = require("firebase/storage");
 
 //lưu ảnh, lưu trailer
-const firebaseConfig = {
-    apiKey: "AIzaSyDzV1nParF1zL5w_S5n7TY6HI1gqcAVm-4",
-    authDomain: "fir-lord.firebaseapp.com",
-    projectId: "fir-lord",
-    storageBucket: "fir-lord.appspot.com",
-    messagingSenderId: "493975364860",
-    appId: "1:493975364860:web:37ea3441ab5c2af2aee379",
-    measurementId: "G-ELHK60D8FY"
-  };
-initializeApp(firebaseConfig);
-const storage = getStorage()
-
-const multerStorage = multer.memoryStorage()
-const upload = multer({
-  storage: multerStorage
-});
-exports.uploadMovieImage = upload.fields([
-  { name: 'imageCover', maxCount: 1 }
-]);
 
 
 //Admin Login
@@ -84,7 +64,6 @@ exports.getAllMovies = async(req, res) => {
             titles: "Movies",
             movies:movies
         });
-       console.log(movies);
     }
     catch (error){
         console.log(`${error.name}: ${error.message}`);
@@ -95,7 +74,6 @@ exports.getAllMovies = async(req, res) => {
 exports.movieDetail = async(req, res) => {
     try {
         const movies = await Movie.findById(req.params.id).populate({path:'actor', select:'name'}).lean();
-        console.log(movies.actor[0].name);
         let results = {
             option_category: await Category.find({}).lean(),
             option_actor: await Actor.find({}).lean()
@@ -152,6 +130,7 @@ exports.insertMovieGet = async(req, res) => {
 };
 exports.insertMoviePost = async(req, res) => {
     try {
+
         const movies = new Movie({
             title: req.body.title,
             category: req.body.category,
@@ -165,6 +144,7 @@ exports.insertMoviePost = async(req, res) => {
             country: req.body.country
         });
         await movies.save();
+        console.log(req.files);
         res.redirect('/index');
     } catch (error) {
         console.log(`${error.name}: ${error.message}`);
@@ -447,3 +427,39 @@ exports.deleteShowtime = async(req, res) => {
         res.render("error.hbs");
     };
 };
+
+//Thống kê(của Nghĩa)
+exports.ThongkeDoanhThu = async(req, res) => {
+    try{
+        const movies = await Movie.find({}).lean();
+        const users = await User.find({}).lean();
+        const query = await Ticket.aggregate([
+            {
+            $match: {
+                $expr: {
+                $and: [
+                    { $eq: [{ $month: "$booking_time" }, parseInt(req.query.month)] },
+                    { $eq: [{ $year: "$booking_time" }, parseInt(req.query.year)] }
+                ]
+                }
+            }
+            }
+        ]
+        );
+        const results = await Ticket.populate(query, 'showtime')
+        const priceArr = results.map(item => item.showtime.price)
+        res.render(
+            "statistic.hbs",{
+                so_luong_ve: results.length,
+                tong_tien: priceArr.reduce((accumulator, currentValue) => accumulator + currentValue,
+                0),
+                movies: movies.length,
+                users: users.length    
+        });
+    }
+    catch (error){
+        console.log(`${error.name}: ${error.message}`);
+        res.render("error.hbs");
+    };
+}
+
