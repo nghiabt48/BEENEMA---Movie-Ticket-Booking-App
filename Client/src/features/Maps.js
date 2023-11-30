@@ -104,7 +104,7 @@ const Maps = () => {
             });
           }
         }
-      }
+      } 
     } catch (e) {
       setdata(null);
       ToastAndroid.show("Không tìm thấy rạp", ToastAndroid.SHORT);
