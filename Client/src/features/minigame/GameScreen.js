@@ -36,26 +36,25 @@ export default class GameScreen extends Component {
     this.state = DEFAULT_STATE;
     this.interval = null;
     this.timeInterval = null;
-    this.voucherCode = null;
   }
 
   componentDidMount = () => {
     this.setState(DEFAULT_STATE, this.pause);
   }
   generateVoucher = async(score) => {
-    const randomValue = Math.random();
-    if (score > 10 ) {
+    if (score > 10 && Math.random() < 0.4) {
       try{
         const res = await AxiosIntance().post('users/voucher')
         if(res.status == 'success') {
-          ToastAndroid.show(res.message, ToastAndroid.LENGTH_SHORT)
+          ToastAndroid.show("Chúc mừng, bạn đã nhận được một voucher!", ToastAndroid.SHORT)
         }
       } catch(e){
         console.log(e.message);
       }
       
     } else {
-      return null; // Không nhận được voucher
+      console.log('lose rate')
+      return; // Không nhận được voucher
     }
   };
   setupTicks = () => {
@@ -70,7 +69,7 @@ export default class GameScreen extends Component {
   reset = () => {
     this.molesPopping = 0;
 
-    this.setState(DEFAULT_STATE, this.setupTicks);
+    this.setState( DEFAULT_STATE , this.setupTicks);
   }
 
   pause = () => {
@@ -122,8 +121,7 @@ export default class GameScreen extends Component {
   }
 
   popRandomMole = () => {
-    if (this.moles.length != 12) {
-      console.log(this.moles.length);
+    if (this.moles.length != 12 || this.state.gameover || this.state.cleared || this.state.paused) {
       return;
     }
 
@@ -141,7 +139,7 @@ export default class GameScreen extends Component {
   }
 
   onDamage = () => {
-    if (this.state.cleared || this.state.gameOver || this.state.paused) {
+    if (this.state.cleared || this.state.gameover || this.state.paused) {
       return;
     }
 
@@ -157,10 +155,10 @@ export default class GameScreen extends Component {
   }
 
   gameOver = () => {
+    this.generateVoucher(this.state.score);
     clearInterval(this.interval);
     clearInterval(this.timeInterval);
 
-    this.generateVoucher(this.state.score);
 
     this.setState({
       gameover: true
