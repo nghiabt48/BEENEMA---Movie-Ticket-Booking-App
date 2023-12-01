@@ -33,7 +33,7 @@ const Trailer = (props) => {
           useNativeControls
           resizeMode={ResizeMode.CONTAIN}
           isLooping
-
+          shouldPlay
         />
         <Text style={styles.textTitle}>{title}</Text>
       </View>
@@ -85,5 +85,6 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontWeight: 'bold',
     marginStart: 15,
+    textAlign:'center'
   }
 })

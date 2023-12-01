@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').height,
         flexDirection: 'column',
-        backgroundColor: 'black',
+        backgroundColor: '#130B2B',
         padding: '10%'
     },
     header: {

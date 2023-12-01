@@ -159,9 +159,6 @@ const DetailMovie = (props) => {
                     ) :
                         (!myreviews.review ?
                             <View>
-                                <View style={styles.Group7}>
-
-                                </View>
                                 <View style={styles.container1}>
                                     <Text style={styles.heading}>Xếp hạng cho bộ phim này</Text>
                                     <View style={styles.stars}>
@@ -346,7 +343,9 @@ const styles = StyleSheet.create({
         height: 15,
     },
     boxImage6: {
-        marginLeft: 10
+        width:32,
+        height:32,
+        marginRight:10
     },
     fixToText: {
         width: '100%',
@@ -382,14 +381,15 @@ const styles = StyleSheet.create({
         marginTop: 30,
     },
     Group5: {
-        padding: 10,
-        width: '100%',
+       
         flexDirection: 'row',
         alignItems: 'center',
         borderWidth: 0.5,
         borderColor: '#DA004E',
         marginTop: 15,
-
+        marginStart:15,
+        marginEnd: 15,
+        margin:15
     },
     Group6: {
         margin: 10,
@@ -473,10 +473,7 @@ const styles = StyleSheet.create({
     },
     TextInputReview: {
         flex: 1,
-        borderWidth: 0.5,
-        borderColor: '#DA004E',
         padding: 8,
-        borderRadius: 5,
         color: '#ffff',
     },
     button: {
@@ -509,8 +506,8 @@ const styles = StyleSheet.create({
     },
     Image: {
         borderRadius: 100,
-        height: 50,
-        width: 50,
+        height: 40,
+        width: 40,
     },
     container2: {
         flexDirection: 'row',
