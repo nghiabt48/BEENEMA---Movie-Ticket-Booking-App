@@ -157,7 +157,7 @@ export default ProfileScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#161621",
+    backgroundColor: "#130B2B",
   },
   Row1: {
     paddingTop: 10,
