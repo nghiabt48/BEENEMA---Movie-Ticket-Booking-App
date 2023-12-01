@@ -52,11 +52,13 @@ const Main = () => {
         tabBarIcon: ({ focused, color, size }) => {
           if (route.name === "Home") {
             return focused? <Image style={styles.ImageIcon} source={require("../image/movie3.png")} />: <Image style={styles.ImageIcon} source={require("../image/movie4.png")} />;
-          } else if (route.name === "Profile") {
-            return focused? <Image style={styles.ImageIcon} source={require("../image/user1.png")} />: <Image style={styles.ImageIcon} source={require("../image/user2.png")} />;
+          } else if (route.name === "MiniGame") {
+            return focused? <Image style={styles.ImageIcon} source={require("../image/game1.png")} />: <Image style={styles.ImageIcon} source={require("../image/game2.png")} />;
           } else if (route.name === "Map") {
             return focused? <Image style={styles.ImageIcon} source={require("../image/map1.png")} />: <Image style={styles.ImageIcon} source={require("../image/map2.png")} />;
-          }
+          } else if (route.name === "Profile") {
+            return focused? <Image style={styles.ImageIcon} source={require("../image/user1.png")} />: <Image style={styles.ImageIcon} source={require("../image/user2.png")} />;
+          } 
         },
         tabBarActiveTintColor: "#F74346",
         tabBarInactiveTintColor: "#4A4B56",
@@ -74,13 +76,18 @@ const Main = () => {
         options={{ headerShown: false, title: "Trang chủ" }}
       />
       <Tab.Screen
-        name="Profile"
-        component={Profile}
-        options={{ headerShown: false ,title:"Cá nhân"}}
+        name="MiniGame"
+        component={GameScreen}
+        options={{ headerShown: false ,title:"Mini Game"}}
       />
       <Stack.Screen
         name="Map"
         component={Maps}
+        options={{ headerShown: false, title: "Bản đồ" }}
+      />
+      <Stack.Screen
+        name="Profile"
+        component={Profile}
         options={{ headerShown: false, title: "Bản đồ" }}
       />
     </Tab.Navigator>
@@ -96,7 +103,6 @@ const Profile = () => {
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
       <Stack.Screen name="ProfileSettings" component={ProfileSettings} />
       <Stack.Screen name="UpdateProfile" component={UpdateProfile} />
-      <Stack.Screen name="MiniGame" component={GameScreen} />
       <Stack.Screen name="ChangePassword" component={ChangePassword} />
       <Stack.Screen name="ListTicket" component={ListTicket} />
       <Stack.Screen name="DetailTickets" component={DetailTickets} />

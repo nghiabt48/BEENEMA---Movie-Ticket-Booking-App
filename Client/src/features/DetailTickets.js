@@ -29,9 +29,8 @@ const DetailTickets = (props) => {
   const year = date.getUTCFullYear();
 
   // Định dạng lại ngày theo dạng "DD-MM-YYYY"
-  const formattedDate = `${day < 10 ? "0" : ""}${day}-${
-    month < 10 ? "0" : ""
-  }${month}-${year}`;
+  const formattedDate = `${day < 10 ? "0" : ""}${day}-${month < 10 ? "0" : ""
+    }${month}-${year}`;
 
   const amount = params.item.showtime.price;
   const formattedAmount = new Intl.NumberFormat("vi-VN", {
@@ -74,7 +73,7 @@ const DetailTickets = (props) => {
         />
         <Text style={styles.txtName}>{params.item.showtime.movie.title}</Text>
         <View style={{ marginStart: 16, flexDirection: "row", marginTop: 16 }}>
-          <Text style={styles.txtMain}>Cinema:</Text>
+          <Text style={styles.txtMain}>Rạp:</Text>
           <Text>
             <Text style={styles.txtSub}>
               {params.item.showtime.room.cinema.name}
@@ -86,21 +85,21 @@ const DetailTickets = (props) => {
           </Text>
         </View>
         <View style={{ marginStart: 16, flexDirection: "row", marginTop: 8 }}>
-          <Text style={styles.txtMain}>Date:</Text>
+          <Text style={styles.txtMain}>Ngày:</Text>
           <Text style={styles.txtSub}>
             {dayOfWeek} {formattedDate}, {timePart}
           </Text>
         </View>
         <View style={{ marginStart: 16, flexDirection: "row", marginTop: 8 }}>
-          <Text style={styles.txtMain}>Room:</Text>
+          <Text style={styles.txtMain}>Phòng:</Text>
           <Text style={styles.txtSub}>{params.item.showtime.room.name}</Text>
         </View>
         <View style={{ marginStart: 16, flexDirection: "row", marginTop: 8 }}>
-          <Text style={styles.txtMain}>Seats:</Text>
+          <Text style={styles.txtMain}>Ghế:</Text>
           <Text style={styles.txtSub}>{params.item.seats.join(", ")}</Text>
         </View>
         <View style={{ marginStart: 16, flexDirection: "row", marginTop: 8 }}>
-          <Text style={styles.txtMain}>Cost:</Text>
+          <Text style={styles.txtMain}>Giá:</Text>
           <Text style={styles.txtSub}>{formattedAmount}</Text>
         </View>
       </View>
@@ -133,6 +132,9 @@ const styles = StyleSheet.create({
     marginTop: 27,
     borderBottomLeftRadius: 16,
     borderBottomRightRadius: 16,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    paddingBottom: 10,
   },
   txtName: {
     color: "white",

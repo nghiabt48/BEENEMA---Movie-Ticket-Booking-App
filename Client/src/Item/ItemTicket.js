@@ -57,7 +57,7 @@ const ItemTicket = (props) => {
           <Text style={styles.txtName}>{item.showtime.movie.title}</Text>
           <Text style={{ marginStart: 10, marginTop: 10 }}>
             <Text style={{ color: "white", fontSize: 14, fontWeight: "bold" }}>
-              Date:{" "}
+              Ngày:{" "}
             </Text>
             <Text style={styles.txtDate}>
               {dayOfWeek} {formattedDate}
@@ -65,11 +65,11 @@ const ItemTicket = (props) => {
           </Text>
           <Text style={{ marginStart: 10, marginTop: 10 }}>
             <Text style={{ color: "white", fontSize: 14, fontWeight: "bold" }}>
-              Time:{" "}
+              Thời gian:{" "}
             </Text>
             <Text style={styles.txtDate}>{timePart} | </Text>
             <Text style={{flex:1}}>
-              <Text style={{ color: "white", fontSize: 14, fontWeight: "bold" }}>Seats: </Text>
+              <Text style={{ color: "white", fontSize: 14, fontWeight: "bold" }}>Ghế: </Text>
               <Text style={styles.txtDate}>{item.seats.join(",")}</Text>
             </Text>
           </Text>
@@ -84,7 +84,7 @@ export default ItemTicket;
 const styles = StyleSheet.create({
   containerMain: {
     flexDirection: "row",
-    marginTop:34,
+    marginTop:15,
     flex:1
   },
   containerSub: {
