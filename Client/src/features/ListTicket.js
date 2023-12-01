@@ -82,7 +82,8 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: "row",
-    marginStart:"10%"
+    marginStart:"10%",
+    marginTop: 10
   },
   textstyle: {
     color: "white",

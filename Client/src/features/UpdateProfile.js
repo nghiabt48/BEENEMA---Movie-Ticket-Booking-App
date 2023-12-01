@@ -282,6 +282,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     width: "100%",
+    marginTop: 10
   },
   textseat: {
     color: "white",
