@@ -232,7 +232,7 @@ export default UpdateProfile;
 const styles = StyleSheet.create({
   container: {
     flexDirection: "column",
-    backgroundColor: "black",
+    backgroundColor: "#130B2B",
     padding: "10%",
     width: Dimensions.get("window").width,
     height: Dimensions.get("window").height,
