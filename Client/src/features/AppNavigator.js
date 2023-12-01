@@ -27,6 +27,7 @@ import AxiosIntance from "./AxiosIntance";
 import ListTicket from "./ListTicket";
 import Search from "./Search";
 import GameScreen from './minigame/GameScreen'
+import DetailTickets from "./DetailTickets";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -98,6 +99,7 @@ const Profile = () => {
       <Stack.Screen name="MiniGame" component={GameScreen} />
       <Stack.Screen name="ChangePassword" component={ChangePassword} />
       <Stack.Screen name="ListTicket" component={ListTicket} />
+      <Stack.Screen name="DetailTickets" component={DetailTickets} />
     </Stack.Navigator>
   );
 };
@@ -114,6 +116,7 @@ const BooKing = () => {
       <Stack.Screen name="SeatCinemaSocket" component={SeatCinemaSocket} />
       <Stack.Screen name="ChooseCinema" component={ChooseCinema} />
       <Stack.Screen name="Search" component={Search} />
+    
     </Stack.Navigator>
   );
 };

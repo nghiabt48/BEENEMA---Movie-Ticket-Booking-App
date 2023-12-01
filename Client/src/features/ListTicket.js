@@ -13,6 +13,7 @@ import React, { useEffect, useState, useContext } from "react";
 import ItemTicket from "../Item/ItemTicket";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AxiosIntance from "./AxiosIntance";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const ListTicket = (props) => {
   const { navigation } = props;
@@ -39,7 +40,7 @@ const ListTicket = (props) => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* Phần đầu */}
       <View style={styles.header}>
         <TouchableOpacity onPress={Back}>
@@ -58,19 +59,17 @@ const ListTicket = (props) => {
       {isLoading === true ? (
         <ActivityIndicator size="large" />
       ) : (
-        <View style={{ marginVertical: "5%", flex: 1 }}>
+        <View style={{ marginVertical: "5%",marginStart:10}}>
           <FlatList
             data={ticket}
-            horizontal={true}
             renderItem={({ item }) => (
               <ItemTicket item={item} navigation={navigation} />
             )}
             keyExtractor={(item) => item._id}
-            showsHorizontalScrollIndicator={false}
           />
         </View>
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -79,11 +78,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
-    backgroundColor: "black",
-    padding: "10%",
+    backgroundColor: "#130B2B",
   },
   header: {
     flexDirection: "row",
+    marginStart:"10%"
   },
   textstyle: {
     color: "white",
@@ -91,26 +90,4 @@ const styles = StyleSheet.create({
   },
 });
 
-const movieData = [
-  {
-    _id: "1",
-    movietitle: "Star Wars: The Rise of Skywalker (2019)",
-    moviedate: "1000",
-    movietime: "10:00",
-    seat: "5C",
-  },
-  {
-    _id: "2",
-    movietitle: "Star Wars: The Rise of Skywalker (2019)",
-    moviedate: "1000",
-    movietime: "10:00",
-    seat: "5C",
-  },
-  {
-    _id: "3",
-    movietitle: "Star Wars: The Rise of Skywalker (2019)",
-    moviedate: "1000",
-    movietime: "10:00",
-    seat: "5C",
-  },
-];
+

@@ -18,7 +18,6 @@ const ItemTicket = (props) => {
   const inputTimestamp = item.showtime.start_time;
   const datePart = inputTimestamp.slice(0, 10);
   const timePart = inputTimestamp.slice(11, 16);
-
   const date = new Date(datePart); // Lấy ngày từ datePart
   const daysOfWeek = [
     "Chủ Nhật",
@@ -43,83 +42,37 @@ const ItemTicket = (props) => {
 
   //   console.log(`Ngày thứ ${dayOfWeek}`);
 
-  const BarcodeGenerator = ({ code }) => {
-    return (
-      <View style={{ alignItems: "center", marginTop: 10, marginStart: 10 }}>
-        <QRCode
-          value={code}
-          size={50}
-          color="black" // Màu của mã vạch
-          backgroundColor="white" // Màu nền của mã vạch
-        />
-      </View>
-    );
-  };
+  const goDetail = function() {
+    navigation.navigate('DetailTickets', {item})
+  }
 
   return (
-    <TouchableOpacity>
-      <View style={styles.ticketContainer}>
-        <ImageBackground
+    <TouchableOpacity onPress={goDetail}>
+      <View style={styles.containerMain}>
+        <Image
+          style={{ width: "45%", height: 106, borderRadius: 20 }}
           source={{ uri: ImageURL }}
-          style={styles.ticketBGImage}
-        >
-          <LinearGradient
-            colors={["rgba(255,85,36,0)", "#FF5524"]}
-            style={styles.linearGradient}
-          >
-            <View
-              style={[
-                styles.blackCircle,
-                { position: "absolute", bottom: -40, left: -40 },
-              ]}
-            ></View>
-            <View
-              style={[
-                styles.blackCircle,
-                { position: "absolute", bottom: -40, right: -40 },
-              ]}
-            ></View>
-          </LinearGradient>
-        </ImageBackground>
-        <View style={styles.linear}></View>
-
-        <View style={styles.ticketFooter}>
-          <View
-            style={[
-              styles.blackCircle,
-              { position: "absolute", top: -40, left: -40 },
-            ]}
-          ></View>
-          <View
-            style={[
-              styles.blackCircle,
-              { position: "absolute", top: -40, right: -40 },
-            ]}
-          ></View>
-          <View style={styles.ticketDateContainer}>
-            <View style={styles.subtitleContainer}>
-              <Text style={styles.dateTitle}>{formattedDate}</Text>
-              <Text style={styles.subtitle}>{dayOfWeek}</Text>
-            </View>
-            <View style={styles.subtitleContainer}>
-              <Image source={require("../image/clock.png")} />
-              <Text style={styles.subtitle}>{timePart}</Text>
-            </View>
-          </View>
-          <View style={styles.ticketSeatContainer}>
-            <View style={styles.subtitleContainer3}>
-              <Text style={styles.subheading}>Phòng</Text>
-              <Text style={styles.subtitle}>{item.showtime.room.name}</Text>
-            </View>
-            <View style={styles.subtitleContainer2}>
-              <Text style={styles.subheading}>Ghế</Text>
-              <Text style={styles.subtitle3}>{item.seats.join(",")}</Text>
-            </View>
-            <View style={styles.subtitleContainer}></View>
-          </View>
-          <Text style={styles.subheading2}>Rạp</Text>
-          <Text style={styles.subtitle2}>{item.showtime.room.cinema.name}</Text>
-          <BarcodeGenerator code={item.ticket_code} />
+        />
+        <View style={styles.containerSub}>
+          <Text style={styles.txtName}>{item.showtime.movie.title}</Text>
+          <Text style={{ marginStart: 10, marginTop: 10 }}>
+            <Text style={{ color: "white", fontSize: 14, fontWeight: "bold" }}>
+              Date:{" "}
+            </Text>
+            <Text style={styles.txtDate}>
+              {dayOfWeek} {formattedDate}
+            </Text>
+          </Text>
+          <Text style={{ marginStart: 10, marginTop: 10 }}>
+            <Text style={{ color: "white", fontSize: 14, fontWeight: "bold" }}>
+              Time:{" "}
+            </Text>
+            <Text style={styles.txtDate}>{timePart} | </Text>
+            <Text style={{flex:1}}>
+              <Text style={{ color: "white", fontSize: 14, fontWeight: "bold" }}>Seats: </Text>
+              <Text style={styles.txtDate}>{item.seats.join(",")}</Text>
+            </Text>
+          </Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -129,103 +82,26 @@ const ItemTicket = (props) => {
 export default ItemTicket;
 
 const styles = StyleSheet.create({
-  ticketContainer: {
-    flex: 1,
-    justifyContent: "center",
-    padding: 20,
-  },
-  ticketBGImage: {
-    alignSelf: "center",
-    width: 250,
-    aspectRatio: 200 / 300,
-    borderTopLeftRadius: 25,
-    borderTopRightRadius: 25,
-    overflow: "hidden",
-    justifyContent: "flex-end",
-  },
-  linearGradient: {
-    height: "70%",
-  },
-  linear: {
-    borderTopColor: "black",
-    borderTopWidth: 3,
-    width: 250,
-    alignSelf: "center",
-    backgroundColor: "#FF5524",
-    borderStyle: "dashed",
-  },
-  ticketFooter: {
-    backgroundColor: "#FF5524",
-    width: 250,
-    alignItems: "center",
-    paddingBottom: 25,
-    alignSelf: "center",
-    borderBottomLeftRadius: 25,
-    borderBottomRightRadius: 25,
-  },
-  ticketDateContainer: {
+  containerMain: {
     flexDirection: "row",
-    gap: 36,
-    alignItems: "center",
-    justifyContent: "center",
-    marginVertical: 10,
+    marginTop:34,
+    flex:1
   },
-  ticketSeatContainer: {
-    flexDirection: "row",
-    gap: 36,
-    alignItems: "center",
-    justifyContent: "center",
-    marginVertical: 10,
+  containerSub: {
+    flexDirection: "column",
+    marginTop: 10,
   },
-  dateTitle: {
-    fontSize: 20,
+  txtName: {
     color: "white",
-  },
-  subtitle: {
     fontSize: 14,
-    color: "white",
     fontWeight: "bold",
     flexWrap: "wrap",
-  },
-  subtitle2: {
-    fontSize: 14,
-    color: "white",
-    fontWeight: "bold",
     marginStart: 10,
   },
-  subtitle3: {
+  txtDate: {
+    color: "white",
     fontSize: 14,
-    color: "white",
-    fontWeight: "bold",
-  },
-  subheading: {
-    fontSize: 18,
-    color: "white",
-  },
-  subheading2: {
-    fontSize: 18,
-    color: "white",
-    marginStart: 10,
-  },
-  subtitleContainer: {
-    alignItems: "center",
-  },
-  subtitleContainer2: {
-    alignItems: "center",
-  },
-  subtitleContainer3: {
-    alignItems: "center",
-    marginStart: 100,
-    padding: 5,
-  },
-  barcodeImage: {
-    height: 50,
-    aspectRatio: 158 / 52,
-  },
-  blackCircle: {
-    height: 80,
-    width: 80,
-    borderRadius: 80,
-    backgroundColor: "black",
+    fontWeight: "400",
+    flexWrap:"wrap",
   },
 });
