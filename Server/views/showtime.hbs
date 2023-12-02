@@ -17,21 +17,21 @@
                   <label for="movie">Movie:</label>
                  <select class="form-control" id="movie" name="movie" required>
                     {{#each movies}}
-                        <option value="{{movies}}">{{title}}</option>
+                        <option value="{{_id}}">{{title}}</option>
                     {{/each}}
                 </select>
               </div>
               <div class="mb-3 mt-3">
-                  <label for="room">Room:</label>
+                 <label for="room">Room:</label>
                  <select class="form-control" id="room" name="room" required>
                     {{#each rooms}}
-                        <option value="{{rooms}}">{{name}}</option>
+                        <option value="{{_id}}">{{name}}</option>
                     {{/each}}
                 </select>
               </div>
               <div class="mb-3">
                 <label for="time">Start time:</label>
-                <input type="datetime-local" class="form-control" id="start_time" name="start_time"required>
+                <input type="datetime-local" class="form-control" id="start_time" name="start_time" required>
               </div>
               <div class="mb-3">
                 <label for="time">End time:</label>

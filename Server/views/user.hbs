@@ -5,6 +5,7 @@
     <table class="table table-dark text-center">
       <thead>
         <tr>
+          <th>Avatar</th>
           <th>Username</th>
           <th>Email</th>
           <th>Role</th>
@@ -13,9 +14,10 @@
       <tbody>
         {{#each users}}
         <tr>
-            <td>{{this.username}}</td>
-            <td>{{this.email}}</td>
-            <td>{{this.role}}</td>
+             <td class="align-middle"><img src="http://127.0.0.1:3000/img/users/{{this.avatar}}" width="75" height="75" style="object-fit: cover;"></td>
+            <td class="align-middle">{{this.username}}</td>
+            <td class="align-middle">{{this.email}}</td>
+            <td class="align-middle">{{this.role}}</td>
         </tr>
         {{/each}}
       </tbody>

@@ -105,8 +105,14 @@ exports.movieDetail = async(req, res) => {
 
 exports.movie_delete = async(req, res) => {
     try {
-        const movies = await Movie.findByIdAndRemove(req.params.id).lean();
-        res.redirect("/index");
+        const showtimes = (await Showtime.find({movie:req.params.id}).lean()).length;
+        if(showtimes > 0){
+            res.render("alert.hbs", {alert:"There is existing movie in showtime"});
+        }
+        else{
+            const movies = await Movie.findByIdAndRemove(req.params.id).lean();
+            res.redirect("/index");
+        }
     } catch (error) {
         console.log(`${error.name}: ${error.message}`);
         res.render("error.hbs");
@@ -286,8 +292,14 @@ exports.insertRoomPost = async(req, res) => {
 };
 exports.deleteRoom = async(req, res) => {
     try {
-        const rooms = await Room.findByIdAndRemove(req.params.id).lean();
-        res.redirect("/room");
+        const showtimes = (await Showtime.find({room:req.params.id}).lean()).length;
+        if(showtimes > 0){
+            res.render("alert.hbs", {alert:"There is existing room in showtime"});
+        }
+        else{
+            const rooms = await Room.findByIdAndRemove(req.params.id).lean();
+            res.redirect("/room");
+        }
     } catch (error) {
         console.log(`${error.name}: ${error.message}`);
         res.render("error.hbs");
@@ -358,8 +370,15 @@ exports.insertCinemaPost = async(req, res) => {
 
 exports.deleteCinema = async(req, res) => {
     try {
-        const cinemas = await Cinema.findByIdAndRemove(req.params.id).lean();
-        res.redirect("/cinema");
+        const rooms = (await Room.find({cinema:req.params.id}).lean()).length;
+        if(rooms > 0){
+            res.render("alert.hbs", {alert:"There is existing cinema in room"});
+        }
+        else{
+            const cinemas = await Cinema.findByIdAndRemove(req.params.id).lean();
+            res.redirect("/cinema");
+        }
+        
     } catch (error) {
         console.log(`${error.name}: ${error.message}`);
         res.render("error.hbs");
@@ -388,7 +407,7 @@ exports.getAllShowtime = async(req, res) => {
         const rooms = await Room.find({}).lean();
         const movies = await Movie.find({}).lean();
         res.render("showtime.hbs", {
-            titles: "List Cinemas",
+            titles: "List Showtimes",
             showtimes: showtimes,
             rooms: rooms,
             movies: movies
@@ -461,5 +480,57 @@ exports.ThongkeDoanhThu = async(req, res) => {
         console.log(`${error.name}: ${error.message}`);
         res.render("error.hbs");
     };
-}
+
+};
+
+//Actor
+exports.getAllActor = async(req, res) => {
+    try{
+        const actors = await Actor.find({}).lean();
+        res.render("actor.hbs", {
+            titles: "List Actors",
+            actors:actors
+        });
+       
+    }
+    catch (error){
+        console.log(`${error.name}: ${error.message}`);
+        res.render("error.hbs");
+    };
+};
+
+exports.insertActorPost = async(req, res) => {
+    try {
+        const actorAvatar = req.file.filename;
+        const actors = new Actor({
+            name: req.body.name,
+            dob: req.body.dob,
+            country: req.body.country,
+            avatar: actorAvatar
+        });
+        await actors.save();
+        console.log(actors);
+        res.redirect('/actor');
+    } catch (error) {
+        console.log(`${error.name}: ${error.message}`);
+        res.render("error.hbs");
+    };
+};
+
+exports.deleteActor = async(req, res) => {
+    try {
+        const movie = (await Movie.find({actor:req.params.id}).lean()).length;
+        if(movie>0){
+            res.render("alert.hbs", {alert:"There is existing actor in movie"});
+        }
+        else{
+            const showtimes = await Actor.findByIdAndRemove(req.params.id).lean();
+            res.redirect("/actor");
+        }
+    } catch (error) {
+        console.log(`${error.name}: ${error.message}`);
+        res.render("error.hbs");
+    };
+};
+
 
