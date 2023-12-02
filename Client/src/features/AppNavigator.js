@@ -115,7 +115,7 @@ const Main = () => {
       <Stack.Screen
         name="Profile"
         component={Profile}
-        options={{ headerShown: false, title: "Bản đồ" }}
+        options={{ headerShown: false, title: "Cá nhân" }}
       />
     </Tab.Navigator>
   );

@@ -44,7 +44,6 @@ const DetailMovie = (props) => {
         const response = await AxiosIntance().get(`movies/${params.data._id}/reviews?user=${infoUser._id}`);
         if (response.data.length > 0) {
             setmyreviews(response.data[0]);
-            console.log(response.data[0])
             setisLoading2(false)
         } else {
             setisLoading2(false)
@@ -168,7 +167,7 @@ const DetailMovie = (props) => {
                     isLoading2 == true ? (
                         null
                     ) :
-                        (!isLogin && !myreviews.review ?
+                        (isLogin && !myreviews.review ?
                             <View>
                                 <View style={styles.container1}>
                                     <Text style={styles.heading}>Xếp hạng cho bộ phim này</Text>
