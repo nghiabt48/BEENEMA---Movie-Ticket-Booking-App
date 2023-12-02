@@ -22,7 +22,7 @@ const ListMovie = (props) => {
   const [data, setdata] = useState([]);
   const [top5, SetTop5] = useState("");
   const [isLoading, setisLoading] = useState(null);
-  const { isLogin } = useContext(AppConText)
+  const { isLogin } = useContext(AppConText);
   //get all movie
   useEffect(() => {
     const getAllMovie = async () => {
@@ -38,7 +38,7 @@ const ListMovie = (props) => {
     };
     getAllMovie();
     top5Movie();
-    return () => { };
+    return () => {};
   }, []);
 
   // set time out
@@ -81,7 +81,7 @@ const ListMovie = (props) => {
   };
   const login = () => {
     navigation.navigate("Login");
-  }
+  };
   return (
     <SafeAreaView style={styles.container}>
       <View>
@@ -95,20 +95,19 @@ const ListMovie = (props) => {
               style={styles.TextInputSearch}
               editable={false}
             ></TextInput>
+            {!isLogin && (
+              <View>
+                <TouchableOpacity onPress={login}>
+                  <Text>Login</Text>
+                  <Image
+                    style={styles.btnArrow2}
+                    source={require("../image/user1.png")}
+                  />
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
         </TouchableOpacity>
-        {
-          !isLogin && (<View>
-            <TouchableOpacity onPress={login}>    
-              <Text>Login</Text>          
-              <Image
-                style={styles.btnArrow2}
-                source={require("../image/user1.png")}
-              />
-            </TouchableOpacity>
-          </View>)
-        }
-        
       </View>
 
       <ScrollView>
