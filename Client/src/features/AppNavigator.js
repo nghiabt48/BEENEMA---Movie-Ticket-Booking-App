@@ -31,6 +31,18 @@ import DetailTickets from "./DetailTickets";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+const LoginRoute = () => {
+  return (
+    <Stack.Navigator
+    initialRouteName="LoginScreen"
+    screenOptions={{ headerShown: false }}
+  >
+    <Stack.Screen name="LoginScreen" component={Logins} />
+    <Stack.Screen name="Register" component={Registers} />
+    <Stack.Screen name="Forgot" component={ForgotEmail} />
+  </Stack.Navigator>
+  )
+}
 const Users = () => {
   return (
     // <Stack.Navigator
@@ -41,44 +53,21 @@ const Users = () => {
     //   <Stack.Screen name="Register" component={Registers} />
     //   <Stack.Screen name="Forgot" component={ForgotEmail} />
     // </Stack.Navigator>
-    <Tab.Navigator
+    <Stack.Navigator
       initialRouteName="Movie"
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
-          if (route.name === "Home") {
-            return focused? <Image style={styles.ImageIcon} source={require("../image/movie3.png")} />: <Image style={styles.ImageIcon} source={require("../image/movie4.png")} />;
-          } else if (route.name === "Map") {
-            return focused? <Image style={styles.ImageIcon} source={require("../image/map1.png")} />: <Image style={styles.ImageIcon} source={require("../image/map2.png")} />;
-          } else if (route.name === "Profile") {
-            return focused? <Image style={styles.ImageIcon} source={require("../image/user1.png")} />: <Image style={styles.ImageIcon} source={require("../image/user2.png")} />;
-          } 
-        },
-        tabBarActiveTintColor: "#F74346",
-        tabBarInactiveTintColor: "#4A4B56",
-        tabBarActiveBackgroundColor: "#130B2B",
-        tabBarInactiveBackgroundColor: "#130B2B",
-        tabBarLabelStyle: {
-          fontWeight: "700",
-        },
-        tabBarHideOnKeyboard: true,
-      })}
     >
       <Stack.Screen
         name="Home"
         component={BooKing}
         options={{ headerShown: false, title: "Trang chủ" }}
       />
+      
       <Stack.Screen
-        name="Map"
-        component={Maps}
-        options={{ headerShown: false, title: "Bản đồ" }}
+        name="Login"
+        component={LoginRoute}
+        options={{ headerShown: false, title: "Login" }}
       />
-      <Stack.Screen
-        name="Profile"
-        component={Profile}
-        options={{ headerShown: false, title: "Profile" }}
-      />
-    </Tab.Navigator>
+    </Stack.Navigator>
   );
 };
 

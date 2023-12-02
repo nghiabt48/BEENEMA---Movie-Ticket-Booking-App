@@ -44,6 +44,7 @@ const DetailMovie = (props) => {
         const response = await AxiosIntance().get(`movies/${params.data._id}/reviews?user=${infoUser._id}`);
         if (response.data.length > 0) {
             setmyreviews(response.data[0]);
+            console.log(response.data[0])
             setisLoading2(false)
         } else {
             setisLoading2(false)

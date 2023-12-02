@@ -10,17 +10,19 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ItemMovie from "../Item/ItemMovie";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AxiosIntance from "./AxiosIntance";
 import ItemTop5 from "../Item/ItemTop5";
+import { AppConText } from "./AppConText";
 
 const ListMovie = (props) => {
   const { navigation } = props;
   const [data, setdata] = useState([]);
   const [top5, SetTop5] = useState("");
   const [isLoading, setisLoading] = useState(null);
+  const { isLogin } = useContext(AppConText)
   //get all movie
   useEffect(() => {
     const getAllMovie = async () => {
@@ -36,7 +38,7 @@ const ListMovie = (props) => {
     };
     getAllMovie();
     top5Movie();
-    return () => {};
+    return () => { };
   }, []);
 
   // set time out
@@ -77,20 +79,38 @@ const ListMovie = (props) => {
   const SearchClik = function () {
     navigation.navigate("Search");
   };
+  const login = () => {
+    navigation.navigate("Login");
+  }
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity onPress={SearchClik}>
-        <View style={styles.Search}>
-          <Image source={require("../image/Layer3.png")} />
-          <TextInput
-            placeholder="Tìm kiếm..."
-            placeholderTextColor={"#ffff"}
-            onChangeText={(text) => down(text)}
-            style={styles.TextInputSearch}
-            editable={false}
-          ></TextInput>
-        </View>
-      </TouchableOpacity>
+      <View>
+        <TouchableOpacity onPress={SearchClik}>
+          <View style={styles.Search}>
+            <Image source={require("../image/Layer3.png")} />
+            <TextInput
+              placeholder="Tìm kiếm..."
+              placeholderTextColor={"#ffff"}
+              onChangeText={(text) => down(text)}
+              style={styles.TextInputSearch}
+              editable={false}
+            ></TextInput>
+          </View>
+        </TouchableOpacity>
+        {
+          !isLogin && (<View>
+            <TouchableOpacity onPress={login}>    
+              <Text>Login</Text>          
+              <Image
+                style={styles.btnArrow2}
+                source={require("../image/user1.png")}
+              />
+            </TouchableOpacity>
+          </View>)
+        }
+        
+      </View>
+
       <ScrollView>
         <Text style={styles.textTop}>Top 5 bộ phim có Rating cao nhất:</Text>
         <View>
