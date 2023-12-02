@@ -19,7 +19,7 @@ const DetailMovie = (props) => {
     const [review, setreview] = useState("");
     const [rating, setrating] = useState("");
     const [showFullText, setShowFullText] = useState(false)
-    const { infoUser, setinfoUser, movieId, setmovieId } = useContext(AppConText);
+    const { infoUser, setinfoUser, movieId, setmovieId, isLogin } = useContext(AppConText);
     const data = params.data.actor
     const [numberOfLines, setNumberOfLines] = useState(3);
     const handleTextLayout = (event) => {
@@ -31,9 +31,10 @@ const DetailMovie = (props) => {
     };
 
     useEffect(() => {
-
+        if (isLogin) {
+            fetchmyReviews()
+        }
         fetchReviews()
-        fetchmyReviews()
         return () => {
 
         }
@@ -60,7 +61,11 @@ const DetailMovie = (props) => {
         }
     }
     const Post = async () => {
-
+        if (!isLogin) {
+            ToastAndroid.show("Vui lòng đăng nhập để tiếp tục!", ToastAndroid.SHORT);
+            navigation.navigate('Login')
+            return;
+        }
         try {
             setisLoading(true)
             const response = await AxiosIntance().post(`movies/${params.data._id}/reviews`, { review: review, rating: rating });
@@ -86,6 +91,11 @@ const DetailMovie = (props) => {
         navigation.navigate("ShowTime", { _id: params.data.id })
     }
     const showCinema = async => {
+        if (!isLogin) {
+            ToastAndroid.show("Vui lòng đăng nhập để tiếp tục!", ToastAndroid.SHORT);
+            navigation.navigate("Login")
+            return;
+        }
         navigation.navigate("ChooseCinema", { _id: params.data.id, title: params.data.title })
         setmovieId({ _id: params.data.id })
     }
@@ -157,7 +167,7 @@ const DetailMovie = (props) => {
                     isLoading2 == true ? (
                         null
                     ) :
-                        (!myreviews.review ?
+                        (!isLogin && !myreviews.review ?
                             <View>
                                 <View style={styles.container1}>
                                     <Text style={styles.heading}>Xếp hạng cho bộ phim này</Text>
@@ -343,9 +353,9 @@ const styles = StyleSheet.create({
         height: 15,
     },
     boxImage6: {
-        width:32,
-        height:32,
-        marginRight:10
+        width: 32,
+        height: 32,
+        marginRight: 10
     },
     fixToText: {
         width: '100%',
@@ -381,15 +391,15 @@ const styles = StyleSheet.create({
         marginTop: 30,
     },
     Group5: {
-       
+
         flexDirection: 'row',
         alignItems: 'center',
         borderWidth: 0.5,
         borderColor: '#DA004E',
         marginTop: 15,
-        marginStart:15,
+        marginStart: 15,
         marginEnd: 15,
-        margin:15
+        margin: 15
     },
     Group6: {
         margin: 10,
@@ -528,7 +538,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         color: '#fff',
         textAlign: 'center',
-        marginTop:10
+        marginTop: 10
     },
     loading: {
         flex: 1,

@@ -17,9 +17,8 @@ import AxiosIntance from "./AxiosIntance";
 const ProfileScreen = (props) => {
   const { navigation } = props;
   const { setisLogin } = useContext(AppConText);
-  const { infoUser, setinfoUser } = useContext(AppConText);
+  const { infoUser, setinfoUser, isLogin } = useContext(AppConText);
   const ImageURL = `http://149.28.159.68:3000/img/users/`;
-
   useEffect(() => {
     //Profile
     const Profile = async () => {
@@ -30,6 +29,14 @@ const ProfileScreen = (props) => {
         ToastAndroid.show("Something went wrong!", ToastAndroid.SHORT);
       }
     };
+    if(!isLogin) {
+      ToastAndroid.show("Vui lòng đăng nhập để tiếp tục!", ToastAndroid.SHORT);
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Login' }]
+      })
+      return
+    }
     Profile();
     return () => { };
   }, []);
