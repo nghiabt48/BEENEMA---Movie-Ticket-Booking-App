@@ -17,51 +17,53 @@ const jwt = require('jsonwebtoken');
 
 
 //Admin Login
-// const signToken = id => {
-//     return jwt.sign({id}, process.env.JWT_SECRET, {
-//       expiresIn: process.env.JWT_EXPIRES_IN
-//     })
-//   }
-//   const sendToken = (user, statusCode, req, res) => {
-//     const token = signToken(user._id);
-//     res.cookie('jwt', token, {
-//       expires: new Date(
-//         Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-//       ),
-//       httpOnly: true,
-//       secure: req.secure || req.headers['x-forwarded-proto'] === 'https'
-//     });
+const signToken = id => {
+    return jwt.sign({id}, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRES_IN
+    })
+  }
+  const sendToken = (user, statusCode, req, res) => {
+    const token = signToken(user._id);
+    res.cookie('jwt', token, {
+      expires: new Date(
+        Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+      ),
+      httpOnly: true,
+      secure: req.secure || req.headers['x-forwarded-proto'] === 'https'
+    });
   
-//     // Remove password from output
-//     user.password = undefined;
-  
-//     res.redirect('/index');
-//   };
+    // Remove password from output
+    user.password = undefined;
+    res.redirect('/index');
+  };
 
   
-// exports.login = catchAsync(async (req, res, next) => {
-//     const { email, password } = req.body;
+exports.login = catchAsync(async (req, res, next) => {
+    const { email, password } = req.body;
     
-//     // 1) Check if email and password exist
-//     if (!email || !password) {
-//         res.render("error.hbs");
-//     }
-//     // 2) Check if user exists && password is correct
-//     const user = await User.findOne({ email }).select('+password');
-//     if (!user) {
-//         res.render("error.hbs");
-//     }
-  
-//     // 3) If everything ok, send token to client
-//     sendToken(user, 200,req, res);
-//   });
+    // 1) Check if email and password exist
+    if (!email || !password) {
+        res.send("Please fill all information");
+    } 
+    else{
+        // 2) Check if user exists && password is correct
+        const user = await User.findOne({ email, role:"admin" }).select('+password');
+        if (!user) {
+            res.send("You can't login if you aren't admin");
+        }
+        else{
+            // 3) If everything ok, send token to client
+            sendToken(user, 200,req, res);
+        }
+    }
+  });
 
 //Movie
 exports.getAllMovies = async(req, res) => {
     try{
         const movies = await Movie.find({}).lean();
         res.render("index.hbs", {
-            titles: "Movies",
+            titles: "Manager Movies",
             movies:movies
         });
     }
@@ -84,8 +86,6 @@ exports.movieDetail = async(req, res) => {
             titles:"Movie Detail",
             title: movies.title,
             category: movies.category,
-            ratingsAverage: movies.ratingsAverage,
-            ratingsQuantity: movies.ratingsQuantity,
             imageCover: movies.imageCover,
             actor: movies.actor[0],
             trailer: movies.trailer,
@@ -140,8 +140,8 @@ exports.insertMoviePost = async(req, res) => {
         const movies = new Movie({
             title: req.body.title,
             category: req.body.category,
-            ratingsAverage: req.body.ratingsAverage,
-            ratingsQuantity: req.body.ratingsQuantity,
+            ratingsAverage: 0,
+            ratingsQuantity: 0,
             imageCover: req.body.imageCover,
             actor: req.body.actor,
             trailer: req.body.trailer,
@@ -165,8 +165,6 @@ exports.updateMoviePost = async(req, res) => {
         const movies = {
             title: req.body.title,
             category: req.body.category,
-            ratingsAverage: req.body.ratingsAverage,
-            ratingsQuantity: req.body.ratingsQuantity,
             imageCover: req.body.imageCover,
             actor: req.body.actor,
             trailer: req.body.trailer,
@@ -187,7 +185,7 @@ exports.getAllUsers = async(req, res) => {
     try{
         const users = await User.find({}).lean();
         res.render("user.hbs", {
-            titles: "List Users",
+            titles: "Manager Users",
             users:users
         });
        
@@ -202,7 +200,7 @@ exports.getAllCategory = async(req, res) => {
     try{
         const categories = await Category.find({}).lean();
         res.render("category.hbs", {
-            titles: "List Categories",
+            titles: "Manager Categories",
             categories:categories
         });
        
@@ -265,7 +263,7 @@ exports.getAllRoom = async(req, res) => {
         const rooms = await Room.find({}).populate({path: 'cinema', select: 'name'}).lean();
         const cinemas = await Cinema.find({}).lean();
         res.render("room.hbs", {
-            titles: "List Rooms",
+            titles: "Manager Rooms",
             rooms: rooms,
             cinema: cinemas
         });
@@ -338,7 +336,7 @@ exports.getAllCinema = async(req, res) => {
     try{
         const cinemas = await Cinema.find({}).lean();
         res.render("cinema.hbs", {
-            titles: "List Cinemas",
+            titles: "Manager Cinemas",
             cinemas: cinemas
         });
        
@@ -407,7 +405,7 @@ exports.getAllShowtime = async(req, res) => {
         const rooms = await Room.find({}).lean();
         const movies = await Movie.find({}).lean();
         res.render("showtime.hbs", {
-            titles: "List Showtimes",
+            titles: "Manager Showtimes",
             showtimes: showtimes,
             rooms: rooms,
             movies: movies
@@ -469,6 +467,7 @@ exports.ThongkeDoanhThu = async(req, res) => {
         const priceArr = results.map(item => item.showtime.price)
         res.render(
             "statistic.hbs",{
+                titles: "Statistics",
                 so_luong_ve: results.length,
                 tong_tien: priceArr.reduce((accumulator, currentValue) => accumulator + currentValue,
                 0),

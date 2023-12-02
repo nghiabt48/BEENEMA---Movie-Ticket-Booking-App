@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const authController = require('./../controller/authController');
 const adminController = require('./../controller/adminController');
 const movieController = require('./../controller/movieController');
 const actorController = require('./../controller/actorController')
@@ -7,10 +8,10 @@ const multer = require('multer')
 
 const upload = multer({ storage: multer.memoryStorage()})
 //login
-// router.get('/', function(req, res, next) {
-//     res.render('login', {title:'Admin'});
-// });
-// router.post('/login', adminController.login);
+router.get('/', function(req, res, next) {
+    res.render('login', {title:'Admin'});
+});
+router.post('/login', adminController.login);
 //router.use(adminController.protect);
 // trang chủ
 router.get('/test', function(req, res, next) {
