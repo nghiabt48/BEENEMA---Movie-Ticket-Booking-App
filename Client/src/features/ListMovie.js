@@ -100,7 +100,7 @@ const ListMovie = (props) => {
                 <TouchableOpacity onPress={login}>
                   <Text>Login</Text>
                   <Image
-                    style={styles.btnArrow2}
+                    style={{marginBottom:15, marginStart: 10}}
                     source={require("../image/user1.png")}
                   />
                 </TouchableOpacity>
