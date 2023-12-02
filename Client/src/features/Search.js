@@ -1,15 +1,86 @@
-import { ActivityIndicator, FlatList, Image, StyleSheet, Text, TextInput, View } from 'react-native'
-import React, { useState } from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context';
-import ItemMovie from '../Item/ItemMovie';
-import AxiosIntance from './AxiosIntance';
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  Modal,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import React, { useState } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import ItemMovie from "../Item/ItemMovie";
+import AxiosIntance from "./AxiosIntance";
 
 const Search = (props) => {
-    const { navigation } = props;
-    const [data, setdata] = useState([]);
-    const [isLoading, setisLoading] = useState(null);
+  const { navigation } = props;
+  const [data, setdata] = useState([]);
+  const [isLoading, setisLoading] = useState(null);
+  const [isLoading2, setisLoading2] = useState(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const [selectedGenre, setSelectedGenre] = useState(null);
+  const [genres, setGenres] = useState([
+    "action",
+    "comedy",
+    "science-fiction",
+    "drama",
+    "fantasy",
+    "tragedy",
+  ]);
+  const [movies, setMovies] = useState([]);
+  const [searchEnabled, setSearchEnabled] = useState(true);
+  const [reset, setReset] = useState(false);
 
-    // set time out
+  //hàm này để reset dữ liệu đã chọn từ modal
+  const handleReset = () => {
+    // Đặt lại trạng thái reset bằng cách đảo ngược giá trị hiện tại
+    setReset((prevReset) => !prevReset);
+
+    // Đặt lại trạng thái của các trường dữ liệu cần reset
+    setSelectedGenre(null);
+    setMovies([]);
+    setIsVisible(false);
+  };
+
+  //mở modal
+  const handleOpenModal = () => {
+    setIsVisible(true);
+  };
+
+  //đóng modal
+  const handleCloseModal = () => {
+    setIsVisible(false);
+  };
+
+  //chọn thể loại từ modal
+  const handleSelectGenre = (genre) => {
+    setSelectedGenre(genre);
+    handleCloseModal();
+    // Gọi hàm để lấy danh sách phim theo thể loại từ API khi thể loại được chọn
+    getMoviesByGenre(genre);
+  };
+
+  const getMoviesByGenre = async (selectedGenre) => {
+    try {
+      //nếu thể loại đã được chọn thì searchEnabled sẽ == false
+      setSearchEnabled(false);
+      //tạo isloading2 vì để không bị trùng với search
+      setisLoading2(true);
+      const respone = await AxiosIntance().get(
+        `/movies?category=${selectedGenre}`
+      );
+      if (respone.status === "success") {
+        setMovies(respone.data.data);
+        setisLoading2(false);
+      }
+    } catch (error) {
+      console.log(error);
+      setisLoading2(false);
+    }
+  };
+  // set time out
   let timeOut = null;
   const down = (searchText) => {
     if (timeOut) {
@@ -22,17 +93,41 @@ const Search = (props) => {
   //get movie by title
   const search = async (searchText) => {
     setisLoading(true);
-    const respone = await AxiosIntance().get("/movies/search?title=" + searchText);
+    const respone = await AxiosIntance().get(
+      "/movies/search?title=" + searchText
+    );
     if (respone.status == "success") {
       setdata(respone.movie);
       setisLoading(false);
-      if(searchText==''){
+      if (searchText == "") {
         setdata(null);
-      setisLoading(false);
+        setisLoading(false);
       }
     } else {
     }
   };
+
+  //nếu searchEnabled == false thì sẽ trả về null
+  const listSearch = function () {
+    if (!searchEnabled) {
+      return null;
+    } else if (isLoading === true) {
+      return <ActivityIndicator size="large" />;
+    } else {
+      return (
+        <FlatList
+          data={data}
+          numColumns={2}
+          renderItem={({ item }) => (
+            <ItemMovie data={item} navigation={navigation} />
+          )}
+          keyExtractor={(item) => item._id}
+          showsVerticalScrollIndicator={false}
+        />
+      );
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.Search}>
@@ -43,12 +138,73 @@ const Search = (props) => {
           onChangeText={(text) => down(text)}
           style={styles.TextInputSearch}
         ></TextInput>
+        <View>
+          <TouchableOpacity onPress={handleOpenModal}>
+            {selectedGenre == null ? (
+              <Image
+                style={{ marginStart: 10 }}
+                source={require("../image/filter.png")}
+              />
+            ) : (
+              <Text style={{ color: "white", marginStart: 10,fontSize:16,fontWeight:"600" }}>
+                {selectedGenre}
+              </Text>
+            )}
+          </TouchableOpacity>
+
+          <Modal
+            transparent={true}
+            animationType="slide"
+            visible={isVisible}
+            onRequestClose={handleCloseModal}
+          >
+            <View style={styles.modalContainer}>
+              <View style={styles.modalContent}>
+                {/* nút reset */}
+                <TouchableOpacity style={styles.reset} onPress={handleReset}>
+                  <Image style={{alignSelf:"center",justifyContent:"center"}} source={require("../image/undo.png")} />
+                  <Text style={{ color: "#F74346",fontSize:14,  fontWeight: "600",textAlign: "center" ,alignSelf:"center",marginStart:5}}>
+                    Reset
+                  </Text>
+                </TouchableOpacity>
+                {/* List thể loại */}
+                <FlatList
+                  data={genres}
+                  keyExtractor={(item) => item}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity
+                      style={styles.genreItem}
+                      onPress={() => handleSelectGenre(item)}
+                    >
+                      <Text
+                        style={{
+                          color: "#F74346",
+                          fontSize: 14,
+                          fontWeight: "600",
+                          padding: 10,
+                        }}
+                      >
+                        {item}
+                      </Text>
+                      <Image source={require("../image/line.png")} />
+                    </TouchableOpacity>
+                  )}
+                />
+              </View>
+            </View>
+          </Modal>
+        </View>
       </View>
-      {isLoading == true ? (
+
+      {/* danh sach list cua search */}
+      {listSearch()}
+
+      {/* The loai */}
+      {isLoading2 == true ? (
         <ActivityIndicator size="large" />
       ) : (
         <FlatList
-          data={data}
+          data={movies}
           numColumns={2}
           renderItem={({ item }) => (
             <ItemMovie data={item} navigation={navigation} />
@@ -58,29 +214,56 @@ const Search = (props) => {
         />
       )}
     </SafeAreaView>
-  )
-}
+  );
+};
 
-export default Search
+export default Search;
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#130B2B",
-        padding: 13,
-      },
-      TextInputSearch: {
-        flex: 1,
-        borderWidth: 1,
-        borderColor: "#FA6900",
-        padding: 8,
-        borderRadius: 20,
-        color: "#ffff",
-      },
-      Search: {
-        width: "100%",
-        flexDirection: "row",
-        alignItems: "center",
-        padding: 10,
-      },
-})
+  container: {
+    flex: 1,
+    backgroundColor: "#130B2B",
+    padding: 13,
+  },
+  TextInputSearch: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: "#FA6900",
+    padding: 8,
+    borderRadius: 20,
+    color: "#ffff",
+  },
+  Search: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 10,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    backgroundColor: "white",
+    width: "100%",
+    padding: 16,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+  },
+  option: {
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+  },
+  reset: {
+    backgroundColor: "rgba(0, 0, 0, 0.3)",
+    width: 100,
+    height:25,
+    borderRadius: 10,
+    flexDirection:"row",
+    justifyContent: "center",
+    alignSelf:"flex-end"
+  },
+});

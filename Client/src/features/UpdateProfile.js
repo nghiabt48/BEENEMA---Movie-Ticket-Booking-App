@@ -70,14 +70,14 @@ const UpdateProfile = (props) => {
       if (!result.canceled) {
         if (respone.status == "success") {
             console.log(respone);
-            ToastAndroid.show("Update Image Successfully", ToastAndroid.SHORT);
+            ToastAndroid.show("Upload ảnh thành công", ToastAndroid.SHORT);
             setImage(respone.url);
         } else {
-          ToastAndroid.show("Update Image Failed", ToastAndroid.SHORT);
+          ToastAndroid.show("Upload ảnh thất bại", ToastAndroid.SHORT);
         }
       }
       else{
-        ToastAndroid.show("Network Error", ToastAndroid.SHORT);
+        ToastAndroid.show("Error", ToastAndroid.SHORT);
       }
     }
     catch (e) {
@@ -105,15 +105,15 @@ const UpdateProfile = (props) => {
       );
 
       if (respone.status == "success") {
-        ToastAndroid.show("Update Profile Successfully", ToastAndroid.SHORT);``
+        ToastAndroid.show("Cập nhật thành công", ToastAndroid.SHORT);``
         setinfoUser(respone.data.user);
       } else {
-        ToastAndroid.show("Update Profile Failed", ToastAndroid.SHORT);
+        ToastAndroid.show("Cập nhật thất bại", ToastAndroid.SHORT);
       }
 
 
     } catch (e) {
-      ToastAndroid.show("Update Profile Failed", ToastAndroid.SHORT);
+      ToastAndroid.show("Cập nhật thất bại", ToastAndroid.SHORT);
       console.log(e);
     }
   };
@@ -219,7 +219,7 @@ const UpdateProfile = (props) => {
               style={{ marginRight: "5%" }}
               source={require("../icons/updateprofile.png")}
             ></Image>
-            <Text style={styles.textstyle2}>Update Profile</Text>
+            <Text style={styles.textstyle2}>Cập nhật</Text>
           </TouchableOpacity>
         </LinearGradient>
       </ScrollView>
@@ -232,7 +232,7 @@ export default UpdateProfile;
 const styles = StyleSheet.create({
   container: {
     flexDirection: "column",
-    backgroundColor: "black",
+    backgroundColor: "#130B2B",
     padding: "10%",
     width: Dimensions.get("window").width,
     height: Dimensions.get("window").height,
@@ -282,6 +282,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     width: "100%",
+    marginTop: 10
   },
   textseat: {
     color: "white",

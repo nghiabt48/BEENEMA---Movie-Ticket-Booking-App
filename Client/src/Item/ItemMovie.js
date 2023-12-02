@@ -17,7 +17,7 @@ const ItemMovie = (props) => {
     <TouchableOpacity style={styles.container} onPress={goDetail}> 
       <View style={styles.Group}>
         <Image source={{uri: ImageURL}} style={styles.Image}/>
-        <Text style={styles.Text1}>{shortenText(data.title, 14)}</Text>
+        <Text style={styles.Text1}>{data.title}</Text>
       </View>
     </TouchableOpacity>
 
@@ -34,14 +34,16 @@ const styles = StyleSheet.create({
     
   },
   Text1: {
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: 'bold',
     color: '#F74346',
+    textAlign:'center'
   },
   Image:{
     borderRadius:10,
     height:200,
-    width:'100%'
+    width:'100%',
+    
   },
   Group:{
     backgroundColor: '#130B2B',

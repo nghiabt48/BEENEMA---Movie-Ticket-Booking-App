@@ -31,7 +31,7 @@ const ProfileScreen = (props) => {
       }
     };
     Profile();
-    return () => {};
+    return () => { };
   }, []);
 
   //check  avatar user có hay chưa nếu chưa thì sẽ mặc định hiển thị avatar.png
@@ -45,13 +45,13 @@ const ProfileScreen = (props) => {
     await AsyncStorage.removeItem("token");
     ToastAndroid.show("Logout Succesfully!", ToastAndroid.SHORT);
   };
-  const updateProfile = () =>{
+  const updateProfile = () => {
     navigation.navigate('UpdateProfile');
   }
-  const changePassword = () =>{
+  const changePassword = () => {
     navigation.navigate('ChangePassword');
   }
-  const myTicket = () =>{
+  const myTicket = () => {
     navigation.navigate('ListTicket');
   }
   return (
@@ -59,7 +59,7 @@ const ProfileScreen = (props) => {
       <ScrollView>
         <View style={styles.Row1}>
           <Text style={styles.textProfile}>Profile</Text>
-          
+
         </View>
         {/* avatar , name  */}
         <View style={styles.Row2}>
@@ -71,46 +71,48 @@ const ProfileScreen = (props) => {
           </Text>
         </View>
         <View style={styles.ViewGroup}>
-        {/* Button My Tickets*/}
-        <View style={styles.viewBtn}>
-          <TouchableOpacity style={styles.btnMine} onPress={myTicket}>
-            <Image
-              style={styles.imgView}
-              source={require("../image/Ticket.png")}
-            />
-            <Text style={styles.buttonText1}>Vé của tôi</Text>
-            <Image
-              style={styles.btnArrow}
-              source={require("../image/arrowleft.png")}
-            />
-          </TouchableOpacity>
+          {/* Button My Tickets*/}
+          <View style={styles.viewBtn}>
+            <TouchableOpacity style={styles.btnMine} onPress={myTicket}>
+              <Image
+                style={styles.imgView}
+                source={require("../image/Ticket.png")}
+              />
+              <Text style={styles.buttonText1}>Vé của tôi</Text>
+              <Image
+                style={styles.btnArrow}
+                source={require("../image/arrowleft.png")}
+              />
+            </TouchableOpacity>
+          </View>
+          {/* Button Update Profile*/}
+          <View style={styles.viewBtn2}>
+            <TouchableOpacity style={styles.btnMine} onPress={updateProfile}>
+              <Image style={styles.imgView} source={require("../image/Note.png")} />
+              <Text style={styles.buttonText2}>Cập nhật hồ sơ</Text>
+              <Image
+                style={styles.btnArrow2}
+                source={require("../image/arrowleft.png")}
+              />
+            </TouchableOpacity>
+          </View>
+          {/* Button Change password*/}
+          <View style={styles.viewBtn3}>
+            <TouchableOpacity style={styles.btnMine} onPress={changePassword}>
+              <Image
+                style={styles.imgView}
+                source={require("../image/SetTing.png")}
+              />
+              <Text style={styles.buttonText3}>Đổi mật khẩu</Text>
+              <Image
+                style={styles.btnArrow3}
+                source={require("../image/arrowleft.png")}
+              />
+            </TouchableOpacity>
+          </View>
+
         </View>
-        {/* Button Update Profile*/}
-        <View style={styles.viewBtn2}>
-          <TouchableOpacity style={styles.btnMine} onPress={updateProfile}>
-            <Image style={styles.imgView} source={require("../image/Note.png")} />
-            <Text style={styles.buttonText2}>Cập nhật hồ sơ</Text>
-            <Image
-              style={styles.btnArrow2}
-              source={require("../image/arrowleft.png")}
-            />
-          </TouchableOpacity>
-        </View>
-        {/* Button Change password*/}
-        <View style={styles.viewBtn3}>
-          <TouchableOpacity style={styles.btnMine} onPress={changePassword}>
-            <Image
-              style={styles.imgView}
-              source={require("../image/SetTing.png")}
-            />
-            <Text style={styles.buttonText3}>Đổi mật khẩu</Text>
-            <Image
-              style={styles.btnArrow3}
-              source={require("../image/arrowleft.png")}
-            />
-          </TouchableOpacity>
-        </View>
-        </View>
+
         {/* Button Logout */}
         <View style={{ alignItems: "center", marginTop: 40, marginBottom: '20%' }}>
           <LinearGradient
@@ -126,10 +128,10 @@ const ProfileScreen = (props) => {
             </TouchableOpacity>
           </LinearGradient>
         </View>
-       
+
       </ScrollView>
       {/* avatar , name  */}
-      
+
     </SafeAreaView>
   );
 };
@@ -139,7 +141,7 @@ export default ProfileScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#161621",
+    backgroundColor: "#130B2B",
   },
   Row1: {
     paddingTop: 10,
@@ -175,8 +177,8 @@ const styles = StyleSheet.create({
   avatarImg: {
     width: 105,
     height: 105,
-    flexShrink:0,
-    borderRadius:27,
+    flexShrink: 0,
+    borderRadius: 27,
   },
   row: {
     flexDirection: "row",
@@ -214,7 +216,7 @@ const styles = StyleSheet.create({
     height: 58,
     borderRadius: 16,
     flexDirection: "row",
-    alignItems:'center'
+    alignItems: 'center'
   },
   buttonText1: {
     color: "white",
@@ -235,7 +237,7 @@ const styles = StyleSheet.create({
     marginStart: 20,
   },
   imgView: {
-    
+
     marginTop: 8,
     marginStart: 20,
   },
@@ -288,8 +290,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: -25,
   },
-  ViewGroup:{
+  ViewGroup: {
     marginStart: '10%',
-    marginEnd:'10%'
+    marginEnd: '10%'
   }
 });

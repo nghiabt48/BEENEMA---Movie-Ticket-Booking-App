@@ -39,7 +39,7 @@ const ItemTop5 = (props) => {
           <MaterialIcons name={"star"} size={25} style={styles.starSelected} />
         </View>
 
-        <Text style={styles.Text1}>{shortenText(data.title, 14)}</Text>
+        <Text style={styles.Text1}>{data.title}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -54,15 +54,17 @@ const styles = StyleSheet.create({
     padding: 13,
   },
   Text1: {
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: "bold",
     color: "#F74346",
+    textAlign:"center"
   },
   Image: {
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     height: 200,
     width: 170,
+    opacity:0.7
   },
   Group: {
     backgroundColor: "#130B2B",
@@ -70,6 +72,6 @@ const styles = StyleSheet.create({
   },
   starSelected: {
     color: "#FFD700",
- 
+    marginTop:2
   },
 });

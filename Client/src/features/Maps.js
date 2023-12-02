@@ -1,4 +1,4 @@
-import { Button, Image, StyleSheet, Text, TextInput, View } from "react-native";
+import { Button, Image, StyleSheet, Text, TextInput, ToastAndroid, View } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import * as Location from "expo-location";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -104,9 +104,10 @@ const Maps = () => {
             });
           }
         }
-      }
+      } 
     } catch (e) {
       setdata(null);
+      ToastAndroid.show("Không tìm thấy rạp", ToastAndroid.SHORT);
     }
   };
 
