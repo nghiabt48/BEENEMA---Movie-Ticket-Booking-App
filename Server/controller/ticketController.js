@@ -4,6 +4,7 @@ const catchAsync = require('../utils/catchAsync');
 const Showtime = require('../model/showtimeModel');
 const AppError = require('../utils/appError');
 const SeatLogs = require('../model/seatLogs');
+const User = require('../model/userModel');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 
 
@@ -58,8 +59,15 @@ exports.seatsCheck = catchAsync(async (req, res, next) => {
 })
 exports.checkOut = catchAsync(async (req, res, next) => {
   // Create payment intent
+  // check voucher
+  let amount;
+  if(req.body.voucher) {
+    const user = await User.findById(req.user.id)
+    amount = req.showtime.price * req.body.seats.length - user.voucher.value
+  }
+  else amount = req.showtime.price * req.body.seats.length 
   const paymentIntent = await stripe.paymentIntents.create({
-    amount: req.showtime.price * req.body.seats.length,
+    amount,
     currency: "vnd",
     automatic_payment_methods: {
       enabled: true
@@ -80,6 +88,7 @@ exports.createTicketCheckout = catchAsync(async (req, res, next) => {
   const { seat_number } = req.body
 
   if (!req.user.id || !showtime || !seat_number) return next(new AppError("Don't have enough fields to create a ticket"), 400)
+  
   const ticket = Ticket.create({
     user: req.user.id,
     showtime: showtime._id,

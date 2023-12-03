@@ -35,7 +35,6 @@ exports.resizeMovieImages = catchAsync(async (req, res, next) => {
   // 1) Cover image
   req.body.imageCover = `movie-${Date.now()}-${req.files.imageCover[0].originalname}-cover.jpeg`;
   await sharp(req.files.imageCover[0].buffer)
-    .resize(300, 500)
     .toFormat('jpeg')
     .jpeg({ quality: 90 })
     .toFile(`public/img/movies/${req.body.imageCover}`);

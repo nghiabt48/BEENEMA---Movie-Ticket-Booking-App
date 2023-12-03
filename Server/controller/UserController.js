@@ -93,3 +93,31 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   });
 });
 exports.updateUser = factory.updateOne(User)
+exports.generateVoucher = catchAsync(async(req, res, next) => {
+  const voucher = generateRandomString(7)
+  await User.findByIdAndUpdate(req.user.id, {
+    voucher : {
+      code: voucher
+    }
+  })
+  res.json({
+    status: 'success',
+    message: 'Chúc mừng, bạn đã nhận được một voucher!',
+    voucher
+  })
+})
+exports.deleteVoucher = catchAsync(async(req, res, next) => {
+  await User.findByIdAndUpdate(req.user.id, {
+    voucher: null
+})
+res.json({message: "deleted"})
+})
+function generateRandomString(length) {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      result += characters.charAt(randomIndex);
+  }
+  return result;
+}

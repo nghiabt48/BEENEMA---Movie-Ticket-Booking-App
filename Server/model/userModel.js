@@ -54,7 +54,14 @@ const userSchema = new mongoose.Schema({
     description: String
   },
   address: String,
-  avatar: String
+  avatar: String,
+  voucher: {
+    code: String,
+    value: {
+      type: Number,
+      default: 20000
+    }
+  }
 })
 userSchema.index({ location: '2dsphere' })
 userSchema.pre('save', async function(next) {

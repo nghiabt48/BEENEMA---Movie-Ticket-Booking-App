@@ -15,7 +15,8 @@ router.patch('/update-user-avatar', userController.uploadUserPhoto, userControll
 router.patch('/update-me', userController.updateMe)
 router.patch('/change-password', authController.changePassword)
 router.get('/my-tickets', userController.getMyTickets)
-
+router.post('/voucher', userController.generateVoucher)
+router.delete('/voucher', userController.deleteVoucher)
 router.use(authController.restrictTo('admin'))
 router.route('/').get(userController.getAllUsers)
 router.route('/:id').get(userController.getUser).patch(authController.restrictTo('admin'), userController.updateUser)

@@ -83,7 +83,7 @@ io.on('connection', (socket) => {
         await SeatLogs.updateMany({ showtime: room, user: data.user }, {
           status: "reserved"
         })
-        return socket.broadcast.to(room).emit('seat_changed', await SeatLogs.find({ showtime: room }));
+        return io.to(room).emit('seat_changed', await SeatLogs.find({ showtime: room }));
       } catch (e) {
 
       }

@@ -3,14 +3,14 @@ const reviewController = require('./../controller/reviewController')
 const authController = require('./../controller/authController')
 const router = express.Router({mergeParams: true})
 
-router.use(authController.protect);
+// router.use(authController.protect);
 
 router
   .route('/')
-  .get(reviewController.getMyReviewsOnMovie)
   .get(reviewController.getAllReviewsOnMovie)
+  .get(authController.protect, reviewController.getMyReviewsOnMovie)
   // nest with movies/12345678/reviews
-  .post(authController.restrictTo('user'), reviewController.setMovieAndUserId,
+  .post(authController.protect, authController.restrictTo('user'), reviewController.setMovieAndUserId,
   reviewController.reviewCheck, reviewController.createReview)
 
 router.route('/:id')
