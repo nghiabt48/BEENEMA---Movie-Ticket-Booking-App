@@ -6,7 +6,6 @@ const DetailTickets = (props) => {
   const { route } = props;
   const { navigation } = props;
   const { params } = route;
-
   //format thoi gian
   const inputTimestamp = params.item.showtime.start_time;
   const datePart = inputTimestamp.slice(0, 10);
@@ -80,7 +79,7 @@ const DetailTickets = (props) => {
             </Text>
             {"\n"}
             <Text style={styles.txtAddress}>
-              {params.item.showtime.room.cinema.name}
+              {params.item.showtime.room.cinema.location.address}
             </Text>
           </Text>
         </View>

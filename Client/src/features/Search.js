@@ -42,6 +42,7 @@ const Search = (props) => {
     setSelectedGenre(null);
     setMovies([]);
     setIsVisible(false);
+    setSearchEnabled(true);
   };
 
   //mở modal
@@ -62,22 +63,56 @@ const Search = (props) => {
     getMoviesByGenre(genre);
   };
 
+
+  //hàm này dùng để lấy thể loại và search 
+  const getMoviesByGenreAndTitle = async (selectedGenre, searchText) => {
+    try {
+      //tạo isloading2 vì để không bị trùng với search
+      setisLoading2(true);
+      const respone = await AxiosIntance().get(
+        `/movies?category=${selectedGenre}&title=${searchText}`
+      );
+      if (respone.status === "success") {
+        setMovies(respone.data);
+        setisLoading2(false);
+
+        //nếu search text null thì sẽ return lại thể loại đã chọn để load lại danh sách phim
+        if (searchText === "") {
+          return getMoviesByGenre(selectedGenre);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      setisLoading2(false);
+    }
+  };
+
+  //hàm này chỉ để lấy thể loại
   const getMoviesByGenre = async (selectedGenre) => {
     try {
       //nếu thể loại đã được chọn thì searchEnabled sẽ == false
       setSearchEnabled(false);
-      //tạo isloading2 vì để không bị trùng với search
       setisLoading2(true);
       const respone = await AxiosIntance().get(
         `/movies?category=${selectedGenre}`
       );
       if (respone.status === "success") {
-        setMovies(respone.data.data);
+        setMovies(respone.data);
         setisLoading2(false);
       }
     } catch (error) {
       console.log(error);
       setisLoading2(false);
+    }
+  };
+
+  const handleSearch = (searchText) => {
+    if (selectedGenre) {
+      // Nếu đã chọn thể loại, thực hiện tìm kiếm với cả hai điều kiện
+      getMoviesByGenreAndTitle(selectedGenre, searchText);
+    } else {
+      // Nếu chưa chọn thể loại, chỉ thực hiện tìm kiếm theo tiêu đề
+      search(searchText);
     }
   };
   // set time out
@@ -87,7 +122,7 @@ const Search = (props) => {
       clearTimeout(timeOut);
     }
     timeOut = setTimeout(() => {
-      search(searchText);
+      handleSearch(searchText);
     }, 1000);
   };
   //get movie by title
@@ -146,7 +181,14 @@ const Search = (props) => {
                 source={require("../image/filter.png")}
               />
             ) : (
-              <Text style={{ color: "white", marginStart: 10,fontSize:16,fontWeight:"600" }}>
+              <Text
+                style={{
+                  color: "white",
+                  marginStart: 10,
+                  fontSize: 16,
+                  fontWeight: "600",
+                }}
+              >
                 {selectedGenre}
               </Text>
             )}
@@ -158,12 +200,29 @@ const Search = (props) => {
             visible={isVisible}
             onRequestClose={handleCloseModal}
           >
+            <TouchableOpacity
+              style={styles.modalContainer}
+              activeOpacity={1}
+              onPressOut={handleCloseModal}
+            ></TouchableOpacity>
             <View style={styles.modalContainer}>
               <View style={styles.modalContent}>
                 {/* nút reset */}
                 <TouchableOpacity style={styles.reset} onPress={handleReset}>
-                  <Image style={{alignSelf:"center",justifyContent:"center"}} source={require("../image/undo.png")} />
-                  <Text style={{ color: "#F74346",fontSize:14,  fontWeight: "600",textAlign: "center" ,alignSelf:"center",marginStart:5}}>
+                  <Image
+                    style={{ alignSelf: "center", justifyContent: "center" }}
+                    source={require("../image/undo.png")}
+                  />
+                  <Text
+                    style={{
+                      color: "#F74346",
+                      fontSize: 14,
+                      fontWeight: "600",
+                      textAlign: "center",
+                      alignSelf: "center",
+                      marginStart: 5,
+                    }}
+                  >
                     Reset
                   </Text>
                 </TouchableOpacity>
@@ -260,10 +319,10 @@ const styles = StyleSheet.create({
   reset: {
     backgroundColor: "rgba(0, 0, 0, 0.3)",
     width: 100,
-    height:25,
+    height: 25,
     borderRadius: 10,
-    flexDirection:"row",
+    flexDirection: "row",
     justifyContent: "center",
-    alignSelf:"flex-end"
+    alignSelf: "flex-end",
   },
 });
