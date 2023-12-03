@@ -68,7 +68,7 @@ app.use('/api/bookings', bookingRouter)
 app.use('/api/actors', actorRouter)
 app.use('/api/rooms', require('./router/roomRouter'))
 // error handler
-// app.use('/', adminRouter);
+app.use('/', adminRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

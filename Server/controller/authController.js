@@ -32,6 +32,38 @@ const sendToken = (user, statusCode, req, res) => {
     }
   });
 };
+// for web admin
+exports.isLoggedIn = async (req, res, next) => {
+  if (req.cookies.jwt) {
+    try {
+      // 1) verify token
+      const decoded = await promisify(jwt.verify)(
+        req.cookies.jwt,
+        process.env.JWT_SECRET
+      );
+
+      // 2) Check if user still exists
+      const currentUser = await User.findById(decoded.id);
+      if (!currentUser) {
+        res.render('login');
+      }
+
+      // 3) Check if user changed password after the token was issued
+      if (currentUser.changedPasswordAfter(decoded.iat)) {
+        res.render('login');
+      }
+
+      // THERE IS A LOGGED IN USER
+      res.locals.user = currentUser;
+      return next();
+    } catch (err) {
+      console.log(err)
+      return next(new AppError(err, 400))
+    }
+  }
+  res.render('login');
+};
+
 exports.protect =catchAsync(async(req, res, next) => {
   // Get token
   let token
