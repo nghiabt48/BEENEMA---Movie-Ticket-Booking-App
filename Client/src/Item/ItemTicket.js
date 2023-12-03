@@ -42,9 +42,9 @@ const ItemTicket = (props) => {
 
   //   console.log(`Ngày thứ ${dayOfWeek}`);
 
-  const goDetail = function() {
-    navigation.navigate('DetailTickets', {item})
-  }
+  const goDetail = function () {
+    navigation.navigate("DetailTickets", { item });
+  };
 
   return (
     <TouchableOpacity onPress={goDetail}>
@@ -68,9 +68,13 @@ const ItemTicket = (props) => {
               Thời gian:{" "}
             </Text>
             <Text style={styles.txtDate}>{timePart} | </Text>
-            <Text style={{flex:1}}>
-              <Text style={{ color: "white", fontSize: 14, fontWeight: "bold" }}>Ghế: </Text>
-              <Text style={styles.txtDate}>{item.seats.join(",")}</Text>
+            <Text style={{ flex: 1 }}>
+              <Text
+                style={{ color: "white", fontSize: 14, fontWeight: "bold" }}
+              >
+                Ghế:{" "}
+              </Text>
+              <Text style={styles.txtDate}>{item.seats.join(", ")}</Text>
             </Text>
           </Text>
         </View>
@@ -84,8 +88,8 @@ export default ItemTicket;
 const styles = StyleSheet.create({
   containerMain: {
     flexDirection: "row",
-    marginTop:15,
-    flex:1
+    marginTop: 15,
+    flex: 1,
   },
   containerSub: {
     flexDirection: "column",
@@ -102,6 +106,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 14,
     fontWeight: "400",
-    flexWrap:"wrap",
+    flexWrap: "wrap",
+    width:50,
   },
 });
