@@ -11,6 +11,7 @@ router.use('/:movieId/reviews', reviewRouter)
 router.route('/top-5').get(movieController.TopSellingMovie, movieController.getAllMovies)
 router
   .route('/')
+  .get(movieController.getMoviesByNameAndCategory)
   .get(movieController.getAllMovies)
   .post(authController.protect, authController.restrictTo('admin'), movieController.uploadMovieImageAndTrailer, movieController.resizeMovieImages, movieController.saveMovieTrailerToStorage, movieController.createMovie)
 router.get('/search', movieController.getMovieByName)
