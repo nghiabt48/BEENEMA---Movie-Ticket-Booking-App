@@ -246,13 +246,13 @@ const SeatCinemaSocket = (props) => {
         await AxiosIntance().delete('users/voucher')
         setUserVoucher({})
       }
-      Alert.alert(`Hoàn thành`, 'Thanh toán đã được xác nhận thành công')
       // 4. After paying, create the ticket
-      await AxiosIntance().post(`tickets/checkout/${showtimeId}/create-ticket`, { seat_number: my_seats })
       socketRef.current.emit("showtime:reserved", {
         showtime: showtimeId,
         user: infoUser._id
       })
+      Alert.alert(`Hoàn thành`, 'Thanh toán đã được xác nhận thành công')
+      await AxiosIntance().post(`tickets/checkout/${showtimeId}/create-ticket`, { seat_number: my_seats })
       navigation.reset({
         index: 0,
         routes: [{ name: 'ListMovie' }]
