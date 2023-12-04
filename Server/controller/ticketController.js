@@ -121,3 +121,8 @@ exports.ThongKeVeTheoThangNam = catchAsync(async function (req, res, next) {
       0)
   })
 })
+exports.ThongKeVeTheoNam = catchAsync(async(req, res, next) => {
+  res.json({
+    data: await Ticket.calculatePriceYearly(req.query.year)
+  })
+})

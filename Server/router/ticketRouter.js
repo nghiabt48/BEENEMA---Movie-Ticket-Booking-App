@@ -11,6 +11,7 @@ router.post('/checkout/:showtimeId/create-ticket',ticketController.getShowtime, 
 router.route('/user').get(ticketController.getTicketFromOneUser)
 router.route('/thong-ke')
   .get(ticketController.ThongKeVeTheoThangNam)
+router.get('/thong-ke/yearly', ticketController.ThongKeVeTheoNam)
 router.route('/:id')
   .get(ticketController.getTicket)
   .patch(ticketController.updateTicket)

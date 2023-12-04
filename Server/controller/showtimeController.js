@@ -7,9 +7,13 @@ exports.getShowTime = factory.getOne(Showtime, {path: 'movie', select: 'title pr
 // exports.getAllShowtimes = factory.getAll(Showtime, {path: 'room', select: 'name', populate: {path: 'cinema', select: 'name'}}, {path: 'movie', select: 'title'})
 exports.getAllShowtimes = catchAsync(async(req, res, next) => {
   req.query.start_time = { $gt: req.request_time }
-  const data = await Showtime.find(req.query)
-                            .populate({path: 'room', select: 'name', populate: 'cinema'})
-                            .populate({path: 'movie', select: 'title'})
+  const data = await Showtime.find()
+  .populate({path: 'room', select: 'name', populate: 'cinema'})
+  .populate({path: 'movie', select: 'title'})
+  res.json({
+    status: 'success',
+    data
+  })
 })
 exports.getShowtimeByName = catchAsync(async(req, res, next) => {
   if(!req.query.title) return next();
