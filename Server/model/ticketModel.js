@@ -30,8 +30,8 @@ function generateRandomString(length) {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let result = '';
   for (let i = 0; i < length; i++) {
-      const randomIndex = Math.floor(Math.random() * characters.length);
-      result += characters.charAt(randomIndex);
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    result += characters.charAt(randomIndex);
   }
   return result;
 }
@@ -55,6 +55,12 @@ ticketSchema.statics.calculatePriceYearly = async function (year) {
         }
       },
       {
+        $unwind: '$showtime'
+      },
+      {
+        $unwind: '$seats'
+      },
+      {
         $group: {
           _id: { $month: '$booking_time' }, // Group by month
           totalRevenue: { $sum: '$showtime.price' }
@@ -66,25 +72,27 @@ ticketSchema.statics.calculatePriceYearly = async function (year) {
         }
       }
     ]);
-
-    // const monthlyRevenues = result.reduce((acc, monthlyResult) => {
-    //   acc[monthlyResult._id] = monthlyResult.totalRevenue;
-    //   return acc;
-    // }, {});
-    const monthlyRevenues = result.map(month => month.totalRevenue)
+    //return result
+    const monthlyRevenues = result.reduce((acc, monthlyResult) => {
+      acc[monthlyResult._id] = monthlyResult.totalRevenue;
+      return acc;
+    }, {});
+    //const monthlyRevenues = result.map(month => month.totalRevenue)
     // Fill in missing months with totalRevenue set to 0
 
     for (let month = 1; month <= 12; month++) {
-      if (!monthlyRevenues[month - 1]) {
-        monthlyRevenues[month - 1] = 0;
+      if (!monthlyRevenues[month]) {
+        monthlyRevenues[month] = 0;
       }
     }
-    
+    // return cap key value la month & totalRevenue: 
     // return Object.keys(monthlyRevenues).map(month => ({
     //   month: parseInt(month),
     //   totalRevenue: monthlyRevenues[month]
     // }));
-    return monthlyRevenues
+
+    // return moi totalRevenue:
+    return Object.keys(monthlyRevenues).map(month => monthlyRevenues[month]);
   } catch (error) {
     console.error('Error calculating yearly revenue:', error);
     throw error;
@@ -94,7 +102,7 @@ ticketSchema.pre(/^find/, async function (next) {
   this.populate({
     path: 'showtime',
     populate: [
-      { path: 'room', model: 'Room', select: 'name', populate: { path: 'cinema', model: 'Cinema', select: 'name location'} },
+      { path: 'room', model: 'Room', select: 'name', populate: { path: 'cinema', model: 'Cinema', select: 'name location' } },
       { path: 'movie', model: 'Movie', select: 'title imageCover' }
     ]
   })
