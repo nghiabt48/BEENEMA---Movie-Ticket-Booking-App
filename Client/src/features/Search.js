@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -127,19 +128,24 @@ const Search = (props) => {
   };
   //get movie by title
   const search = async (searchText) => {
-    setisLoading(true);
-    const respone = await AxiosIntance().get(
-      "/movies/search?title=" + searchText
-    );
-    if (respone.status == "success") {
-      setdata(respone.movie);
-      setisLoading(false);
-      if (searchText == "") {
-        setdata(null);
+    try {
+      setisLoading(true);
+      const respone = await AxiosIntance().get(
+        "/movies/search?title=" + searchText
+      );
+      if (respone.status == "success") {
+        setdata(respone.movie);
         setisLoading(false);
+        if (searchText == "") {
+          setdata(null);
+          setisLoading(false);
+        }
+      } else {
       }
-    } else {
+    } catch (error) {
+      ToastAndroid.show("Something went wrong" +error, ToastAndroid.SHORT);
     }
+   
   };
 
   //nếu searchEnabled == false thì sẽ trả về null

@@ -22,12 +22,17 @@ const ProfileScreen = (props) => {
   useEffect(() => {
     //Profile
     const Profile = async () => {
-      const respone = await AxiosIntance().get("/users/me");
-      if (respone.status == "success") {
-        setinfoUser(respone.data.document);
-      } else {
-        ToastAndroid.show("Something went wrong!", ToastAndroid.SHORT);
+      try {
+        const respone = await AxiosIntance().get("/users/me");
+        if (respone.status == "success") {
+          setinfoUser(respone.data.document);
+        } else {
+          ToastAndroid.show("Something went wrong!", ToastAndroid.SHORT);
+        }
+      } catch (error) {
+        ToastAndroid.show("Something went wrong!" +error, ToastAndroid.SHORT);
       }
+    
     };
     Profile();
     return () => { };

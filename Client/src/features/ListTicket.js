@@ -28,13 +28,17 @@ const ListTicket = (props) => {
   }, []);
 
   const fetchTickets = async () => {
-    setisLoading(true);
-    const response = await AxiosIntance().get(`/tickets/user`);
-    if (response.status === "success") {
-      setTicket(response.data.tickets);
+    try {
+      setisLoading(true);
+      const response = await AxiosIntance().get(`/tickets/user`);
+      if (response.status === "success") {
+        setTicket(response.data.tickets);
 
-      setisLoading(false);
-    } else {
+        setisLoading(false);
+      } else {
+        setisLoading(false);
+      }
+    } catch (error) {
       setisLoading(false);
     }
   };
@@ -59,7 +63,7 @@ const ListTicket = (props) => {
       {isLoading === true ? (
         <ActivityIndicator size="large" />
       ) : (
-        <View style={{ marginVertical: "5%",marginStart:10}}>
+        <View style={{ marginVertical: "5%", marginStart: 10 }}>
           <FlatList
             data={ticket}
             renderItem={({ item }) => (
@@ -82,13 +86,12 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: "row",
-    marginStart:"10%",
-    marginTop: 10
+    marginStart: "10%",
+    marginTop: 10,
+    padding: 10,
   },
   textstyle: {
     color: "white",
     fontWeight: "bold",
   },
 });
-
-

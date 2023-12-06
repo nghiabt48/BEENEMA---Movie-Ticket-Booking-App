@@ -1,4 +1,12 @@
-import { Button, Image, StyleSheet, Text, TextInput, ToastAndroid, View } from "react-native";
+import {
+  Button,
+  Image,
+  StyleSheet,
+  Text,
+  TextInput,
+  ToastAndroid,
+  View,
+} from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import * as Location from "expo-location";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -41,11 +49,15 @@ const Maps = () => {
   }, []);
 
   const getCinema = async () => {
-    const respone = await AxiosIntance().get("/cinemas");
-    if (respone.status === "success") {
-      setTheaters(respone.data.data);
-      // console.log(respone.data.data);
-    } else {
+    try {
+      const respone = await AxiosIntance().get("/cinemas");
+      if (respone.status === "success") {
+        setTheaters(respone.data.data);
+        // console.log(respone.data.data);
+      } else {
+        ToastAndroid.show("Đã xảy ra lỗi!", ToastAndroid.SHORT);
+      }
+    } catch (error) {
       ToastAndroid.show("Đã xảy ra lỗi!", ToastAndroid.SHORT);
     }
   };
@@ -89,8 +101,7 @@ const Maps = () => {
             firstCinemaLocation[1],
             firstCinemaLocation[0]
           );
-        }
-        else{
+        } else {
           let currentLocation = await Location.getCurrentPositionAsync({});
           setLocation(currentLocation);
 
@@ -104,7 +115,7 @@ const Maps = () => {
             });
           }
         }
-      } 
+      }
     } catch (e) {
       setdata(null);
       ToastAndroid.show("Không tìm thấy rạp", ToastAndroid.SHORT);
@@ -157,7 +168,7 @@ const Maps = () => {
             (item) => item._id === theater._id
           );
           const distance = distanceInfo ? distanceInfo.distance : "N/A";
-
+          console.log(theater);
           return (
             <Marker
               key={theater._id}
@@ -168,10 +179,14 @@ const Maps = () => {
               title={theater.name}
               image={cinemaMarkerImage}
             >
-              <Callout>
+              <Callout style={{ width:500, height: 100,}}>
                 <Text>
                   <Text>Rạp : </Text>
                   <Text style={styles.txt}>{theater.name}</Text>
+                </Text>
+                <Text>
+                  <Text>Địa chỉ : </Text>
+                  <Text style={styles.txt}>{theater.location.address}</Text>
                 </Text>
                 <Text>
                   <Text>Khoảng Cách : </Text>
@@ -210,6 +225,5 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 20,
     color: "#ffff",
-  
   },
 });
