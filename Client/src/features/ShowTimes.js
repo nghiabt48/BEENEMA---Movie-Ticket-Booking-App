@@ -38,7 +38,7 @@ const ShowTimes = (props) => {
     );
     if (response.status == "success") {
       setshowtime(
-        response.data.showtimes.filter((item) => item.movie.id == movieId._id)
+        response.data.filter((item) => item.movie.id == movieId._id)
       );
       setisLoading(false);
     } else {
