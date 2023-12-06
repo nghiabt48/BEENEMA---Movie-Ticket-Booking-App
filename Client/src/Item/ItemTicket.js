@@ -46,6 +46,14 @@ const ItemTicket = (props) => {
     navigation.navigate("DetailTickets", { item });
   };
 
+  // Rút gọn ghế
+  const seatsString = item.seats.join(", ");
+  const seatsArray = seatsString.split(", ");
+  //check số ghế nếu số ghế lớn hơn 2 thì thêm ,...
+  const checkSeats = seatsArray.length > 2
+    ? seatsArray.slice(0, 2).join(", ") + ",..."
+    : seatsArray.join(", ");
+  
   return (
     <TouchableOpacity onPress={goDetail}>
       <View style={styles.containerMain}>
@@ -74,7 +82,7 @@ const ItemTicket = (props) => {
               >
                 Ghế:{" "}
               </Text>
-              <Text style={styles.txtDate}>{item.seats.join(", ")}</Text>
+              <Text style={styles.txtDate}>{checkSeats}</Text>
             </Text>
           </Text>
         </View>
@@ -94,6 +102,7 @@ const styles = StyleSheet.create({
   containerSub: {
     flexDirection: "column",
     marginTop: 10,
+    flex:1
   },
   txtName: {
     color: "white",
@@ -107,6 +116,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "400",
     flexWrap: "wrap",
-    width:50,
+    width: 50,
   },
 });

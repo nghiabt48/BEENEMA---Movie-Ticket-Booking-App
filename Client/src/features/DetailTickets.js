@@ -73,7 +73,7 @@ const DetailTickets = (props) => {
         <Text style={styles.txtName}>{params.item.showtime.movie.title}</Text>
         <View style={{ marginStart: 16, flexDirection: "row", marginTop: 16 }}>
           <Text style={styles.txtMain}>Rạp:</Text>
-          <Text>
+          <Text style={{flex:1,}}>
             <Text style={styles.txtSub}>
               {params.item.showtime.room.cinema.name}
             </Text>
@@ -162,5 +162,6 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     lineHeight: 18,
     marginTop: 4,
+    flexWrap:"wrap",
   },
 });

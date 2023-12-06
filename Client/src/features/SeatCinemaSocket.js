@@ -319,7 +319,12 @@ const SeatCinemaSocket = (props) => {
   const datePart = inputTimestamp.slice(0, 10);
   const timePart = inputTimestamp.slice(11, 16);
 
-
+  //format gia tien 
+  var formatPrice = (params.item.price * mySeats.length) - ((useVoucher && userVoucher.code && mySeats.length > 0) ? userVoucher.value : 0);
+  var formattedAmount = new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(formatPrice);
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.container2}>
@@ -406,7 +411,7 @@ const SeatCinemaSocket = (props) => {
                     style={styles.boxImage5}
                   />
                   <Text style={styles.textPice}>
-                    {(params.item.price * mySeats.length) - ((useVoucher && userVoucher.code && mySeats.length > 0) ? userVoucher.value : 0)}VND
+                    {formattedAmount}
                   </Text>
                 </View>
 

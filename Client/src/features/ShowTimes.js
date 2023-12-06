@@ -21,7 +21,6 @@ const ShowTimes = (props) => {
   const [showtime, setshowtime] = useState();
   const [isLoading, setisLoading] = useState(null);
   const { movieId, setmovieId } = useContext(AppConText);
-  console.log(params)
   const Back = () => {
     navigation.goBack();
   };
