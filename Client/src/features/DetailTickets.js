@@ -1,11 +1,12 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
+import { Image, StyleSheet, Text, TouchableOpacity, View,Modal } from "react-native";
+import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import QRCode from "react-native-qrcode-svg";
 const DetailTickets = (props) => {
   const { route } = props;
   const { navigation } = props;
   const { params } = route;
+  const [isVisible, setIsVisible] = useState(false);
   //format thoi gian
   const inputTimestamp = params.item.showtime.start_time;
   const datePart = inputTimestamp.slice(0, 10);
@@ -28,8 +29,9 @@ const DetailTickets = (props) => {
   const year = date.getUTCFullYear();
 
   // Định dạng lại ngày theo dạng "DD-MM-YYYY"
-  const formattedDate = `${day < 10 ? "0" : ""}${day}-${month < 10 ? "0" : ""
-    }${month}-${year}`;
+  const formattedDate = `${day < 10 ? "0" : ""}${day}-${
+    month < 10 ? "0" : ""
+  }${month}-${year}`;
 
   const amount = params.item.showtime.price;
   const formattedAmount = new Intl.NumberFormat("vi-VN", {
@@ -37,10 +39,18 @@ const DetailTickets = (props) => {
     currency: "VND",
   }).format(amount);
 
-
-
   const Back = () => {
     navigation.goBack();
+  };
+
+   //mở modal
+   const handleOpenModal = () => {
+    setIsVisible(true);
+  };
+
+  //đóng modal
+  const handleCloseModal = () => {
+    setIsVisible(false);
   };
 
   const BarcodeGenerator = ({ code }) => {
@@ -62,6 +72,9 @@ const DetailTickets = (props) => {
           <Image source={require("../icons/back.png")} />
         </TouchableOpacity>
         <Text style={styles.txtHeader}>Chi tiết vé</Text>
+        <TouchableOpacity onPress={handleOpenModal}>
+          <Image style={styles.in4} source={require("../image/in4.png")} />
+        </TouchableOpacity>
       </View>
 
       <View style={styles.body}>
@@ -73,7 +86,7 @@ const DetailTickets = (props) => {
         <Text style={styles.txtName}>{params.item.showtime.movie.title}</Text>
         <View style={{ marginStart: 16, flexDirection: "row", marginTop: 16 }}>
           <Text style={styles.txtMain}>Rạp:</Text>
-          <Text style={{flex:1,}}>
+          <Text style={{ flex: 1 }}>
             <Text style={styles.txtSub}>
               {params.item.showtime.room.cinema.name}
             </Text>
@@ -102,6 +115,52 @@ const DetailTickets = (props) => {
           <Text style={styles.txtSub}>{formattedAmount}</Text>
         </View>
       </View>
+
+
+     {/* modal cua information */}
+      <Modal
+            transparent={true}
+            animationType="slide"
+            visible={isVisible}
+            onRequestClose={handleCloseModal}
+          >
+            <TouchableOpacity
+              style={styles.modalContainer}
+              activeOpacity={1}
+              onPressOut={handleCloseModal}
+            ></TouchableOpacity>
+            <View style={styles.modalContainer}>
+              <View style={styles.modalContent}>
+                {/* nút reset */}
+                <TouchableOpacity style={styles.reset}>
+                  <Text
+                    style={{
+                      color: "#F74346",
+                      fontSize: 14,
+                      fontWeight: "500",
+                      textAlign: "center",
+                      alignSelf: "center",
+                      marginStart: 5,
+                    }}
+                  >
+                    Sau khi tới rạp bạn hãy đưa mã QR cho nhân viên quét để lấy mã vé! 
+                  </Text>
+                  <Text
+                    style={{
+                      color: "#F74346",
+                      fontSize: 15,
+                      fontWeight: "bold",
+                      textAlign: "center",
+                      alignSelf: "center",
+                      marginStart: 5,
+                    }}
+                  >
+                    CHÚC BẠN XEM PHIM VUI VẺ ^_^
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
     </SafeAreaView>
   );
 };
@@ -116,14 +175,16 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     marginStart: 20,
-    marginTop: 10
+    marginTop: 10,
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   txtHeader: {
     color: "white",
     fontSize: 23,
     fontWeight: "400",
     alignSelf: "center",
-    marginStart: "20%",
+    marginStart:"10%"
   },
   body: {
     backgroundColor: "#1F293D",
@@ -162,6 +223,25 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     lineHeight: 18,
     marginTop: 4,
-    flexWrap:"wrap",
+    flexWrap: "wrap",
+  },
+  in4: {
+    alignSelf: "center",
+    marginStart: "20%",
+    width: 24,
+    height: 24,
+  },
+  modalContainer: {
+    flex:1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "flex-end",
+    alignItems: "center",
+  },
+  modalContent: {
+    backgroundColor: "white",
+    width: "100%",
+    padding: 16,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
   },
 });

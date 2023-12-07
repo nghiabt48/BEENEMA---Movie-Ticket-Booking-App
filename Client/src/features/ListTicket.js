@@ -49,7 +49,7 @@ const ListTicket = (props) => {
       <View style={styles.header}>
         <TouchableOpacity onPress={Back}>
           <Image
-            style={styles.imagestyle}
+            style={styles.ImageBack}
             source={require("../icons/back.png")}
           />
         </TouchableOpacity>
@@ -93,5 +93,9 @@ const styles = StyleSheet.create({
   textstyle: {
     color: "white",
     fontWeight: "bold",
+  },
+  ImageBack: {
+    width: 50,
+    height: 50,
   },
 });
