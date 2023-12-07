@@ -28,8 +28,8 @@ const ListMovie = (props) => {
     const getAllMovie = async () => {
       setisLoading(true);
       const response = await AxiosIntance().get("/movies");
-      if (response.status == "success") {
-        setdata(response.data.data);
+      if (response.data[0].status === true) {
+        setdata(response.data);
         setisLoading(false);
       } else {
         setisLoading(false);
@@ -67,8 +67,8 @@ const ListMovie = (props) => {
   const top5Movie = async () => {
     setisLoading(true);
     const response = await AxiosIntance().get("/movies/top-5");
-    if (response.status == "success") {
-      SetTop5(response.data.data);
+    if (response.data[0].status == true) {
+      SetTop5(response.data);
       setisLoading(false);
     } else {
       setisLoading(false);
