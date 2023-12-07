@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     maxWidth: Dimensions.get("window").width / 2,
-    padding: 13,
+    padding: 8,
   },
   Text1: {
     fontSize: 14,
