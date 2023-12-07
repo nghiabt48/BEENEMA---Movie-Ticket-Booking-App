@@ -1,4 +1,11 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View,Modal } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Modal,
+} from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import QRCode from "react-native-qrcode-svg";
@@ -33,18 +40,23 @@ const DetailTickets = (props) => {
     month < 10 ? "0" : ""
   }${month}-${year}`;
 
-  const amount = params.item.showtime.price;
+  const price = params.item.showtime.price;
+  const seatsString = params.item.seats;
+  //tính tổng giá vé = giá tiền vé * số ghế
+  const amountPrice = price * seatsString.length;
+
   const formattedAmount = new Intl.NumberFormat("vi-VN", {
     style: "currency",
     currency: "VND",
-  }).format(amount);
+  }).format(amountPrice);
+  // console.log(formattedAmount2)
 
   const Back = () => {
     navigation.goBack();
   };
 
-   //mở modal
-   const handleOpenModal = () => {
+  //mở modal
+  const handleOpenModal = () => {
     setIsVisible(true);
   };
 
@@ -116,51 +128,51 @@ const DetailTickets = (props) => {
         </View>
       </View>
 
-
-     {/* modal cua information */}
+      {/* modal cua information */}
       <Modal
-            transparent={true}
-            animationType="slide"
-            visible={isVisible}
-            onRequestClose={handleCloseModal}
-          >
-            <TouchableOpacity
-              style={styles.modalContainer}
-              activeOpacity={1}
-              onPressOut={handleCloseModal}
-            ></TouchableOpacity>
-            <View style={styles.modalContainer}>
-              <View style={styles.modalContent}>
-                {/* nút reset */}
-                <TouchableOpacity style={styles.reset}>
-                  <Text
-                    style={{
-                      color: "#F74346",
-                      fontSize: 14,
-                      fontWeight: "500",
-                      textAlign: "center",
-                      alignSelf: "center",
-                      marginStart: 5,
-                    }}
-                  >
-                    Sau khi tới rạp bạn hãy đưa mã QR cho nhân viên quét để lấy mã vé! 
-                  </Text>
-                  <Text
-                    style={{
-                      color: "#F74346",
-                      fontSize: 15,
-                      fontWeight: "bold",
-                      textAlign: "center",
-                      alignSelf: "center",
-                      marginStart: 5,
-                    }}
-                  >
-                    CHÚC BẠN XEM PHIM VUI VẺ ^_^
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
+        transparent={true}
+        animationType="slide"
+        visible={isVisible}
+        onRequestClose={handleCloseModal}
+      >
+        <TouchableOpacity
+          style={styles.modalContainer}
+          activeOpacity={1}
+          onPressOut={handleCloseModal}
+        ></TouchableOpacity>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            {/* nút reset */}
+            <TouchableOpacity style={styles.reset}>
+              <Text
+                style={{
+                  color: "#F74346",
+                  fontSize: 14,
+                  fontWeight: "500",
+                  textAlign: "center",
+                  alignSelf: "center",
+                  marginStart: 5,
+                }}
+              >
+                Sau khi tới rạp bạn hãy đưa mã QR cho nhân viên quét để lấy mã
+                vé!
+              </Text>
+              <Text
+                style={{
+                  color: "#F74346",
+                  fontSize: 15,
+                  fontWeight: "bold",
+                  textAlign: "center",
+                  alignSelf: "center",
+                  marginStart: 5,
+                }}
+              >
+                CHÚC BẠN XEM PHIM VUI VẺ ^_^
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -184,7 +196,7 @@ const styles = StyleSheet.create({
     fontSize: 23,
     fontWeight: "400",
     alignSelf: "center",
-    marginStart:"10%"
+    marginStart: "10%",
   },
   body: {
     backgroundColor: "#1F293D",
@@ -232,7 +244,7 @@ const styles = StyleSheet.create({
     height: 24,
   },
   modalContainer: {
-    flex:1,
+    flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     justifyContent: "flex-end",
     alignItems: "center",
