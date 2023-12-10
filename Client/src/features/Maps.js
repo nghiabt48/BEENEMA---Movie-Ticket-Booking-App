@@ -6,6 +6,7 @@ import {
   TextInput,
   ToastAndroid,
   View,
+  Linking,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import * as Location from "expo-location";
@@ -122,6 +123,20 @@ const Maps = () => {
     }
   };
 
+
+  //Mở google map dựa theo la và longtidude 
+  const openGoogleMaps = (latitude, longitude) => {
+    const url = `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`;
+
+    Linking.canOpenURL(url).then((supported) => {
+      if (supported) {
+        Linking.openURL(url);
+      } else {
+        console.log(`Cannot open URL: ${url}`);
+      }
+    });
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#130B2B" }}>
       <View style={styles.Search}>
@@ -168,7 +183,7 @@ const Maps = () => {
             (item) => item._id === theater._id
           );
           const distance = distanceInfo ? distanceInfo.distance : "N/A";
-          console.log(theater);
+
           return (
             <Marker
               key={theater._id}
@@ -178,8 +193,9 @@ const Maps = () => {
               }}
               title={theater.name}
               image={cinemaMarkerImage}
+            
             >
-              <Callout style={{ width:500, height: 100,}}>
+              <Callout style={{ width: 500, height: 100 }}  onPress={() => openGoogleMaps(theater.location.coordinates[1], theater.location.coordinates[0])}>
                 <Text>
                   <Text>Rạp : </Text>
                   <Text style={styles.txt}>{theater.name}</Text>
@@ -191,6 +207,10 @@ const Maps = () => {
                 <Text>
                   <Text>Khoảng Cách : </Text>
                   <Text style={styles.txt}>{distance} Kilometers</Text>
+                </Text>
+              
+                <Text style={{ textDecorationLine: "underline",fontSize:16,fontWeight:"bold"}}>
+                  Nhấp vào để xem đường đi 
                 </Text>
               </Callout>
             </Marker>
