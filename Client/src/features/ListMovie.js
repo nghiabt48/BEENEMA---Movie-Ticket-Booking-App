@@ -16,11 +16,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import AxiosIntance from "./AxiosIntance";
 import ItemTop5 from "../Item/ItemTop5";
 import { AppConText } from "./AppConText";
+import Swiper from 'react-native-swiper';
 
 const ListMovie = (props) => {
   const { navigation } = props;
   const [data, setdata] = useState([]);
-  const [top5, SetTop5] = useState("");
+  const [top5, SetTop5] = useState([]);
   const [isLoading, setisLoading] = useState(null);
   const { isLogin } = useContext(AppConText);
   //get all movie
@@ -113,19 +114,24 @@ const ListMovie = (props) => {
       </View>
 
       <ScrollView>
-        <Text style={styles.textTop}>Top 5 bộ phim có Rating cao nhất:</Text>
-        <View>
+        {/* <Text style={styles.textTop}>Top 5 bộ phim có Rating cao nhất:</Text> */}
+        <View style={{height:280}}>
           {isLoading === true ? (
             <ActivityIndicator size="large" />
           ) : (
-            <FlatList
-              data={top5}
-              horizontal={true}
-              renderItem={({ item }) => (
-                <ItemTop5 data={item} navigation={navigation} />
-              )}
-              keyExtractor={(item) => item._id}
-            />
+            // <FlatList
+            //   data={top5}
+            //   horizontal={true}
+            //   renderItem={({ item }) => (
+            //     <ItemTop5 data={item} navigation={navigation} />
+            //   )}
+            //   keyExtractor={(item) => item._id}
+            // />
+            <Swiper autoplay={true} dotColor="#fff" activeDotColor="#F74346">
+                {top5.map((item, _id) => (
+                    <ItemTop5 key={_id} data={item} />
+                ))}
+            </Swiper>
           )}
         </View>
 
