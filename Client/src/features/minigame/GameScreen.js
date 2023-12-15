@@ -42,7 +42,7 @@ export default class GameScreen extends Component {
     this.setState(DEFAULT_STATE, this.pause);
   }
   generateVoucher = async(score) => {
-    if (score > 10 && Math.random() < 0.4) {
+    if (score > 10 && Math.random() < 0.1) {
       try{
         const res = await AxiosIntance().post('users/voucher')
         if(res.status == 'success') {
