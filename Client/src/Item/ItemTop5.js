@@ -50,7 +50,7 @@ export default ItemTop5;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    maxWidth: Dimensions.get("window").width / 2,
+    //maxWidth: Dimensions.get("window").width / 2,
     padding: 8,
   },
   Text1: {
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     height: 200,
-    width: 170,
+    width: '100%',
     opacity:0.7
   },
   Group: {
