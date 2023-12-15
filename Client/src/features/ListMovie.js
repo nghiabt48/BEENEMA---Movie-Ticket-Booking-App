@@ -129,7 +129,7 @@ const ListMovie = (props) => {
             // />
             <Swiper autoplay={true} dotColor="#fff" activeDotColor="#F74346">
                 {top5.map((item, _id) => (
-                    <ItemTop5 key={_id} data={item} />
+                    <ItemTop5 key={_id} data={item} navigation={navigation}/>
                 ))}
             </Swiper>
           )}
