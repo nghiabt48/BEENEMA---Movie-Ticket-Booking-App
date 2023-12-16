@@ -1,35 +1,36 @@
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 {{> menu}}
 
-<div class="p-4">
-    <div class="row m-4 d-flex justify-content-center">
-        <div class="card col-5 bg-primary text-light me-2">
-            <div class="card-body">
-                <h5 class="card-title">Total Users</h5>
-                <p class="card-text fw-bolder">{{users}}</p>
-            </div>
-        </div>
-        <div class="card col-5 bg-warning text-light ms-2">
-            <div class="card-body">
-                <h5 class="card-title">Total Movies</h5>
-                <p class="card-text fw-bolder">{{movies}}</p>
-            </div>
-        </div>
+<div class="p-4 m-5">
+    <div class="p-4">
+        <canvas id="myChart"></canvas>
     </div>
 
-    <div class="row m-4 justify-content-center">
-        <div class="card col-5 bg-success text-light me-2">
-        <div class="card-body">
-            <h5 class="card-title">Total Tickets Sold</h5>
-            <p class="card-text fw-bolder">{{so_luong_ve}}</p>
-        </div>
-        </div>
-        <div class="card col-5 bg-danger text-light ms-2">
-            <div class="card-body">
-                <h5 class="card-title">Total Revenue</h5>
-                <p class="card-text fw-bolder">{{tong_tien}} VND</p>
-            </div>
-        </div>
-    </div>
+    
     
 </div>
 <!-- Nội dung -->
+<script>
+    
+  const ctx = document.getElementById('myChart');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+      datasets: [{
+        label: 'Total Revenue Each Months',
+        data: [{{data}}],
+        borderWidth: 1,
+        backgroundColor: '#DA004E',
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+</script>

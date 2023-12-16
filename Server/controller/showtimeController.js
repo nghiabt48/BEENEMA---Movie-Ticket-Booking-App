@@ -9,7 +9,7 @@ exports.getAllShowtimes = catchAsync(async(req, res, next) => {
   req.query.start_time = { $gt: req.request_time }
   const data = await Showtime.find(req.query)
   .populate({path: 'room', select: 'name', populate: 'cinema'})
-  .populate({path: 'movie', select: 'title'})
+  .populate({path: 'movie', select: 'title imageCover'})
   res.json({
     status: 'success',
     data
@@ -18,7 +18,7 @@ exports.getAllShowtimes = catchAsync(async(req, res, next) => {
 exports.getShowtimeByName = catchAsync(async(req, res, next) => {
   if(!req.query.title) return next();
 
-  let showtimes = await Showtime.find({start_time: { $gt: req.request_time }}).populate({path: 'room', select: 'name', populate: 'cinema'}).populate({path: 'movie', select: 'title'})
+  let showtimes = await Showtime.find({start_time: { $gt: req.request_time }}).populate({path: 'room', select: 'name', populate: 'cinema'}).populate({path: 'movie', select: 'title imageCover'})
   showtimes = showtimes.filter(item => item.movie.title == req.query.title)
   res.json({
     status: 'success',
@@ -27,13 +27,13 @@ exports.getShowtimeByName = catchAsync(async(req, res, next) => {
 })
 exports.getShowtimeByCinema = catchAsync(async (req, res, next) => {
   if (!req.query.cinema) return next()
-  let showtimes = await Showtime.find().populate('room movie', 'cinema name title imageCover')
-  showtimes = showtimes.filter(showtime => showtime.room.cinema == req.query.cinema)
+  let data = await Showtime.find({start_time: { $gt: req.request_time }})
+  .populate({path: 'room', select: 'name', populate: 'cinema'})
+  .populate({path: 'movie', select: 'title imageCover'})
+  data = data.filter(showtime => showtime.room.cinema._id == req.query.cinema)
   res.status(200).json({
     status: 'success',
-    data: {
-      showtimes
-    }
+    data
   })
 })
 exports.getRequestTime = async(req, res, next) => {

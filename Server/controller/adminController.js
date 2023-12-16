@@ -104,15 +104,12 @@ exports.movieDetail = async(req, res) => {
 };
 
 exports.movie_delete = async(req, res) => {
-    try {
-        const showtimes = (await Showtime.find({movie:req.params.id}).lean()).length;
-        if(showtimes > 0){
-            res.render("alert.hbs", {alert:"There is existing movie in showtime"});
-        }
-        else{
-            const movies = await Movie.findByIdAndRemove(req.params.id).lean();
-            res.redirect("/index");
-        }
+    try {    
+        const movie = await Movie.findById(req.params.id).select('status');
+        const oppositeStatus = !(movie.status);
+        console.log(oppositeStatus);
+        const result = await Movie.findByIdAndUpdate(req.params.id, {status: oppositeStatus}, { new: true }).lean();
+        res.redirect("/index");
     } catch (error) {
         console.log(`${error.name}: ${error.message}`);
         res.render("error.hbs");
@@ -349,11 +346,11 @@ exports.insertCinemaPost = async(req, res) => {
     try {
         const cinemas = new Cinema({
             name: req.body.name,
-            location:[
-                req.body.coordinates, 
-                req.body.address, 
-                req.body.description
-            ]
+            location:{
+                coordinates: req.body.coordinates, 
+                address: req.body.address, 
+                description: req.body.description
+            }
         });
         console.log(req.body);
         await cinemas.save();
@@ -446,31 +443,16 @@ exports.deleteShowtime = async(req, res) => {
 //Thống kê(của Nghĩa)
 exports.ThongkeDoanhThu = async(req, res) => {
     try{
-        const movies = await Movie.find({}).lean();
-        const users = await User.find({}).lean();
-        const query = await Ticket.aggregate([
-            {
-            $match: {
-                $expr: {
-                $and: [
-                    { $eq: [{ $month: "$booking_time" }, parseInt(req.query.month)] },
-                    { $eq: [{ $year: "$booking_time" }, parseInt(req.query.year)] }
-                ]
-                }
-            }
-            }
-        ]
-        );
-        const results = await Ticket.populate(query, 'showtime')
-        const priceArr = results.map(item => item.showtime.price)
-        res.render(
-            "statistic.hbs",{
-                titles: "Statistics",
-                so_luong_ve: results.length,
-                tong_tien: priceArr.reduce((accumulator, currentValue) => accumulator + currentValue,
-                0),
-                movies: movies.length,
-                users: users.length    
+        const currentYear = (new Date()).getFullYear();
+        req.query.year = currentYear;
+        const users = (await User.find().lean()).length;
+        const movies = (await Movie.find().lean()).length
+        const data = await Ticket.calculatePriceYearly(req.query.year);
+        res.render("statistic.hbs",{
+            titles:"Statistic",
+            data:data,
+            users: users,
+            movies:movies
         });
     }
     catch (error){

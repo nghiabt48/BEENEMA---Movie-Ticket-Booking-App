@@ -9,6 +9,7 @@
           <th>Image</th>
           <th>Title</th>
           <th>Ratings Average</th>
+           <th>Status</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -19,7 +20,11 @@
             <td class="align-middle">{{this.title}}</td>
             <td class="align-middle">{{this.ratingsAverage}}</td>
             <td class="align-middle">
-              <a href='/index/deletemovie/{{this._id}}' class='btn btn-danger'>Delete</a>
+              {{#if this.status}}
+                <a href='/index/deletemovie/{{this._id}}' class='btn btn-danger'>Inactive</a>
+              {{else}}
+                <a href='/index/deletemovie/{{this._id}}' class='btn btn-danger'>Active</a>
+              {{/if}}
               <a href='/index/detailmovie/{{this._id}}' class='btn btn-primary'>Update</a>
             </td>
         </tr>

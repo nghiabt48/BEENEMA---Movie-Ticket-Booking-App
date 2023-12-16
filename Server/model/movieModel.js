@@ -35,7 +35,11 @@ const movieSchema = new mongoose.Schema({
   duration: Number,
   release_date: Date,
   description: String,
-  country: String
+  country: String,
+  status: {
+    type: Boolean,
+    default: true
+  }
 },
 {
   toJSON: { virtuals: true },

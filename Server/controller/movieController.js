@@ -50,7 +50,11 @@ exports.TopSellingMovie = (req, res, next) => {
   req.query.fields = 'title, category, imageCover, duration, ratingsAverage, trailer, description, release_date, ratingsQuantity, actor';
   next();
 };
-exports.getAllMovies = factory.getAll(Movie, 'actor')
+ exports.getAllMovies = factory.getAll(Movie, 'actor')
+exports.markStatusTrue = catchAsync(async(req, res, next) => {
+  req.query.status = true
+  next()
+})
 exports.getMoviesByNameAndCategory = catchAsync(async(req, res, next) => {
   if (!req.query.title && !req.query.category) return next()
   if (req.query.category) req.query.category = req.query.category.split(',');
@@ -75,15 +79,15 @@ exports.getMovieByName = catchAsync(async (req, res, next) => {
 })
 
 exports.saveMovieTrailerToStorage = catchAsync(async (req, res, next) => {
-  if(!req.files || req.files.trailer == undefined) return next()
-    const storageRef = ref(storage, `files/${req.files.trailer.originalname}`);
+  if(!req.files || req.files.trailer[0] == undefined) return next()
+    const storageRef = ref(storage, `files/${req.files.trailer[0].originalname}`);
     // Create file metadata including the content type
     const metadata = {
         contentType: req.files.trailer.mimetype,
     };
 
     // Upload the file in the bucket storage
-    const snapshot = await uploadBytesResumable(storageRef, req.files.trailer.buffer, metadata);
+    const snapshot = await uploadBytesResumable(storageRef, req.files.trailer[0].buffer, metadata);
     //by using uploadBytesResumable we can control the progress of uploading like pause, resume, cancel
 
     // Grab the public url
@@ -99,9 +103,6 @@ exports.createMovie = catchAsync(async (req, res, next) => {
     status: 'success',
     data: movie
   })
-})
-exports.getCinemaByMovie = catchAsync(async(req, res, next) => {
-  
 })
 // Update product
 exports.updateMovie = factory.updateOne(Movie)
