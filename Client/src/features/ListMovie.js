@@ -127,7 +127,7 @@ const ListMovie = (props) => {
             //   )}
             //   keyExtractor={(item) => item._id}
             // />
-            <Swiper autoplay={true} dotColor="#fff" activeDotColor="#F74346">
+            <Swiper autoplay={true} dotColor="#fff" activeDotColor="#F74346" autoplayTimeout={3}>
                 {top5.map((item, _id) => (
                     <ItemTop5 key={_id} data={item} navigation={navigation}/>
                 ))}
