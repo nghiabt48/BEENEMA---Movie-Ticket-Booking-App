@@ -74,7 +74,8 @@ const DetailMovie = (props) => {
         `movies/${params.data._id}/reviews`
       );
       if (response.status == "success") {
-        setreviews(response.data);
+        const reversedReview = response.data.reverse();
+        setreviews(reversedReview);
         setisLoading(false);
       } else {
         setisLoading(false);

@@ -32,8 +32,8 @@ const ListTicket = (props) => {
       setisLoading(true);
       const response = await AxiosIntance().get(`/tickets/user`);
       if (response.status === "success") {
-        setTicket(response.data.tickets);
-
+        const reversedTickets = response.data.tickets.reverse();
+        setTicket(reversedTickets);
         setisLoading(false);
       } else {
         setisLoading(false);
@@ -66,7 +66,7 @@ const ListTicket = (props) => {
         <View style={{ marginVertical: "5%", marginStart: 10 }}>
           <FlatList
             data={ticket}
-            renderItem={({ item }) => (
+            renderItem={({ item}) => (
               <ItemTicket item={item} navigation={navigation} />
             )}
             keyExtractor={(item) => item._id}
