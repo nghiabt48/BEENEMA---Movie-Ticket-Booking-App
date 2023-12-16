@@ -29,6 +29,8 @@ const DetailMovie = (props) => {
   const [isLoading2, setisLoading2] = useState(null);
   const [review, setreview] = useState("");
   const [rating, setrating] = useState("");
+  const category = params.data.category;
+  const categoryStrring = category.join(', ')
   const [showFullText, setShowFullText] = useState(false);
   const { infoUser, setinfoUser, movieId, setmovieId, isLogin } =
     useContext(AppConText);
@@ -131,7 +133,6 @@ const DetailMovie = (props) => {
     });
     setmovieId({ _id: params.data.id });
   };
-
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
@@ -158,7 +159,7 @@ const DetailMovie = (props) => {
 
         <View style={styles.Group3}>
           <Text style={styles.text2}>{params.data.title}</Text>
-          <Text style={styles.text3}>{params.data.category}</Text>
+          <Text style={styles.text3}>{categoryStrring}</Text>
         </View>
         {/* get actor */}
         <FlatList
