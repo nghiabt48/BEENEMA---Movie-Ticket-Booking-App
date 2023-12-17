@@ -366,6 +366,13 @@ const SeatCinemaSocket = (props) => {
             </View>
           </View>
         </View>
+        <LinearGradient
+          colors={['#DA004E', '#F34C30']}
+          style={styles.gradient2}
+          end={{ x: 0.1, y: 1 }}
+        >
+          <Text style={styles.Text5}>Screen</Text>
+        </LinearGradient>
         <View style={styles.viewGroup3}>{renderSeats()}</View>
         <View style={styles.viewGroup5}>
           <View style={styles.Group5}>
@@ -474,7 +481,7 @@ const styles = StyleSheet.create({
   viewGroup3: {
     justifyContent: "center",
     alignItems: "center",
-    marginTop: "10%",
+    marginTop: "5%",
   },
   viewGroup4: {
     flexDirection: "row",
@@ -583,5 +590,16 @@ const styles = StyleSheet.create({
     width: 12,
     height: 12,
     borderRadius: 100,
+  },
+  gradient2: {
+    height: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    marginTop:"5%"
+  },
+  Text5: {
+    color: '#ffff',
+    fontSize:18,
   },
 });

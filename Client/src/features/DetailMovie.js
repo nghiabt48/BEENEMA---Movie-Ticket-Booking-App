@@ -36,6 +36,17 @@ const DetailMovie = (props) => {
     useContext(AppConText);
   const data = params.data.actor;
   const [numberOfLines, setNumberOfLines] = useState(3);
+
+  var ngayThang = new Date(myreviews.created_At);
+
+  // Lấy thông tin ngày, tháng, năm
+  var ngay = ngayThang.getUTCDate();
+  var thang = ngayThang.getUTCMonth() + 1; // Tháng bắt đầu từ 0 nên cộng thêm 1
+  var nam = ngayThang.getUTCFullYear();
+
+  // Định dạng lại thành chuỗi "dd/mm/yyyy"
+  var chuoiNgayThang = ngay + '/' + thang + '/' + nam;
+
   const handleTextLayout = (event) => {
     const { lines } = event.nativeEvent;
     // Check if the number of lines exceeds the limit
@@ -49,7 +60,7 @@ const DetailMovie = (props) => {
       fetchmyReviews();
     }
     fetchReviews();
-    return () => {};
+    return () => { };
   }, []);
   const fetchmyReviews = async () => {
     try {
@@ -102,6 +113,7 @@ const DetailMovie = (props) => {
       if (response.status == "success") {
         ToastAndroid.show("Đánh giá thành công", ToastAndroid.SHORT);
         fetchReviews();
+        fetchmyReviews();
         setisLoading(false);
       }
     } catch (error) {
@@ -295,73 +307,77 @@ const DetailMovie = (props) => {
                 {myreviews.user ? (
                   <Text style={styles.textUser}>{myreviews.user.username}</Text>
                 ) : null}
-                <View style={styles.stars}>
-                  {myreviews.rating >= 1 ? (
-                    <MaterialIcons
-                      name={"star"}
-                      size={16}
-                      style={styles.starSelected}
-                    />
-                  ) : (
-                    <MaterialIcons
-                      name={"star-border"}
-                      size={16}
-                      style={styles.starUnselected}
-                    />
-                  )}
-                  {myreviews.rating >= 2 ? (
-                    <MaterialIcons
-                      name={"star"}
-                      size={16}
-                      style={styles.starSelected}
-                    />
-                  ) : (
-                    <MaterialIcons
-                      name={"star-border"}
-                      size={16}
-                      style={styles.starUnselected}
-                    />
-                  )}
-                  {myreviews.rating >= 3 ? (
-                    <MaterialIcons
-                      name={"star"}
-                      size={16}
-                      style={styles.starSelected}
-                    />
-                  ) : (
-                    <MaterialIcons
-                      name={"star-border"}
-                      size={16}
-                      style={styles.starUnselected}
-                    />
-                  )}
-                  {myreviews.rating >= 4 ? (
-                    <MaterialIcons
-                      name={"star"}
-                      size={16}
-                      style={styles.starSelected}
-                    />
-                  ) : (
-                    <MaterialIcons
-                      name={"star-border"}
-                      size={16}
-                      style={styles.starUnselected}
-                    />
-                  )}
-                  {myreviews.rating >= 5 ? (
-                    <MaterialIcons
-                      name={"star"}
-                      size={16}
-                      style={styles.starSelected}
-                    />
-                  ) : (
-                    <MaterialIcons
-                      name={"star-border"}
-                      size={16}
-                      style={styles.starUnselected}
-                    />
-                  )}
+                <View style={{flexDirection:'row'}}>
+                  <View style={styles.stars}>
+                    {myreviews.rating >= 1 ? (
+                      <MaterialIcons
+                        name={"star"}
+                        size={16}
+                        style={styles.starSelected}
+                      />
+                    ) : (
+                      <MaterialIcons
+                        name={"star-border"}
+                        size={16}
+                        style={styles.starUnselected}
+                      />
+                    )}
+                    {myreviews.rating >= 2 ? (
+                      <MaterialIcons
+                        name={"star"}
+                        size={16}
+                        style={styles.starSelected}
+                      />
+                    ) : (
+                      <MaterialIcons
+                        name={"star-border"}
+                        size={16}
+                        style={styles.starUnselected}
+                      />
+                    )}
+                    {myreviews.rating >= 3 ? (
+                      <MaterialIcons
+                        name={"star"}
+                        size={16}
+                        style={styles.starSelected}
+                      />
+                    ) : (
+                      <MaterialIcons
+                        name={"star-border"}
+                        size={16}
+                        style={styles.starUnselected}
+                      />
+                    )}
+                    {myreviews.rating >= 4 ? (
+                      <MaterialIcons
+                        name={"star"}
+                        size={16}
+                        style={styles.starSelected}
+                      />
+                    ) : (
+                      <MaterialIcons
+                        name={"star-border"}
+                        size={16}
+                        style={styles.starUnselected}
+                      />
+                    )}
+                    {myreviews.rating >= 5 ? (
+                      <MaterialIcons
+                        name={"star"}
+                        size={16}
+                        style={styles.starSelected}
+                      />
+                    ) : (
+                      <MaterialIcons
+                        name={"star-border"}
+                        size={16}
+                        style={styles.starUnselected}
+                      />
+                    )}
+                  </View>
+                  <Text style={{ color: '#fff', marginStart: 20 }}>{chuoiNgayThang}</Text>
                 </View>
+
                 {myreviews.review ? (
                   <Text style={styles.textReview}>{myreviews.review}</Text>
                 ) : null}
