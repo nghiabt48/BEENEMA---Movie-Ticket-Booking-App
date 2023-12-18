@@ -18,16 +18,20 @@ const Registers = (props) => {
             navigation.navigate("Login")
         } catch (e) {
             if (e.response.data.error.name == "ValidationError"
+                && e.response.data.error.message.includes("Please provide a valid email")) {
+                ToastAndroid.show("Email không đúng định dạng", ToastAndroid.LONG);
+            }
+            else if (e.response.data.error.name == "ValidationError"
                 && e.response.data.error.message.includes("Passwords are not the same")) {
                 ToastAndroid.show("Mật khẩu không giống nhau", ToastAndroid.LONG);
             }
             else if (e.response.data.error.name == "ValidationError") {
                 ToastAndroid.show("Hãy nhập đầy đủ thông tin", ToastAndroid.LONG);
             }
-            if (e.response.data.message=="Duplicate value!") {
+            else if (e.response.data.message == "Duplicate value!") {
                 ToastAndroid.show("Email đã tồn tại", ToastAndroid.LONG);
             }
-            
+
         }
 
     }
