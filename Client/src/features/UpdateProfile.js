@@ -160,6 +160,7 @@ const UpdateProfile = (props) => {
           returnKeyType="next"
           autoCorrect={false}
           value={infoUser.email}
+          editable={false}
           onChangeText={(text) => setinfoUser({ ...infoUser, email: text })}
         />
 
