@@ -105,11 +105,22 @@ exports.movieDetail = async(req, res) => {
 
 exports.movie_delete = async(req, res) => {
     try {    
-        const movie = await Movie.findById(req.params.id).select('status');
-        const oppositeStatus = !(movie.status);
-        console.log(oppositeStatus);
-        const result = await Movie.findByIdAndUpdate(req.params.id, {status: oppositeStatus}, { new: true }).lean();
-        res.redirect("/index");
+        const now = new Date();
+        now.setHours(now.getHours() + 7);
+        req.request_time = now;
+        req.query.start_time = { $gt: req.request_time };
+
+        const showtimes = await Showtime.find({movie:req.params.id, start_time: req.query.start_time});
+        
+        if(showtimes.length > 0){
+            res.render("alert.hbs", {alert:"There is existing movie in showtime"});
+        }
+        else{
+            const movie = await Movie.findById(req.params.id).select('status');
+            const oppositeStatus = !(movie.status);
+            const result = await Movie.findByIdAndUpdate(req.params.id, {status: oppositeStatus}, { new: true }).lean();
+            res.redirect("/index");
+        }
     } catch (error) {
         console.log(`${error.name}: ${error.message}`);
         res.render("error.hbs");
@@ -396,9 +407,17 @@ exports.detailCinema = async(req, res) => {
 //Cinema
 exports.getAllShowtime = async(req, res) => {
     try{
-        const showtimes = await Showtime.find({}).populate({path: 'movie room', select: 'title name'}).lean();
+        const now = new Date();
+        now.setHours(now.getHours() + 7);
+        req.request_time = now;
+        req.query.start_time = { $gt: req.request_time };
+
+        const showtimes = await Showtime.find(req.query)
+        .populate({path: 'room', select: 'name'})
+        .populate({path: 'movie', select: 'title'})
+        .lean();
         const rooms = await Room.find({}).lean();
-        const movies = await Movie.find({}).lean();
+        const movies = await Movie.find({status:true}).lean();
         res.render("showtime.hbs", {
             titles: "Manager Showtimes",
             showtimes: showtimes,
@@ -415,15 +434,20 @@ exports.getAllShowtime = async(req, res) => {
 
 exports.insertShowtimePost = async(req, res) => {
     try {
-        const showtimes = new Showtime({
-            room: req.body.room,
-            movie: req.body.movie,
-            start_time: req.body.start_time,
-            end_time: req.body.end_time,
-            price: req.body.price
-        });
-        await showtimes.save();
-        res.redirect('/showtime');
+        if(req.body.start_time > req.body.end_time){
+            res.render("alert.hbs", {alert:"End time should be greater than start time"});
+        }
+        else{
+            const showtimes = new Showtime({
+                room: req.body.room,
+                movie: req.body.movie,
+                start_time: req.body.start_time,
+                end_time: req.body.end_time,
+                price: req.body.price
+            });
+            await showtimes.save();
+            res.redirect('/showtime');
+        }
     } catch (error) {
         console.log(`${error.name}: ${error.message}`);
         res.render("error.hbs");

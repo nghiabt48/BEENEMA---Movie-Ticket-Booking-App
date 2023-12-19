@@ -58,6 +58,8 @@
           <th>Movie</th>
           <th>Room</th>
           <th>Price</th>
+          {{!-- <th>Start time</th>
+          <th>End time</th> --}}
           <th>Actions</th>
         </tr>
       </thead>
@@ -67,6 +69,8 @@
             <td>{{this.movie.title}}</td>
             <td>{{this.room.name}}</td>
             <td>{{this.price}}</td>
+            {{!-- <td>{{this.start_time}}</td>
+            <td>{{this.end_time}}</td> --}}
             <td>
               <a href='/showtime/deleteshowtime/{{this._id}}' class='btn btn-danger'>Delete</a>
               <a href='/showtime/{{this._id}}' class='btn btn-primary'>Update</a>

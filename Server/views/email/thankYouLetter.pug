@@ -1,0 +1,21 @@
+extends baseEmail
+
+block content
+  p Hi #{firstName},
+  p Thank you for using our ticket booking service - Beenema. This is your recent ticket's detail:
+  h2(style="color: #333; margin-top: 30px;") Order Details
+      table(style="width: 100%; border-collapse: collapse; margin-top: 20px;")
+        thead
+          tr(style="background-color: #f2f2f2;")
+            th(style="padding: 10px; text-align: left;") Product
+            th(style="padding: 10px; text-align: left;") Quantity
+            th(style="padding: 10px; text-align: left;") Price
+        tbody
+          each product in order.products
+            tr
+              td(style="padding: 10px;") #{product.name}
+              td(style="padding: 10px;") #{product.quantity}
+              td(style="padding: 10px;") #{product.price}
+      p(style="color: #555; text-align: center; margin-top: 30px;") Total Amount: #{order.totalAmount}
+      p(style="color: #555; text-align: center; margin-top: 20px;") If you have any questions, feel free to contact us.
+      p(style="color: #555; text-align: center; margin-top: 20px;") Thank you again for choosing us!

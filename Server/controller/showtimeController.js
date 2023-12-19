@@ -19,10 +19,23 @@ exports.getShowtimeByName = catchAsync(async(req, res, next) => {
   if(!req.query.title) return next();
 
   let showtimes = await Showtime.find({start_time: { $gt: req.request_time }}).populate({path: 'room', select: 'name', populate: 'cinema'}).populate({path: 'movie', select: 'title imageCover'})
-  showtimes = showtimes.filter(item => item.movie.title == req.query.title)
+  const uniqueShowtime = new Set();
+  let uniqueShowtimeList = showtimes.filter(showtime => {
+    if (!uniqueShowtime.has(showtime.room.cinema.name)) {
+      uniqueShowtime.add(showtime.room.cinema.name);
+      return true;
+    }
+    return false;
+  });
+  
+  uniqueShowtimeList = uniqueShowtimeList.filter(item => item.movie.title == req.query.title)
+  let data = uniqueShowtimeList
+  if(data.length < 1) {
+    data = showtimes.filter(item => item.movie.title == req.query.title)
+  }
   res.json({
     status: 'success',
-    data: showtimes
+    data
   })
 })
 exports.getShowtimeByCinema = catchAsync(async (req, res, next) => {
